@@ -58,10 +58,12 @@ import 'package:gym_app/screens/auth/sign_up_screen.dart';
 import 'package:gym_app/screens/auth/reset_password_screen.dart';
 
 // Onboarding Screens
+import 'package:gym_app/screens/onboarding/identity_screen.dart';
 import 'package:gym_app/screens/onboarding/sport_selection_screen.dart';
 import 'package:gym_app/screens/onboarding/gender_selection_screen.dart';
 import 'package:gym_app/screens/onboarding/measurements_screen.dart';
 import 'package:gym_app/screens/onboarding/photo_upload_screen.dart';
+import 'package:gym_app/screens/onboarding/congratulations_screen.dart';
 
 import '../presentation/challenges_page/challenges_page.dart';
 import '../presentation/chest_gym_exercise_page/chest_gym_exercise_page.dart';
@@ -101,7 +103,13 @@ class AppRoutes {
 
   static const String loginFilledPage = '/login_filled_page';
 
+  // Onboarding routes
+  static const String identityScreen = '/identity_screen';
   static const String sportSelectionScreen = '/sport_selection_screen';
+  static const String genderSelectionScreen = '/gender_selection_screen';
+  static const String measurementsScreen = '/measurements_screen';
+  static const String photoUploadScreen = '/photo_upload_screen';
+  static const String congratulationsScreen = '/congratulations_screen';
 
   static const String loginFilledTabContainerScreen =
       '/login_filled_tab_container_screen';
@@ -393,6 +401,8 @@ class AppRoutes {
         return getPage(ConfirmPaymentScreen(), settings);
       case AppRoutes.appNavigationScreen:
         return getPage(AppNavigationScreen(), settings);
+      case AppRoutes.identityScreen:
+        return getPage(IdentityScreen(), settings);
       case AppRoutes.sportSelectionScreen:
         return getPage(SportSelectionScreen(), settings);
       case AppRoutes.genderSelectionScreen:
@@ -401,6 +411,8 @@ class AppRoutes {
         return getPage(MeasurementsScreen(selectedSports: [], selectedGender: ''), settings);
       case AppRoutes.photoUploadScreen:
         return getPage(PhotoUploadScreen(selectedSports: [], selectedGender: '', height: {}, weight: {}), settings);
+      case AppRoutes.congratulationsScreen:
+        return getPage(CongratulationsScreen(), settings);
       case AppRoutes.initialRoute:
         return getPage(SplashScreen(), settings);
       default:

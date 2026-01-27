@@ -4,9 +4,9 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../core/app_export.dart';
-import '../../widgets/custom_elevated_button.dart';
+import '../../widgets/custom_button.dart';
 import '../../services/onboarding_service.dart';
+import 'congratulations_screen.dart';
 
 class PhotoUploadScreen extends StatefulWidget {
   final List<String> selectedSports;
@@ -29,7 +29,7 @@ class PhotoUploadScreen extends StatefulWidget {
 class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
   final OnboardingService _onboardingService = OnboardingService();
   final ImagePicker _picker = ImagePicker();
-  final List<File?> _photos = [null, null, null, null];
+  File? _photo;
   bool _isLoading = false;
 
   Future<void> _checkAndRequestPermission(ImageSource source) async {
@@ -74,11 +74,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
 
       if (image != null) {
         setState(() {
-          // Find first empty slot
-          int emptyIndex = _photos.indexWhere((photo) => photo == null);
-          if (emptyIndex != -1) {
-            _photos[emptyIndex] = File(image.path);
-          }
+          _photo = File(image.path);
         });
       }
     } catch (e) {
@@ -92,19 +88,19 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
     }
   }
 
-  void _removePhoto(int index) {
+  void _removePhoto() {
     setState(() {
-      _photos[index] = null;
+      _photo = null;
     });
   }
 
   void _showImageSourceDialog() {
     Get.bottomSheet(
       Container(
-        padding: getPadding(all: 20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.only(
+        padding: const EdgeInsets.all(20),
+        decoration: const BoxDecoration(
+          color: Color(0xFF1E1E1E),
+          borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
@@ -112,25 +108,26 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
+            const Text(
               'Add Photo',
-              style: theme.textTheme.titleLarge?.copyWith(
+              style: TextStyle(
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
-            SizedBox(height: getVerticalSize(20)),
+            const SizedBox(height: 20),
             ListTile(
-              leading: Icon(Icons.camera_alt, color: theme.colorScheme.primary),
-              title: const Text('Take Photo'),
+              leading: const Icon(Icons.camera_alt, color: Color(0xFFCDFF4D)),
+              title: const Text('Take Photo', style: TextStyle(color: Colors.white)),
               onTap: () {
                 Get.back();
                 _checkAndRequestPermission(ImageSource.camera);
               },
             ),
             ListTile(
-              leading: Icon(Icons.photo_library,
-                  color: theme.colorScheme.primary),
-              title: const Text('Choose from Gallery'),
+              leading: const Icon(Icons.photo_library, color: Color(0xFFCDFF4D)),
+              title: const Text('Choose from Gallery', style: TextStyle(color: Colors.white)),
               onTap: () {
                 Get.back();
                 _checkAndRequestPermission(ImageSource.gallery);
@@ -153,15 +150,12 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
         throw Exception('No user logged in');
       }
 
-      // Upload photos if any
+      // Upload photo if any
       List<String> photoUrls = [];
-      List<File> validPhotos =
-          _photos.whereType<File>().toList();
-
-      if (validPhotos.isNotEmpty) {
+      if (_photo != null) {
         photoUrls = await _onboardingService.uploadPhotos(
           uid: currentUser.uid,
-          photos: validPhotos,
+          photos: [_photo!],
         );
       }
 
@@ -175,21 +169,14 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
         photoUrls: photoUrls,
       );
 
-      // Navigate to home
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
       }
 
-      Get.offAllNamed(AppRoutes.homeContainerScreen);
-
-      Get.snackbar(
-        'Success',
-        'Profile setup complete!',
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      // Navigate to congratulations screen
+      Get.off(() => const CongratulationsScreen());
     } catch (e) {
       debugPrint('Error completing onboarding: $e');
 
@@ -209,201 +196,137 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
   }
 
   Future<void> _skip() async {
-    // Show confirmation dialog
-    bool? confirm = await Get.dialog<bool>(
-      AlertDialog(
-        title: const Text('Skip Photos?'),
-        content: const Text(
-            'You can always add photos later from your profile settings.'),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(result: false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Get.back(result: true),
-            child: const Text('Skip'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirm == true) {
-      _finish();
-    }
+    _finish(); // Just finish without photo
   }
 
   @override
   Widget build(BuildContext context) {
-    int photoCount = _photos.where((photo) => photo != null).length;
-
     return Scaffold(
-      backgroundColor: theme.colorScheme.onErrorContainer,
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: theme.colorScheme.onErrorContainer,
+        backgroundColor: Colors.black,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Get.back(),
         ),
       ),
       body: SafeArea(
         child: Column(
           children: [
-            // Progress indicator
-            Padding(
-              padding: getPadding(all: 20),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: LinearProgressIndicator(
-                      value: 1.0,
-                      backgroundColor: Colors.grey[300],
-                      color: theme.colorScheme.primary,
-                      minHeight: 4,
-                    ),
-                  ),
-                  SizedBox(width: getHorizontalSize(12)),
-                  Text(
-                    '4/4',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: getPadding(all: 20),
+                  padding: const EdgeInsets.all(24.0),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       // Title
-                      Text(
-                        'Add your photos',
-                        style: theme.textTheme.headlineLarge?.copyWith(
+                      const Text(
+                        'Hazlo más real',
+                        style: TextStyle(
+                          fontSize: 28,
                           fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
+                        textAlign: TextAlign.center,
                       ),
 
-                      SizedBox(height: getVerticalSize(8)),
+                      const SizedBox(height: 12),
 
+                      // Subtitle
                       Text(
-                        'Help others recognize you (Optional)',
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: Colors.grey,
+                        'Si subes una foto, tu avatar se parecerá más a ti.',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey[400],
                         ),
+                        textAlign: TextAlign.center,
                       ),
 
-                      SizedBox(height: getVerticalSize(32)),
+                      const SizedBox(height: 48),
 
-                      // Photo grid
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: getHorizontalSize(16),
-                          mainAxisSpacing: getVerticalSize(16),
-                          childAspectRatio: 0.8,
-                        ),
-                        itemCount: 4,
-                        itemBuilder: (context, index) {
-                          File? photo = _photos[index];
-
-                          return GestureDetector(
-                            onTap: photo == null ? _showImageSourceDialog : null,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: Colors.grey[300]!,
-                                  width: 1,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.05),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: photo == null
-                                  ? Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.add_a_photo,
-                                          size: getSize(48),
-                                          color: Colors.grey[400],
-                                        ),
-                                        SizedBox(height: getVerticalSize(8)),
-                                        Text(
-                                          'Add Photo',
-                                          style: theme.textTheme.bodyMedium
-                                              ?.copyWith(
-                                            color: Colors.grey[600],
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : Stack(
-                                      children: [
-                                        // Image
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(16),
-                                          child: Image.file(
-                                            photo,
-                                            width: double.infinity,
-                                            height: double.infinity,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-
-                                        // Remove button
-                                        Positioned(
-                                          top: 8,
-                                          right: 8,
-                                          child: GestureDetector(
-                                            onTap: () => _removePhoto(index),
-                                            child: Container(
-                                              padding: getPadding(all: 6),
-                                              decoration: BoxDecoration(
-                                                color: Colors.black
-                                                    .withOpacity(0.6),
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Icon(
-                                                Icons.close,
-                                                size: getSize(20),
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                      // Photo preview area
+                      GestureDetector(
+                        onTap: _photo == null ? _showImageSourceDialog : null,
+                        child: Container(
+                          width: 200,
+                          height: 200,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF2C2C2C),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: const Color(0xFF3C3C3C),
+                              width: 2,
                             ),
-                          );
-                        },
+                          ),
+                          child: _photo == null
+                              ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.add_a_photo_outlined,
+                                      size: 64,
+                                      color: Colors.grey[600],
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      'Add Photo',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Stack(
+                                  children: [
+                                    // Image
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: Image.file(
+                                        _photo!,
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+
+                                    // Remove button
+                                    Positioned(
+                                      top: 8,
+                                      right: 8,
+                                      child: GestureDetector(
+                                        onTap: _removePhoto,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(6),
+                                          decoration: BoxDecoration(
+                                            color: Colors.black.withOpacity(0.6),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(
+                                            Icons.close,
+                                            size: 20,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                        ),
                       ),
 
-                      SizedBox(height: getVerticalSize(24)),
+                      const SizedBox(height: 32),
 
-                      // Photo count
-                      Center(
-                        child: Text(
-                          '$photoCount of 4 photos added',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: Colors.grey,
-                          ),
+                      // Microcopy
+                      Text(
+                        'Tu avatar, tu estilo.',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),
@@ -413,27 +336,26 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
 
             // Action buttons
             Padding(
-              padding: getPadding(all: 20),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
                 children: [
-                  // Finish button
-                  CustomElevatedButton(
-                    height: getVerticalSize(54),
-                    text: _isLoading ? 'FINISHING...' : 'FINISH',
-                    buttonStyle: CustomButtonStyles.fillPrimary,
-                    buttonTextStyle: CustomTextStyles
-                        .bodyLargeUniformProExtraCondensedOnErrorContainer,
-                    onTap: _isLoading ? null : _finish,
+                  // Upload/Finish button
+                  CustomButton(
+                    text: _photo == null ? 'Subir foto' : 'Continue',
+                    onPressed: _photo == null ? _showImageSourceDialog : _finish,
+                    isLoading: _isLoading,
+                    height: 54,
                   ),
 
-                  SizedBox(height: getVerticalSize(12)),
+                  const SizedBox(height: 12),
 
                   // Skip button
                   TextButton(
                     onPressed: _isLoading ? null : _skip,
                     child: Text(
-                      'Skip for now',
-                      style: theme.textTheme.bodyLarge?.copyWith(
+                      'Omitir',
+                      style: TextStyle(
+                        fontSize: 16,
                         color: Colors.grey[600],
                       ),
                     ),
