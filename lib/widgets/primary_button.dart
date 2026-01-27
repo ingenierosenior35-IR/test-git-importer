@@ -22,13 +22,13 @@ class PrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: width ?? double.infinity,
-      margin: margin ?? EdgeInsets.symmetric(horizontal: 24),
+      margin: margin ?? const EdgeInsets.symmetric(horizontal: 24),
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: Color(0xFFCDFF4D),
           foregroundColor: Colors.black,
-          padding: EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),

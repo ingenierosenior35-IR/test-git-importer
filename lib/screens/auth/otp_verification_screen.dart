@@ -16,7 +16,11 @@ class OTPVerificationScreen extends StatefulWidget {
     required this.identifier,
     required this.isPhone,
     this.verificationId,
-  }) : super(key: key);
+  }) : assert(
+         !isPhone || verificationId != null,
+         'verificationId is required when isPhone is true',
+       ),
+       super(key: key);
 
   // Legacy constructor for backward compatibility
   factory OTPVerificationScreen.phone({

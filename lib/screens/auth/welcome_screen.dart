@@ -30,7 +30,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   bool isEmail(String input) {
-    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(input);
+    // More permissive email regex that supports longer TLDs
+    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$').hasMatch(input);
   }
 
   bool isPhone(String input) {
@@ -59,18 +60,30 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     try {
       if (isEmail(input)) {
         // Navigate to OTP verification screen with email
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
         Get.to(() => OTPVerificationScreen(
           identifier: input,
           isPhone: false,
         ));
+        return;
       } else if (isPhone(input)) {
-        // Add + if not present for phone numbers
-        String phoneNumber = input.startsWith('+') ? input : '+$input';
+        // Clean phone number and add + if not present
+        String cleaned = input.replaceAll(RegExp(r'[^\d+]'), '');
+        String phoneNumber = cleaned.startsWith('+') ? cleaned : '+$cleaned';
         
         // Send OTP via SMS
-        bool success = await _authService.sendPhoneVerificationCode(
+        await _authService.sendPhoneVerificationCode(
           phoneNumber,
           onCodeSent: (verificationId) {
+            if (mounted) {
+              setState(() {
+                _isLoading = false;
+              });
+            }
             // Navigate to OTP verification screen
             Get.to(() => OTPVerificationScreen(
               identifier: phoneNumber,
@@ -79,11 +92,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ));
           },
           onError: (error) {
-            setState(() {
-              _errorMessage = error;
-            });
+            if (mounted) {
+              setState(() {
+                _errorMessage = error;
+                _isLoading = false;
+              });
+            }
           },
         );
+        return;
       } else {
         setState(() {
           _errorMessage = 'Formato inválido. Ingresa un correo o teléfono válido';
@@ -203,7 +220,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 40),
+            padding: const EdgeInsets.symmetric(vertical: 40),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -235,7 +252,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 
                 // Single input field for phone or email
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: TextField(
                     controller: _inputController,
                     style: GoogleFonts.urbanist(
@@ -254,7 +271,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: EdgeInsets.symmetric(
+                      contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 16,
                       ),
@@ -264,7 +281,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         color: Colors.red,
                       ),
                     ),
-                    keyboardType: TextInputType.emailAddress,
+                    keyboardType: TextInputType.text,
                   ),
                 ),
                 
@@ -281,7 +298,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 
                 // Divider with text
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Row(
                     children: [
                       Expanded(
@@ -291,7 +308,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Text(
                           'O continuar con',
                           style: GoogleFonts.urbanist(
@@ -344,7 +361,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Don't have an account? ",
+                      "¿No tienes cuenta? ",
                       style: GoogleFonts.urbanist(
                         fontSize: 14,
                         color: Colors.grey,
@@ -355,7 +372,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         Get.to(() => SignUpScreen());
                       },
                       child: Text(
-                        'Register',
+                        'Registrarse',
                         style: GoogleFonts.urbanist(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
