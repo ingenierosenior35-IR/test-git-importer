@@ -7,6 +7,9 @@ import '../../widgets/custom_elevated_button.dart';
 import 'otp_verification_screen.dart';
 import '../onboarding/sport_selection_screen.dart';
 
+/// DEPRECATED: This screen uses phone number authentication and is being replaced by WelcomeScreen.
+/// The app flow now uses WelcomeScreen as the initial authentication screen.
+/// This file is kept for backward compatibility but should not be actively used.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key?  key}) : super(key: key);
 
