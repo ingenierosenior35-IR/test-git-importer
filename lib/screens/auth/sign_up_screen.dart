@@ -40,22 +40,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     if (!_agreeToTerms) {
-      Get.snackbar(
-        'Error',
-        'Please agree to Terms & Condition',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Please agree to Terms & Condition'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
       return;
     }
 
     if (_passwordController.text != _confirmPasswordController.text) {
-      Get.snackbar(
-        'Error',
-        'Passwords do not match',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Passwords do not match'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
       return;
     }
 
@@ -71,12 +75,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
 
       if (userCredential != null) {
-        Get.snackbar(
-          'Success',
-          'Account created successfully',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Account created successfully'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
         
         // Navigate to onboarding
         Get.offAll(() => const SportSelectionScreen());
@@ -92,13 +98,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
         setState(() {
           _isLoading = false;
         });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to create account: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
-      Get.snackbar(
-        'Error',
-        'Failed to create account: $e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
     }
   }
 
@@ -125,20 +131,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
                   
-                  SizedBox(height: 20),
+                  SizedBox(height: 60), // Increased spacing from 20 to 60
                   
-                  // Title
-                  Text(
-                    'Sign Up',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
+                  // Title - centered
+                  Center(
+                    child: Text(
+                      'Sign Up',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                   
-                  SizedBox(height: 40),
+                  SizedBox(height: 60), // Increased spacing from 40 to 60
                   
                   // Full Name input
                   TextFormField(

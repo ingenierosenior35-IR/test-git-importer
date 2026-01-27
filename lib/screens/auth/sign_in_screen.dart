@@ -48,12 +48,14 @@ class _SignInScreenState extends State<SignInScreen> {
       if (userCredential != null) {
         bool onboardingCompleted = await _authService.checkOnboardingStatus();
         
-        Get.snackbar(
-          'Success',
-          'Signed in successfully',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Signed in successfully'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
         
         if (onboardingCompleted) {
           Get.offAllNamed(AppRoutes.homeContainerScreen);
@@ -72,13 +74,13 @@ class _SignInScreenState extends State<SignInScreen> {
         setState(() {
           _isLoading = false;
         });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to sign in: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
-      Get.snackbar(
-        'Error',
-        'Failed to sign in: $e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
     }
   }
 

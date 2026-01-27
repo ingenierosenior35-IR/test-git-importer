@@ -4,6 +4,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart';
 import 'firestore_service.dart';
+import '../routes/app_routes.dart';
 
 class AuthService extends GetxService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -176,6 +177,9 @@ class AuthService extends GetxService {
       await _auth.signOut();
       await _googleSignIn.signOut();
       await FacebookAuth.instance. logOut();
+      
+      // Navigate to WelcomeScreen after logout
+      Get.offAllNamed(AppRoutes.welcomeScreen);
     } catch (e) {
       debugPrint('Error signing out: $e');
     }
