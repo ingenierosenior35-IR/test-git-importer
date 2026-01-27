@@ -3,6 +3,7 @@ import '../../widgets/custom_elevated_button.dart';
 import 'controller/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:gym_app/core/app_export.dart';
+import '../../services/auth_service.dart';
 
 // ignore: must_be_immutable
 class ProfilePage extends StatelessWidget {
@@ -440,10 +441,12 @@ class ProfilePage extends StatelessWidget {
                                             buttonStyle: CustomButtonStyles.fillPrimary,
                                             buttonTextStyle: CustomTextStyles
                                                 .bodyLargeUniformProExtraCondensedOnErrorContainer,
-                                            onTap: () {
+                                            onTap: () async {
                                               customBottomBarController.getIndex(0);
                                               PrefUtils.setIsSignIn(true);
-                                              Get.offAllNamed(AppRoutes.loginFilledTabContainerScreen);
+                                              // Call AuthService signOut which will handle navigation to WelcomeScreen
+                                              final AuthService authService = Get.find<AuthService>();
+                                              await authService.signOut();
                                             }),
                                       )
 
