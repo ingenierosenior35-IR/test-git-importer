@@ -27,9 +27,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     try {
       final userCredential = await _authService.signInWithGoogle();
       
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
 
       if (userCredential != null) {
         bool onboardingCompleted = await _authService.checkOnboardingStatus();
@@ -48,9 +50,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         }
       }
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
       Get.snackbar(
         'Error',
         'Failed to sign in with Google: $e',
@@ -68,9 +72,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     try {
       final userCredential = await _authService.signInWithFacebook();
       
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
 
       if (userCredential != null) {
         bool onboardingCompleted = await _authService.checkOnboardingStatus();
@@ -89,9 +95,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         }
       }
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
       Get.snackbar(
         'Error',
         'Failed to sign in with Facebook: $e',
@@ -147,7 +155,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 
                 // Subtitle
                 Text(
-                  'If you already have grocery account, enter your email below.',
+                  'If you already have airfly account, enter your email below.',
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 14,
