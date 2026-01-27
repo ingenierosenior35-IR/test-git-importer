@@ -4,7 +4,6 @@ import 'package:gym_app/presentation/onboarding_one_screen/onboarding_one_screen
 import 'package:gym_app/presentation/login_filled_tab_container_screen/login_filled_tab_container_screen.dart';
 import 'package:gym_app/presentation/forgot_password_screen/forgot_password_screen.dart';
 import 'package:gym_app/presentation/verification_screen/verification_screen.dart';
-import 'package:gym_app/presentation/reset_password_screen/reset_password_screen.dart';
 import 'package:gym_app/presentation/password_changed_popup_screen/password_changed_popup_screen.dart';
 import 'package:gym_app/presentation/home_container_screen/home_container_screen.dart';
 import 'package:gym_app/presentation/search_fill_screen/search_fill_screen.dart';
@@ -112,8 +111,6 @@ class AppRoutes {
   static const String forgotPasswordScreen = '/forgot_password_screen';
 
   static const String verificationScreen = '/verification_screen';
-
-  static const String resetPasswordScreen = '/reset_password_screen';
 
   static const String passwordChangedPopupScreen =
       '/password_changed_popup_screen';
@@ -282,8 +279,6 @@ class AppRoutes {
         return getPage(ForgotPasswordScreen(), settings);
       case AppRoutes.verificationScreen:
         return getPage(VerificationScreen(), settings);
-      case AppRoutes.resetPasswordScreen:
-        return getPage(ResetPasswordScreen(), settings);
       case AppRoutes.passwordChangedPopupScreen:
         return getPage(PasswordChangedPopupScreen(), settings);
       case AppRoutes.homePage:
