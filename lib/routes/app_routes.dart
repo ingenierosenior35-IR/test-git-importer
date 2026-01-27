@@ -61,6 +61,8 @@ import 'package:gym_app/screens/auth/reset_password_screen.dart';
 import 'package:gym_app/screens/onboarding/identity_screen.dart';
 import 'package:gym_app/screens/onboarding/sport_selection_screen.dart';
 import 'package:gym_app/screens/onboarding/gender_selection_screen.dart';
+import 'package:gym_app/screens/onboarding/height_screen.dart';
+import 'package:gym_app/screens/onboarding/weight_screen.dart';
 import 'package:gym_app/screens/onboarding/measurements_screen.dart';
 import 'package:gym_app/screens/onboarding/photo_upload_screen.dart';
 import 'package:gym_app/screens/onboarding/congratulations_screen.dart';
@@ -107,6 +109,8 @@ class AppRoutes {
   static const String identityScreen = '/identity_screen';
   static const String sportSelectionScreen = '/sport_selection_screen';
   static const String genderSelectionScreen = '/gender_selection_screen';
+  static const String heightScreen = '/height_screen';
+  static const String weightScreen = '/weight_screen';
   static const String measurementsScreen = '/measurements_screen';
   static const String photoUploadScreen = '/photo_upload_screen';
   static const String congratulationsScreen = '/congratulations_screen';
@@ -245,6 +249,8 @@ class AppRoutes {
 
   // Onboarding routes
   static const String genderSelectionScreen = '/gender_selection_screen';
+  static const String heightScreen = '/height_screen';
+  static const String weightScreen = '/weight_screen';
   static const String measurementsScreen = '/measurements_screen';
   static const String photoUploadScreen = '/photo_upload_screen';
 
@@ -407,6 +413,10 @@ class AppRoutes {
         return getPage(SportSelectionScreen(), settings);
       case AppRoutes.genderSelectionScreen:
         return getPage(GenderSelectionScreen(selectedSports: []), settings);
+      case AppRoutes.heightScreen:
+        return getPage(HeightScreen(selectedSports: [], selectedGender: ''), settings);
+      case AppRoutes.weightScreen:
+        return getPage(WeightScreen(selectedSports: [], selectedGender: '', height: {}), settings);
       case AppRoutes.measurementsScreen:
         return getPage(MeasurementsScreen(selectedSports: [], selectedGender: ''), settings);
       case AppRoutes.photoUploadScreen:
