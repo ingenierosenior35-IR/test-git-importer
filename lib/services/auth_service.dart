@@ -192,4 +192,78 @@ class AuthService extends GetxService {
     if (user == null) return false;
     return await _firestoreService.isOnboardingCompleted(user. uid);
   }
+  
+  // Email/Password Sign Up
+  Future<UserCredential?> signUpWithEmailPassword(
+    String email,
+    String password,
+    String displayName,
+  ) async {
+    try {
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      
+      // Update display name
+      await userCredential.user?.updateDisplayName(displayName);
+      
+      // Create user in Firestore
+      if (userCredential.user != null) {
+        _firestoreService.createOrUpdateUser(
+          uid: userCredential.user!.uid,
+          email: userCredential.user!.email,
+          displayName: displayName,
+          provider: 'email',
+        ).catchError((e) {
+          debugPrint('Error creating user in Firestore: $e');
+        });
+      }
+      
+      return userCredential;
+    } catch (e) {
+      debugPrint('Error signing up with email/password: $e');
+      rethrow;
+    }
+  }
+  
+  // Email/Password Sign In
+  Future<UserCredential?> signInWithEmailPassword(
+    String email,
+    String password,
+  ) async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      
+      // Update user in Firestore
+      if (userCredential.user != null) {
+        _firestoreService.createOrUpdateUser(
+          uid: userCredential.user!.uid,
+          email: userCredential.user!.email,
+          displayName: userCredential.user!.displayName,
+          provider: 'email',
+        ).catchError((e) {
+          debugPrint('Error updating user in Firestore: $e');
+        });
+      }
+      
+      return userCredential;
+    } catch (e) {
+      debugPrint('Error signing in with email/password: $e');
+      rethrow;
+    }
+  }
+  
+  // Password Reset
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      debugPrint('Error sending password reset email: $e');
+      rethrow;
+    }
+  }
 }
