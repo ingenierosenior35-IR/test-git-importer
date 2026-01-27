@@ -35,6 +35,8 @@ dependencies:
   # Image picker and permissions
   image_picker: ^1.0.7
   permission_handler: ^11.2.0
+  # Google Fonts for Urbanist
+  google_fonts: ^6.1.0
 dev_dependencies:
   flutter_test: 
     sdk: flutter

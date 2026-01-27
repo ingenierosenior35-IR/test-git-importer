@@ -8,6 +8,7 @@ import 'sign_up_screen.dart';
 import '../../services/auth_service.dart';
 import '../onboarding/sport_selection_screen.dart';
 import '../../routes/app_routes.dart';
+import 'otp_verification_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -18,7 +19,82 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   final AuthService _authService = Get.put(AuthService());
+  final TextEditingController _identityController = TextEditingController();
   bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _identityController.dispose();
+    super.dispose();
+  }
+
+  bool _isEmail(String input) {
+    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(input);
+  }
+
+  bool _isPhone(String input) {
+    // Remove spaces and check if it's a valid phone number
+    String cleaned = input.replaceAll(' ', '');
+    return RegExp(r'^\+?[0-9]{10,15}$').hasMatch(cleaned);
+  }
+
+  Future<void> _handleContinue() async {
+    String identity = _identityController.text.trim();
+    
+    if (identity.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Por favor ingresa tu teléfono o correo',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (_isEmail(identity)) {
+      // Email flow - navigate to sign in screen
+      Get.to(() => SignInScreen());
+    } else if (_isPhone(identity)) {
+      // Phone flow - send OTP
+      setState(() {
+        _isLoading = true;
+      });
+
+      // Format phone number with country code if not present
+      String phoneNumber = identity.startsWith('+') ? identity : '+1$identity';
+
+      await _authService.sendPhoneVerificationCode(
+        phoneNumber,
+        onCodeSent: (verificationId) {
+          setState(() {
+            _isLoading = false;
+          });
+          Get.to(() => OTPVerificationScreen(
+            phoneNumber: phoneNumber,
+            verificationId: verificationId,
+          ));
+        },
+        onError: (error) {
+          setState(() {
+            _isLoading = false;
+          });
+          Get.snackbar(
+            'Error',
+            error,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+        },
+      );
+    } else {
+      Get.snackbar(
+        'Error',
+        'Por favor ingresa un correo o teléfono válido',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
 
   Future<void> _handleGoogleSignIn() async {
     setState(() {
@@ -118,354 +194,220 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          // Blurred background image with yellow/lime and black tones
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.black,
-                    Color(0xFF1A1A00),
-                    Color(0xFF2D2D00),
-                    Colors.black,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(height: 40),
+                
+                // RIVAL Logo
+                Text(
+                  'RIVAL',
+                  style: TextStyle(
+                    color: Color(0xFFCDFF4D),
+                    fontSize: 56,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 2,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                
+                SizedBox(height: 60),
+                
+                // Main Label: "Crea tu identidad"
+                Text(
+                  'Crea tu identidad',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                
+                SizedBox(height: 32),
+                
+                // Single input field for phone or email
+                Container(
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF1E1E1E),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: TextField(
+                    controller: _identityController,
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      hintText: 'Teléfono o correo',
+                      hintStyle: TextStyle(color: Colors.grey, fontSize: 16),
+                      prefixIcon: Icon(Icons.phone_android, color: Colors.grey),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    ),
+                  ),
+                ),
+                
+                SizedBox(height: 16),
+                
+                // "Comenzar" button
+                ElevatedButton(
+                  onPressed: _isLoading ? null : _handleContinue,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFFCDFF4D),
+                    foregroundColor: Colors.black,
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    minimumSize: Size(double.infinity, 56),
+                  ),
+                  child: Text(
+                    _isLoading ? 'CARGANDO...' : 'Comenzar',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                
+                SizedBox(height: 32),
+                
+                // Divider with text
+                Row(
+                  children: [
+                    Expanded(
+                      child: Divider(
+                        color: Colors.grey[800],
+                        thickness: 1,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'O continuar con',
+                        style: TextStyle(
+                          color: Color(0xFF666666),
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Divider(
+                        color: Colors.grey[800],
+                        thickness: 1,
+                      ),
+                    ),
                   ],
                 ),
-              ),
-              child: Stack(
-                children: [
-                  // Credit card icon with blur effect to simulate background
-                  Positioned(
-                    top: 100,
-                    left: 40,
-                    child: Transform.rotate(
-                      angle: -0.2,
-                      child: Container(
-                        width: 120,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: Color(0xFFCDFF4D).withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(12),
+                
+                SizedBox(height: 24),
+                
+                // Google button
+                ElevatedButton(
+                  onPressed: _isLoading ? null : _handleGoogleSignIn,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF2C2C2C),
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    minimumSize: Size(double.infinity, 56),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomImageView(
+                        svgPath: ImageConstant.imgGooglepay1,
+                        height: 20,
+                        width: 20,
+                      ),
+                      SizedBox(width: 12),
+                      Text(
+                        'Continue with Google',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                  Positioned(
-                    top: 180,
-                    right: 30,
-                    child: Transform.rotate(
-                      angle: 0.3,
-                      child: Container(
-                        width: 100,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          color: Color(0xFFCDFF4D).withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(12),
+                ),
+                
+                SizedBox(height: 12),
+                
+                // Facebook button
+                ElevatedButton(
+                  onPressed: _isLoading ? null : _handleFacebookSignIn,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF2C2C2C),
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    minimumSize: Size(double.infinity, 56),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.facebook, color: Colors.blue, size: 24),
+                      SizedBox(width: 12),
+                      Text(
+                        'Continue with Facebook',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                  Positioned(
-                    bottom: 300,
-                    left: 60,
-                    child: Container(
-                      width: 80,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFCDFF4D).withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(12),
+                ),
+                
+                SizedBox(height: 12),
+                
+                // Apple button
+                ElevatedButton(
+                  onPressed: null, // Apple sign-in not implemented yet
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF2C2C2C),
+                    foregroundColor: Colors.white,
+                    disabledBackgroundColor: Color(0xFF2C2C2C).withOpacity(0.5),
+                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    minimumSize: Size(double.infinity, 56),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.apple, color: Colors.white, size: 24),
+                      SizedBox(width: 12),
+                      Text(
+                        'Continue with Apple',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                  // Blur effect overlay
-                  BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
-                    child: Container(
-                      color: Colors.black.withOpacity(0.3),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+                
+                SizedBox(height: 20),
+              ],
             ),
           ),
-          
-          // Bottom sheet modal content
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.95),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                ),
-                border: Border.all(
-                  color: Color(0xFFCDFF4D).withOpacity(0.3),
-                  width: 1,
-                ),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                ),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: SafeArea(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 30),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            // Drag handle
-                            Center(
-                              child: Container(
-                                width: 40,
-                                height: 4,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[700],
-                                  borderRadius: BorderRadius.circular(2),
-                                ),
-                              ),
-                            ),
-                            
-                            SizedBox(height: 30),
-                            
-                            // Logo icon placeholder
-                            Center(
-                              child: Icon(
-                                Icons.credit_card,
-                                size: 60,
-                                color: Color(0xFFCDFF4D),
-                              ),
-                            ),
-                            
-                            SizedBox(height: 24),
-                            
-                            // Title
-                            Text(
-                              'Welcome to airfly ✈️',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            
-                            SizedBox(height: 12),
-                            
-                            // Subtitle
-                            Text(
-                              'If you already have airfly account, enter your email below.',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            
-                            SizedBox(height: 32),
-                            
-                            // Continue with Email button
-                            ElevatedButton(
-                              onPressed: () {
-                                Get.to(() => SignInScreen());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFFCDFF4D),
-                                foregroundColor: Colors.black,
-                                padding: EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.email_outlined, color: Colors.black),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    'Continue with Email',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            
-                            SizedBox(height: 24),
-                            
-                            // Divider with text
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Divider(
-                                    color: Colors.grey[800],
-                                    thickness: 1,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 16),
-                                  child: Text(
-                                    'Sign in with',
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Divider(
-                                    color: Colors.grey[800],
-                                    thickness: 1,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            
-                            SizedBox(height: 24),
-                            
-                            // Google button
-                            ElevatedButton(
-                              onPressed: _isLoading ? null : _handleGoogleSignIn,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF1E1E1E),
-                                foregroundColor: Colors.white,
-                                padding: EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CustomImageView(
-                                    svgPath: ImageConstant.imgGooglepay1,
-                                    height: 20,
-                                    width: 20,
-                                  ),
-                                  SizedBox(width: 12),
-                                  Text(
-                                    'Continue with Google',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            
-                            SizedBox(height: 16),
-                            
-                            // Facebook button
-                            ElevatedButton(
-                              onPressed: _isLoading ? null : _handleFacebookSignIn,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF1E1E1E),
-                                foregroundColor: Colors.white,
-                                padding: EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.facebook, color: Colors.blue, size: 24),
-                                  SizedBox(width: 12),
-                                  Text(
-                                    'Continue with Facebook',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            
-                            SizedBox(height: 16),
-                            
-                            // Apple button
-                            ElevatedButton(
-                              onPressed: null, // Apple sign-in not implemented yet
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(0xFF1E1E1E),
-                                foregroundColor: Colors.white,
-                                padding: EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.apple, color: Colors.white, size: 24),
-                                  SizedBox(width: 12),
-                                  Text(
-                                    'Continue with Apple',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            
-                            SizedBox(height: 24),
-                            
-                            // Register link
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Don't have an account? ",
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.to(() => SignUpScreen());
-                                  },
-                                  child: Text(
-                                    'Register',
-                                    style: TextStyle(
-                                      color: Color(0xFFCDFF4D),
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            
-                            SizedBox(height: 20),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/app_export.dart';
 
 /// Helper class for managing themes and colors.
@@ -54,20 +55,20 @@ class ThemeHelper {
       useMaterial3: true,
       visualDensity: VisualDensity.standard,
       colorScheme: colorScheme,
+      fontFamily: GoogleFonts.urbanist().fontFamily,
       textTheme: TextThemes.textTheme(colorScheme),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: colorScheme.onPrimaryContainer.withOpacity(1),
+          textStyle: GoogleFonts.urbanist(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-              14,
-            ),
+            borderRadius: BorderRadius.circular(12),
           ),
-          visualDensity: const VisualDensity(
-            vertical: -4,
-            horizontal: -4,
-          ),
-          padding: EdgeInsets.zero,
+          minimumSize: Size(double.infinity, 56),
+          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
@@ -78,9 +79,7 @@ class ThemeHelper {
               color: colorScheme.primary,
               width: 1,
             ),
-            borderRadius: BorderRadius.circular(
-              16,
-            ),
+            borderRadius: BorderRadius.circular(12),
           ),
           visualDensity: const VisualDensity(
             vertical: -4,
@@ -133,64 +132,55 @@ class ThemeHelper {
 
 /// Class containing the supported text theme styles.
 class TextThemes {
-  static TextTheme textTheme(ColorScheme colorScheme) => TextTheme(
-        bodyLarge: TextStyle(
-          color: colorScheme.onPrimaryContainer.withOpacity(1),
-          fontSize: getFontSize(
-            16,
-          ),
-          fontFamily: 'SF Pro Display',
-          fontWeight: FontWeight.w400,
-        ),
-        bodyMedium: TextStyle(
-          color: colorScheme.onPrimaryContainer.withOpacity(1),
-          fontSize: getFontSize(
-            13,
-          ),
-          fontFamily: 'Uniform Pro Extra Condensed',
-          fontWeight: FontWeight.w400,
-        ),
-        bodySmall: TextStyle(
-          color: colorScheme.onPrimaryContainer.withOpacity(1),
-          fontSize: getFontSize(
-            12,
-          ),
-          fontFamily: 'SF Pro Display',
-          fontWeight: FontWeight.w400,
-        ),
-        displayMedium: TextStyle(
-          color: colorScheme.onPrimaryContainer.withOpacity(1),
-          fontSize: getFontSize(
-            40,
-          ),
-          fontFamily: 'Uniform Pro Extra Condensed',
-          fontWeight: FontWeight.w400,
-        ),
-        headlineMedium: TextStyle(
-          color: colorScheme.onPrimaryContainer.withOpacity(1),
-          fontSize: getFontSize(
-            28,
-          ),
-          fontFamily: 'Uniform Pro Extra Condensed',
-          fontWeight: FontWeight.w400,
-        ),
-        titleLarge: TextStyle(
-          color: colorScheme.onPrimaryContainer.withOpacity(1),
-          fontSize: getFontSize(
-            22,
-          ),
-          fontFamily: 'Uniform Pro Extra Condensed',
-          fontWeight: FontWeight.w400,
-        ),
-        titleMedium: TextStyle(
-          color: colorScheme.primary,
-          fontSize: getFontSize(
-            16,
-          ),
-          fontFamily: 'SF Pro Display',
-          fontWeight: FontWeight.w700,
-        ),
-      );
+  static TextTheme textTheme(ColorScheme colorScheme) => GoogleFonts.urbanistTextTheme(
+    TextTheme(
+      displayLarge: GoogleFonts.urbanist(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+      displayMedium: GoogleFonts.urbanist(
+        fontSize: 28,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+      titleLarge: GoogleFonts.urbanist(
+        fontSize: 24,
+        fontWeight: FontWeight.w600,
+        color: Colors.white,
+      ),
+      titleMedium: GoogleFonts.urbanist(
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+        color: Colors.white,
+      ),
+      bodyLarge: GoogleFonts.urbanist(
+        fontSize: 16,
+        fontWeight: FontWeight.normal,
+        color: colorScheme.onPrimaryContainer.withOpacity(1),
+      ),
+      bodyMedium: GoogleFonts.urbanist(
+        fontSize: 14,
+        fontWeight: FontWeight.normal,
+        color: colorScheme.onPrimaryContainer.withOpacity(1),
+      ),
+      bodySmall: GoogleFonts.urbanist(
+        fontSize: 12,
+        fontWeight: FontWeight.normal,
+        color: colorScheme.onPrimaryContainer.withOpacity(1),
+      ),
+      labelLarge: GoogleFonts.urbanist(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
+      headlineMedium: GoogleFonts.urbanist(
+        fontSize: 28,
+        fontWeight: FontWeight.w400,
+        color: colorScheme.onPrimaryContainer.withOpacity(1),
+      ),
+    ),
+  );
 }
 
 /// Class containing the supported color schemes.
