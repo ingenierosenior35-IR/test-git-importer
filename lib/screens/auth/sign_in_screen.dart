@@ -60,11 +60,19 @@ class _SignInScreenState extends State<SignInScreen> {
         } else {
           Get.offAll(() => const SportSelectionScreen());
         }
+      } else {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
       }
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
       Get.snackbar(
         'Error',
         'Failed to sign in: $e',

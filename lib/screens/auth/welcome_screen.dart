@@ -147,7 +147,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 
                 // Subtitle
                 Text(
-                  'If you are already have grocery account, enter your email below.',
+                  'If you already have grocery account, enter your email below.',
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 14,

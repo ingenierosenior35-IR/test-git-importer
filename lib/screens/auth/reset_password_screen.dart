@@ -146,7 +146,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 // Info message with email
                 RichText(
                   text: TextSpan(
-                    text: 'Code has been send to ',
+                    text: 'Code has been sent to ',
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: 14,

@@ -80,11 +80,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
         
         // Navigate to onboarding
         Get.offAll(() => const SportSelectionScreen());
+      } else {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
       }
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
       Get.snackbar(
         'Error',
         'Failed to create account: $e',
@@ -339,7 +347,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'have an account? ',
+                        'Already have an account? ',
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 14,
