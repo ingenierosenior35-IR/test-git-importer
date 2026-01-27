@@ -11,7 +11,7 @@ class CustomButtonStyles {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        minimumSize: Size(double.infinity, 56),
+        minimumSize: Size.fromHeight(56),
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
       );
   static ButtonStyle get fillOnPrimary => ElevatedButton.styleFrom(
@@ -19,7 +19,7 @@ class CustomButtonStyles {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        minimumSize: Size(double.infinity, 56),
+        minimumSize: Size.fromHeight(56),
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
       );
   static ButtonStyle get fillPrimary => ElevatedButton.styleFrom(
@@ -27,7 +27,7 @@ class CustomButtonStyles {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        minimumSize: Size(double.infinity, 56),
+        minimumSize: Size.fromHeight(56),
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
       );
   // text button style
@@ -42,7 +42,7 @@ class CustomButtonStyles {
       side: BorderSide(color: appTheme.buttonColor),
       borderRadius: BorderRadius.circular(12),
     ),
-    minimumSize: Size(double.infinity, 56),
+    minimumSize: Size.fromHeight(56),
     padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
   );
 }

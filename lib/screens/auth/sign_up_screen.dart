@@ -337,7 +337,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      minimumSize: Size(double.infinity, 56),
+                      minimumSize: Size.fromHeight(56),
                     ),
                     child: Text(
                       _isLoading ? 'LOADING...' : 'Signup',

@@ -29,12 +29,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   bool _isEmail(String input) {
-    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(input);
+    // More robust email validation
+    return RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(input);
   }
 
   bool _isPhone(String input) {
-    // Remove spaces and check if it's a valid phone number
-    String cleaned = input.replaceAll(' ', '');
+    // Remove spaces, dashes, parentheses and other formatting characters
+    String cleaned = input.replaceAll(RegExp(r'[\s\-\(\)]'), '');
     return RegExp(r'^\+?[0-9]{10,15}$').hasMatch(cleaned);
   }
 
@@ -52,7 +53,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     }
 
     if (_isEmail(identity)) {
-      // Email flow - navigate to sign in screen
+      // Email flow - navigate to sign in screen with email pre-filled
       Get.to(() => SignInScreen());
     } else if (_isPhone(identity)) {
       // Phone flow - send OTP
@@ -60,8 +61,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         _isLoading = true;
       });
 
-      // Format phone number with country code if not present
-      String phoneNumber = identity.startsWith('+') ? identity : '+1$identity';
+      // Clean phone number and format with country code
+      String cleanedPhone = identity.replaceAll(RegExp(r'[\s\-\(\)]'), '');
+      String phoneNumber = cleanedPhone.startsWith('+') ? cleanedPhone : '+$cleanedPhone';
 
       await _authService.sendPhoneVerificationCode(
         phoneNumber,
@@ -240,11 +242,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   child: TextField(
                     controller: _identityController,
                     style: TextStyle(color: Colors.white, fontSize: 16),
-                    keyboardType: TextInputType.emailAddress,
+                    keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       hintText: 'Teléfono o correo',
                       hintStyle: TextStyle(color: Colors.grey, fontSize: 16),
-                      prefixIcon: Icon(Icons.phone_android, color: Colors.grey),
+                      prefixIcon: Icon(Icons.person_outline, color: Colors.grey),
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     ),
@@ -263,7 +265,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    minimumSize: Size(double.infinity, 56),
+                    minimumSize: Size.fromHeight(56),
                   ),
                   child: Text(
                     _isLoading ? 'CARGANDO...' : 'Comenzar',
@@ -317,7 +319,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    minimumSize: Size(double.infinity, 56),
+                    minimumSize: Size.fromHeight(56),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -332,7 +334,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         'Continue with Google',
                         style: TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),
                       ),
@@ -352,7 +354,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    minimumSize: Size(double.infinity, 56),
+                    minimumSize: Size.fromHeight(56),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -363,7 +365,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         'Continue with Facebook',
                         style: TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),
                       ),
@@ -384,7 +386,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    minimumSize: Size(double.infinity, 56),
+                    minimumSize: Size.fromHeight(56),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -395,7 +397,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         'Continue with Apple',
                         style: TextStyle(
                           fontSize: 16,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),
                       ),
