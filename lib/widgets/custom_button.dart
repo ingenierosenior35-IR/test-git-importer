@@ -40,7 +40,7 @@ class CustomButton extends StatelessWidget {
         : Colors.black;
 
     return Container(
-      height: height ?? 54.0,
+      height: height ?? 56.0,
       width: width ?? double.infinity,
       margin: margin,
       child: ElevatedButton(
