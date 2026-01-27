@@ -247,73 +247,83 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                       const SizedBox(height: 48),
 
                       // Photo preview area
-                      GestureDetector(
-                        onTap: _photo == null ? _showImageSourceDialog : null,
-                        child: Container(
-                          width: 200,
-                          height: 200,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF2C2C2C),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: const Color(0xFF3C3C3C),
-                              width: 2,
+                      Semantics(
+                        label: _photo == null 
+                            ? 'Add profile photo. Tap to upload.' 
+                            : 'Profile photo uploaded. Tap to change.',
+                        button: true,
+                        child: GestureDetector(
+                          onTap: _photo == null ? _showImageSourceDialog : null,
+                          child: Container(
+                            width: 200,
+                            height: 200,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF2C2C2C),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: const Color(0xFF3C3C3C),
+                                width: 2,
+                              ),
                             ),
-                          ),
-                          child: _photo == null
-                              ? Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.add_a_photo_outlined,
-                                      size: 64,
-                                      color: Colors.grey[600],
-                                    ),
-                                    const SizedBox(height: 16),
-                                    Text(
-                                      'Add Photo',
-                                      style: TextStyle(
-                                        fontSize: 16,
+                            child: _photo == null
+                                ? Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.add_a_photo_outlined,
+                                        size: 64,
                                         color: Colors.grey[600],
                                       ),
-                                    ),
-                                  ],
-                                )
-                              : Stack(
-                                  children: [
-                                    // Image
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(16),
-                                      child: Image.file(
-                                        _photo!,
-                                        width: double.infinity,
-                                        height: double.infinity,
-                                        fit: BoxFit.cover,
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        'Add Photo',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.grey[600],
+                                        ),
                                       ),
-                                    ),
+                                    ],
+                                  )
+                                : Stack(
+                                    children: [
+                                      // Image
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: Image.file(
+                                          _photo!,
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
 
-                                    // Remove button
-                                    Positioned(
-                                      top: 8,
-                                      right: 8,
-                                      child: GestureDetector(
-                                        onTap: _removePhoto,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(6),
-                                          decoration: BoxDecoration(
-                                            color: Colors.black.withOpacity(0.6),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: const Icon(
-                                            Icons.close,
-                                            size: 20,
-                                            color: Colors.white,
+                                      // Remove button
+                                      Positioned(
+                                        top: 8,
+                                        right: 8,
+                                        child: Semantics(
+                                          label: 'Remove photo',
+                                          button: true,
+                                          child: GestureDetector(
+                                            onTap: _removePhoto,
+                                            child: Container(
+                                              padding: const EdgeInsets.all(6),
+                                              decoration: BoxDecoration(
+                                                color: Colors.black.withOpacity(0.6),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: const Icon(
+                                                Icons.close,
+                                                size: 20,
+                                                color: Colors.white,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
+                                    ],
+                                  ),
+                          ),
                         ),
                       ),
 

@@ -26,11 +26,26 @@ class _MeasurementsScreenState extends State<MeasurementsScreen> {
   // Height  
   int _heightCm = 170;
 
-  // Generate weight options (30-150 kg)
-  List<int> get _weightOptions => List.generate(121, (index) => 30 + index);
+  // Generate weight options based on unit
+  List<int> get _weightOptions {
+    if (_weightUnit == 'kg') {
+      return List.generate(171, (index) => 30 + index); // 30-200 kg
+    } else {
+      return List.generate(376, (index) => 66 + index); // 66-440 lbs (30-200 kg converted)
+    }
+  }
   
-  // Generate height options (140-220 cm)
-  List<int> get _heightOptions => List.generate(81, (index) => 140 + index);
+  // Generate height options (100-250 cm for inclusivity)
+  List<int> get _heightOptions => List.generate(151, (index) => 100 + index);
+  
+  // Get current weight value in the selected unit
+  int get _currentWeight {
+    if (_weightUnit == 'kg') {
+      return _weightKg;
+    } else {
+      return (_weightKg * 2.20462).round(); // Convert kg to lbs
+    }
+  }
 
   void _toggleWeightUnit() {
     setState(() {
@@ -38,6 +53,16 @@ class _MeasurementsScreenState extends State<MeasurementsScreen> {
         _weightUnit = 'lb';
       } else {
         _weightUnit = 'kg';
+      }
+    });
+  }
+  
+  void _onWeightChanged(int value) {
+    setState(() {
+      if (_weightUnit == 'kg') {
+        _weightKg = value;
+      } else {
+        _weightKg = (value / 2.20462).round(); // Convert lbs to kg
       }
     });
   }
@@ -148,13 +173,9 @@ class _MeasurementsScreenState extends State<MeasurementsScreen> {
                       // Weight Picker
                       ScrollPicker(
                         items: _weightOptions,
-                        initialItem: _weightKg,
-                        suffix: ' kg',
-                        onSelectedItemChanged: (value) {
-                          setState(() {
-                            _weightKg = value;
-                          });
-                        },
+                        initialItem: _currentWeight,
+                        suffix: _weightUnit == 'kg' ? ' kg' : ' lb',
+                        onSelectedItemChanged: _onWeightChanged,
                       ),
 
                       const SizedBox(height: 16),

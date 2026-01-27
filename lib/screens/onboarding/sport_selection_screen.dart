@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/sport_chip.dart';
 import '../../services/auth_service.dart';
+import '../../routes/app_routes.dart';
 import 'gender_selection_screen.dart';
 
 class SportSelectionScreen extends StatefulWidget {
@@ -18,13 +19,13 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
 
   final List<Map<String, dynamic>> _sports = [
     {'name': 'Running', 'icon': Icons.directions_run},
-    {'name': 'Trail Running', 'icon': Icons.terrain},
+    {'name': 'Trail Running', 'icon': Icons.hiking},
     {'name': 'Basketball', 'icon': Icons.sports_basketball},
     {'name': 'Baseball', 'icon': Icons.sports_baseball},
     {'name': 'Roller Skating', 'icon': Icons.roller_skating},
     {'name': 'Volleyball', 'icon': Icons.sports_volleyball},
     {'name': 'Swimming', 'icon': Icons.pool},
-    {'name': 'Climbing', 'icon': Icons.terrain},
+    {'name': 'Climbing', 'icon': Icons.landscape},
     {'name': 'Football', 'icon': Icons.sports_soccer},
     {'name': 'Tennis', 'icon': Icons.sports_tennis},
     {'name': 'Cycling', 'icon': Icons.directions_bike},
@@ -44,7 +45,7 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
       
       if (onboardingCompleted && mounted) {
         debugPrint('✅ Onboarding already completed, redirecting to home');
-        Get.offAllNamed('/home_container_screen');
+        Get.offAllNamed(AppRoutes.homeContainerScreen);
       }
     } catch (e) {
       debugPrint('⚠️ Error checking onboarding status: $e');
