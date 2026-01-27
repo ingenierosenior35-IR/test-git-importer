@@ -42,7 +42,7 @@ class _ScrollPickerState extends State<ScrollPicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: widget.itemHeight * widget.visibleItemCount,
       child: Stack(
         children: [
