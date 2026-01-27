@@ -182,178 +182,134 @@ class _IdentityScreenState extends State<IdentityScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          // Blurred background
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.black.withOpacity(0.8),
-                  Colors.black.withOpacity(0.95),
-                ],
-              ),
-            ),
-          ),
-          // Modal sheet
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFF1E1E1E),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(32),
-                  topRight: Radius.circular(32),
-                ),
-              ),
-              child: SafeArea(
-                top: false,
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 16),
-                        
-                        // Logo "Rival"
-                        const Text(
-                          'RIVAL',
-                          style: TextStyle(
-                            fontSize: 36,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFFCDFF4D),
-                            letterSpacing: 4,
-                          ),
-                        ),
-                        
-                        const SizedBox(height: 32),
-                        
-                        // Title
-                        const Text(
-                          'Crea tu identidad',
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        
-                        const SizedBox(height: 12),
-                        
-                        // Subtitle
-                        const Text(
-                          'Todo jugador tiene una historia.',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        
-                        const SizedBox(height: 32),
-                        
-                        // Phone/Email Input Field
-                        TextField(
-                          controller: _phoneEmailController,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: 'Teléfono o correo',
-                            hintStyle: TextStyle(color: Colors.grey[600]),
-                            filled: true,
-                            fillColor: const Color(0xFF2C2C2C),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 18,
-                            ),
-                          ),
-                          keyboardType: TextInputType.emailAddress,
-                        ),
-                        
-                        const SizedBox(height: 20),
-                        
-                        // "Comenzar" Button
-                        CustomButton(
-                          text: 'Comenzar',
-                          onPressed: _handleContinueWithPhoneEmail,
-                          isLoading: _isLoading,
-                          height: 54,
-                        ),
-                        
-                        const SizedBox(height: 32),
-                        
-                        // Divider with "Sign in with"
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Divider(
-                                color: Colors.grey[700],
-                                thickness: 1,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: Text(
-                                'Sign in with',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Divider(
-                                color: Colors.grey[700],
-                                thickness: 1,
-                              ),
-                            ),
-                          ],
-                        ),
-                        
-                        const SizedBox(height: 24),
-                        
-                        // Google Sign In Button
-                        SocialLoginButton(
-                          provider: SocialLoginProvider.google,
-                          onPressed: _handleGoogleSignIn,
-                          isLoading: _isGoogleLoading,
-                        ),
-                        
-                        const SizedBox(height: 12),
-                        
-                        // Facebook Sign In Button
-                        SocialLoginButton(
-                          provider: SocialLoginProvider.facebook,
-                          onPressed: _handleFacebookSignIn,
-                          isLoading: _isFacebookLoading,
-                        ),
-                        
-                        const SizedBox(height: 12),
-                        
-                        // Apple Sign In Button
-                        SocialLoginButton(
-                          provider: SocialLoginProvider.apple,
-                          onPressed: _handleAppleSignIn,
-                          isLoading: _isAppleLoading,
-                        ),
-                        
-                        const SizedBox(height: 24),
-                      ],
-                    ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 40),
+                
+                // Logo "Rival" at the top
+                const Text(
+                  'RIVAL',
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFFCDFF4D),
+                    letterSpacing: 4,
                   ),
                 ),
-              ),
+                
+                const SizedBox(height: 60),
+                
+                // Title
+                const Text(
+                  'Crea tu identidad',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                
+                const SizedBox(height: 32),
+                
+                // Phone/Email Input Field
+                TextField(
+                  controller: _phoneEmailController,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: 'Teléfono o correo',
+                    hintStyle: TextStyle(color: Colors.grey[600]),
+                    filled: true,
+                    fillColor: const Color(0xFF1E1E1E),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 18,
+                    ),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                
+                const SizedBox(height: 20),
+                
+                // "Comenzar" Button - Large and prominent
+                CustomButton(
+                  text: 'Comenzar',
+                  onPressed: _handleContinueWithPhoneEmail,
+                  isLoading: _isLoading,
+                  height: 56,
+                ),
+                
+                const SizedBox(height: 40),
+                
+                // Divider with "O continuar con"
+                Row(
+                  children: [
+                    Expanded(
+                      child: Divider(
+                        color: Colors.grey[700],
+                        thickness: 1,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'O continuar con',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Divider(
+                        color: Colors.grey[700],
+                        thickness: 1,
+                      ),
+                    ),
+                  ],
+                ),
+                
+                const SizedBox(height: 24),
+                
+                // Google Sign In Button
+                SocialLoginButton(
+                  provider: SocialLoginProvider.google,
+                  onPressed: _handleGoogleSignIn,
+                  isLoading: _isGoogleLoading,
+                ),
+                
+                const SizedBox(height: 12),
+                
+                // Facebook Sign In Button
+                SocialLoginButton(
+                  provider: SocialLoginProvider.facebook,
+                  onPressed: _handleFacebookSignIn,
+                  isLoading: _isFacebookLoading,
+                ),
+                
+                const SizedBox(height: 12),
+                
+                // Apple Sign In Button
+                SocialLoginButton(
+                  provider: SocialLoginProvider.apple,
+                  onPressed: _handleAppleSignIn,
+                  isLoading: _isAppleLoading,
+                ),
+                
+                const SizedBox(height: 40),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

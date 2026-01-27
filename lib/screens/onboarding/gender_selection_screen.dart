@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/custom_button.dart';
-import 'measurements_screen.dart';
+import 'height_screen.dart';
 
 class GenderSelectionScreen extends StatefulWidget {
   final List<String> selectedSports;
@@ -53,7 +53,7 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
       return;
     }
 
-    Get.to(() => MeasurementsScreen(
+    Get.to(() => HeightScreen(
       selectedSports: widget.selectedSports,
       selectedGender: _selectedGender!,
     ));
@@ -115,23 +115,22 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
 
                       const SizedBox(height: 40),
 
-                      // Gender buttons - Male and Female side by side
+                      // Gender buttons - All 3 in a single horizontal row
                       Row(
                         children: [
                           Expanded(
                             child: _buildGenderButton(_genders[0]), // Male
                           ),
-                          const SizedBox(width: 16),
+                          const SizedBox(width: 12),
                           Expanded(
                             child: _buildGenderButton(_genders[1]), // Female
                           ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _buildGenderButton(_genders[2]), // Prefer not to say
+                          ),
                         ],
                       ),
-
-                      const SizedBox(height: 16),
-
-                      // "Prefiero no decir" button (full width)
-                      _buildGenderButton(_genders[2]),
 
                       const SizedBox(height: 24),
 
@@ -171,12 +170,12 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
     return GestureDetector(
       onTap: () => _selectGender(gender['name']),
       child: Container(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
         decoration: BoxDecoration(
           color: isSelected
               ? const Color(0xFFCDFF4D).withOpacity(0.15)
               : const Color(0xFF2C2C2C),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
                 ? const Color(0xFFCDFF4D)
@@ -185,11 +184,12 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
           ),
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             // Icon
             Container(
-              width: 64,
-              height: 64,
+              width: 48,
+              height: 48,
               decoration: BoxDecoration(
                 color: isSelected
                     ? const Color(0xFFCDFF4D)
@@ -198,22 +198,24 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
               ),
               child: Icon(
                 gender['icon'],
-                size: 36,
+                size: 28,
                 color: isSelected ? Colors.black : Colors.white,
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
 
             // Label
             Text(
               gender['label'],
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 12,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                 color: isSelected ? const Color(0xFFCDFF4D) : Colors.white,
               ),
               textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

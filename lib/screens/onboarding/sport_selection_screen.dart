@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/custom_button.dart';
-import '../../widgets/sport_chip.dart';
+import '../../widgets/sport_card.dart';
 import '../../services/auth_service.dart';
 import '../../routes/app_routes.dart';
 import 'gender_selection_screen.dart';
@@ -142,25 +142,25 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
 
                       const SizedBox(height: 32),
 
-                      // Sports grid (3 columns)
+                      // Sports grid (2 columns with large square cards)
                       GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                          childAspectRatio: 2.5,
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 1.0, // Square cards
                         ),
                         itemCount: _sports.length,
                         itemBuilder: (context, index) {
                           final sport = _sports[index];
                           final isSelected = _selectedSports.contains(sport['name']);
 
-                          return SportChip(
+                          return SportCard(
                             label: sport['name'],
-                            isSelected: isSelected,
                             icon: sport['icon'],
+                            isSelected: isSelected,
                             onTap: () => _toggleSport(sport['name']),
                           );
                         },
