@@ -176,7 +176,7 @@ class AuthService extends GetxService {
     try {
       await _auth.signOut();
       await _googleSignIn.signOut();
-      await FacebookAuth.instance. logOut();
+      await FacebookAuth.instance.logOut();
       
       // Navigate to WelcomeScreen after logout
       Get.offAllNamed(AppRoutes.welcomeScreen);

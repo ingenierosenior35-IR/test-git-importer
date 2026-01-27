@@ -443,7 +443,8 @@ class ProfilePage extends StatelessWidget {
                                                 .bodyLargeUniformProExtraCondensedOnErrorContainer,
                                             onTap: () async {
                                               customBottomBarController.getIndex(0);
-                                              PrefUtils.setIsSignIn(true);
+                                              PrefUtils.setIsSignIn(false); // Mark user as not signed in
+                                              Get.back(); // Close the dialog first
                                               // Call AuthService signOut which will handle navigation to WelcomeScreen
                                               final AuthService authService = Get.find<AuthService>();
                                               await authService.signOut();
