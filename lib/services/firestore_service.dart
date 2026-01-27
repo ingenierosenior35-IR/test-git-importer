@@ -23,7 +23,7 @@ class FirestoreService {
       if (doc.exists) {
         // Update existing user
         await userDoc.update({
-          'lastLogin': FieldValue. serverTimestamp(),
+          'lastLogin': FieldValue.serverTimestamp(),
           if (phoneNumber != null) 'phoneNumber': phoneNumber,
           if (email != null) 'email': email,
           if (displayName != null) 'displayName': displayName,
@@ -53,7 +53,7 @@ class FirestoreService {
   Future<bool> isPhoneNumberRegistered(String phoneNumber) async {
     try {
       QuerySnapshot querySnapshot = await usersCollection
-          . where('phoneNumber', isEqualTo: phoneNumber)
+          .where('phoneNumber', isEqualTo: phoneNumber)
           .limit(1)
           .get();
       
@@ -126,9 +126,9 @@ class FirestoreService {
         'gender': gender,
         'height': height,
         'weight': weight,
-        'profilePhotos': profilePhotos ??  [],
+        'profilePhotos': profilePhotos ?? [],
         'onboardingCompleted': true,  // ← SOLO AQUÍ se pone en true
-        'profileCompletedAt': FieldValue. serverTimestamp(),
+        'profileCompletedAt': FieldValue.serverTimestamp(),
       });
       debugPrint('✅ Onboarding data saved successfully');
     } catch (e) {

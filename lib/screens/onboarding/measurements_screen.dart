@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../core/app_export.dart';
-import '../../widgets/custom_elevated_button.dart';
+import '../../widgets/custom_button.dart';
+import '../../widgets/scroll_picker.dart';
 import 'photo_upload_screen.dart';
 
 class MeasurementsScreen extends StatefulWidget {
@@ -19,397 +19,216 @@ class MeasurementsScreen extends StatefulWidget {
 }
 
 class _MeasurementsScreenState extends State<MeasurementsScreen> {
-  // Height
-  String _heightUnit = 'cm';
-  double _heightCm = 170.0;
-  int _heightFeet = 5;
-  int _heightInches = 7;
-
   // Weight
   String _weightUnit = 'kg';
-  double _weightKg = 70.0;
-  double _weightLbs = 154.0;
+  int _weightKg = 70;
+  
+  // Height  
+  int _heightCm = 170;
 
-  // Height range: 100-250 cm / 3'3"-8'2"
-  static const double minHeightCm = 100.0;
-  static const double maxHeightCm = 250.0;
-
-  // Weight range: 30-300 kg / 66-660 lbs
-  static const double minWeightKg = 30.0;
-  static const double maxWeightKg = 300.0;
-
-  void _toggleHeightUnit() {
-    setState(() {
-      if (_heightUnit == 'cm') {
-        // Convert cm to feet/inches
-        double totalInches = _heightCm / 2.54;
-        _heightFeet = (totalInches / 12).floor();
-        _heightInches = (totalInches % 12).round();
-        _heightUnit = 'ft-in';
-      } else {
-        // Convert feet/inches to cm
-        double totalInches = (_heightFeet * 12) + _heightInches.toDouble();
-        _heightCm = totalInches * 2.54;
-        _heightUnit = 'cm';
-      }
-    });
+  // Generate weight options based on unit
+  List<int> get _weightOptions {
+    if (_weightUnit == 'kg') {
+      return List.generate(171, (index) => 30 + index); // 30-200 kg
+    } else {
+      return List.generate(376, (index) => 66 + index); // 66-440 lbs (30-200 kg converted)
+    }
+  }
+  
+  // Generate height options (100-250 cm for inclusivity)
+  List<int> get _heightOptions => List.generate(151, (index) => 100 + index);
+  
+  // Get current weight value in the selected unit
+  int get _currentWeight {
+    if (_weightUnit == 'kg') {
+      return _weightKg;
+    } else {
+      return (_weightKg * 2.20462).round(); // Convert kg to lbs
+    }
   }
 
   void _toggleWeightUnit() {
     setState(() {
       if (_weightUnit == 'kg') {
-        _weightLbs = _weightKg * 2.20462;
-        _weightUnit = 'lbs';
+        _weightUnit = 'lb';
       } else {
-        _weightKg = _weightLbs / 2.20462;
         _weightUnit = 'kg';
+      }
+    });
+  }
+  
+  void _onWeightChanged(int value) {
+    setState(() {
+      if (_weightUnit == 'kg') {
+        _weightKg = value;
+      } else {
+        _weightKg = (value / 2.20462).round(); // Convert lbs to kg
       }
     });
   }
 
   void _continue() {
-    // Validate ranges
-    if (_heightCm < minHeightCm || _heightCm > maxHeightCm) {
-      Get.snackbar(
-        'Invalid Height',
-        'Please enter a valid height (100-250 cm)',
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
-      return;
-    }
-
-    if (_weightKg < minWeightKg || _weightKg > maxWeightKg) {
-      Get.snackbar(
-        'Invalid Weight',
-        'Please enter a valid weight (30-300 kg)',
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
-      return;
-    }
-
-    // Prepare height and weight data (normalized to cm and kg)
+    // Prepare data
     Map<String, dynamic> height = {
-      'value': _heightCm,
+      'value': _heightCm.toDouble(),
       'unit': 'cm',
-      'displayUnit': _heightUnit, // Store preferred display unit
     };
 
     Map<String, dynamic> weight = {
-      'value': _weightKg,
+      'value': _weightKg.toDouble(),
       'unit': 'kg',
-      'displayUnit': _weightUnit, // Store preferred display unit
     };
 
-    // Navigate to photo upload screen
     Get.to(() => PhotoUploadScreen(
-          selectedSports: widget.selectedSports,
-          selectedGender: widget.selectedGender,
-          height: height,
-          weight: weight,
-        ));
+      selectedSports: widget.selectedSports,
+      selectedGender: widget.selectedGender,
+      height: height,
+      weight: weight,
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: theme.colorScheme.onErrorContainer,
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: theme.colorScheme.onErrorContainer,
+        backgroundColor: Colors.black,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Get.back(),
         ),
       ),
       body: SafeArea(
         child: Column(
           children: [
-            // Progress indicator
-            Padding(
-              padding: getPadding(all: 20),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: LinearProgressIndicator(
-                      value: 0.75,
-                      backgroundColor: Colors.grey[300],
-                      color: theme.colorScheme.primary,
-                      minHeight: 4,
-                    ),
-                  ),
-                  SizedBox(width: getHorizontalSize(12)),
-                  Text(
-                    '3/4',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: getPadding(all: 20),
+                  padding: const EdgeInsets.all(24.0),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       // Title
-                      Text(
-                        'Tell us about yourself',
-                        style: theme.textTheme.headlineLarge?.copyWith(
+                      const Text(
+                        'Tus atributos de juego',
+                        style: TextStyle(
+                          fontSize: 28,
                           fontWeight: FontWeight.bold,
-                        ),
-                      ),
-
-                      SizedBox(height: getVerticalSize(8)),
-
-                      Text(
-                        'Help us personalize your workout plans',
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: Colors.grey,
-                        ),
-                      ),
-
-                      SizedBox(height: getVerticalSize(40)),
-
-                      // Height Section
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Height',
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: _toggleHeightUnit,
-                            child: Container(
-                              padding: getPadding(
-                                left: 12,
-                                right: 12,
-                                top: 6,
-                                bottom: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.primary
-                                    .withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: theme.colorScheme.primary,
-                                ),
-                              ),
-                              child: Text(
-                                _heightUnit,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: theme.colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: getVerticalSize(16)),
-
-                      // Height display and slider
-                      Container(
-                        padding: getPadding(all: 24),
-                        decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
                         ),
-                        child: Column(
-                          children: [
-                            // Display value
-                            Text(
-                              _heightUnit == 'cm'
-                                  ? '${_heightCm.toStringAsFixed(0)} cm'
-                                  : '$_heightFeet\' $_heightInches"',
-                              style: theme.textTheme.displaySmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: theme.colorScheme.primary,
-                              ),
-                            ),
+                        textAlign: TextAlign.center,
+                      ),
 
-                            SizedBox(height: getVerticalSize(16)),
+                      const SizedBox(height: 12),
 
-                            // Slider
-                            if (_heightUnit == 'cm')
-                              Slider(
-                                value: _heightCm,
-                                min: minHeightCm,
-                                max: maxHeightCm,
-                                divisions: 150,
-                                activeColor: theme.colorScheme.primary,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _heightCm = value;
-                                  });
-                                },
-                              )
-                            else
-                              Column(
-                                children: [
-                                  // Feet slider
-                                  Row(
-                                    children: [
-                                      Text('Feet: ',
-                                          style: theme.textTheme.bodyMedium),
-                                      Expanded(
-                                        child: Slider(
-                                          value: _heightFeet.toDouble(),
-                                          min: 3,
-                                          max: 8,
-                                          divisions: 5,
-                                          activeColor:
-                                              theme.colorScheme.primary,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _heightFeet = value.toInt();
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  // Inches slider
-                                  Row(
-                                    children: [
-                                      Text('Inches: ',
-                                          style: theme.textTheme.bodyMedium),
-                                      Expanded(
-                                        child: Slider(
-                                          value: _heightInches.toDouble(),
-                                          min: 0,
-                                          max: 11,
-                                          divisions: 11,
-                                          activeColor:
-                                              theme.colorScheme.primary,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              _heightInches = value.toInt();
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                          ],
+                      // Subtitle
+                      Text(
+                        'Estos números ayudan a calibrar tu avatar.',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey[400],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+
+                      const SizedBox(height: 32),
+
+                      // Central icon (balance/scale)
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF2C2C2C),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: const Color(0xFF3C3C3C),
+                            width: 2,
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.monitor_weight_outlined,
+                          size: 40,
+                          color: Colors.grey[600],
                         ),
                       ),
 
-                      SizedBox(height: getVerticalSize(32)),
+                      const SizedBox(height: 40),
 
                       // Weight Section
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "What's your weight",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      // Weight Picker
+                      ScrollPicker(
+                        items: _weightOptions,
+                        initialItem: _currentWeight,
+                        suffix: _weightUnit == 'kg' ? ' kg' : ' lb',
+                        onSelectedItemChanged: _onWeightChanged,
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      // Kg/Lb Toggle
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            'Weight',
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: _toggleWeightUnit,
-                            child: Container(
-                              padding: getPadding(
-                                left: 12,
-                                right: 12,
-                                top: 6,
-                                bottom: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: theme.colorScheme.primary
-                                    .withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: theme.colorScheme.primary,
-                                ),
-                              ),
-                              child: Text(
-                                _weightUnit,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: theme.colorScheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
+                          _buildUnitToggle('Kg', _weightUnit == 'kg'),
+                          const SizedBox(width: 12),
+                          _buildUnitToggle('Lb', _weightUnit == 'lb'),
                         ],
                       ),
 
-                      SizedBox(height: getVerticalSize(16)),
+                      const SizedBox(height: 40),
 
-                      // Weight display and slider
-                      Container(
-                        padding: getPadding(all: 24),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
+                      // Height Section
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Altura',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
-                        child: Column(
-                          children: [
-                            // Display value
-                            Text(
-                              _weightUnit == 'kg'
-                                  ? '${_weightKg.toStringAsFixed(1)} kg'
-                                  : '${_weightLbs.toStringAsFixed(1)} lbs',
-                              style: theme.textTheme.displaySmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: theme.colorScheme.primary,
-                              ),
-                            ),
+                      ),
 
-                            SizedBox(height: getVerticalSize(16)),
+                      const SizedBox(height: 24),
 
-                            // Slider
-                            Slider(
-                              value: _weightUnit == 'kg'
-                                  ? _weightKg
-                                  : _weightLbs,
-                              min: _weightUnit == 'kg'
-                                  ? minWeightKg
-                                  : minWeightKg * 2.20462,
-                              max: _weightUnit == 'kg'
-                                  ? maxWeightKg
-                                  : maxWeightKg * 2.20462,
-                              divisions: 270,
-                              activeColor: theme.colorScheme.primary,
-                              onChanged: (value) {
-                                setState(() {
-                                  if (_weightUnit == 'kg') {
-                                    _weightKg = value;
-                                  } else {
-                                    _weightLbs = value;
-                                  }
-                                });
-                              },
-                            ),
-                          ],
+                      // Height Picker
+                      ScrollPicker(
+                        items: _heightOptions,
+                        initialItem: _heightCm,
+                        suffix: ' cm',
+                        onSelectedItemChanged: (value) {
+                          setState(() {
+                            _heightCm = value;
+                          });
+                        },
+                      ),
+
+                      const SizedBox(height: 32),
+
+                      // Microcopy
+                      Text(
+                        'Cada jugador tiene sus números.',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),
@@ -419,17 +238,46 @@ class _MeasurementsScreenState extends State<MeasurementsScreen> {
 
             // Continue button
             Padding(
-              padding: getPadding(all: 20),
-              child: CustomElevatedButton(
-                height: getVerticalSize(54),
-                text: 'CONTINUE',
-                buttonStyle: CustomButtonStyles.fillPrimary,
-                buttonTextStyle: CustomTextStyles
-                    .bodyLargeUniformProExtraCondensedOnErrorContainer,
-                onTap: _continue,
+              padding: const EdgeInsets.all(24.0),
+              child: CustomButton(
+                text: 'Continue',
+                onPressed: _continue,
+                height: 54,
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUnitToggle(String unit, bool isSelected) {
+    return GestureDetector(
+      onTap: _toggleWeightUnit,
+      child: Container(
+        width: 60,
+        height: 60,
+        decoration: BoxDecoration(
+          color: isSelected 
+              ? const Color(0xFFCDFF4D) 
+              : const Color(0xFF2C2C2C),
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: isSelected 
+                ? const Color(0xFFCDFF4D) 
+                : const Color(0xFF3C3C3C),
+            width: 2,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            unit,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: isSelected ? Colors.black : Colors.white,
+            ),
+          ),
         ),
       ),
     );
