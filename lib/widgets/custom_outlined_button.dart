@@ -51,7 +51,7 @@ class CustomOutlinedButton extends BaseButton {
   }
 
   Widget get buildOutlinedButtonWidget => Container(
-        height: height ?? getVerticalSize(54),
+        height: height ?? 56,
         width: width ?? double.maxFinite,
         margin: margin,
         decoration: decoration,

@@ -9,20 +9,26 @@ class CustomButtonStyles {
   static ButtonStyle get fillOnErrorContainer => ElevatedButton.styleFrom(
         backgroundColor: theme.colorScheme.onErrorContainer,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(getHorizontalSize(15.00)),
+          borderRadius: BorderRadius.circular(12),
         ),
+        minimumSize: Size.fromHeight(56),
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
       );
   static ButtonStyle get fillOnPrimary => ElevatedButton.styleFrom(
         backgroundColor: theme.colorScheme.onPrimary,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(getHorizontalSize(16.00)),
+          borderRadius: BorderRadius.circular(12),
         ),
+        minimumSize: Size.fromHeight(56),
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
       );
   static ButtonStyle get fillPrimary => ElevatedButton.styleFrom(
         backgroundColor: theme.colorScheme.primary,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(getHorizontalSize(16.00)),
+          borderRadius: BorderRadius.circular(12),
         ),
+        minimumSize: Size.fromHeight(56),
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
       );
   // text button style
   static ButtonStyle get none => ButtonStyle(
@@ -34,7 +40,9 @@ class CustomButtonStyles {
     backgroundColor: Colors.transparent,
     shape: RoundedRectangleBorder(
       side: BorderSide(color: appTheme.buttonColor),
-      borderRadius: BorderRadius.circular(getHorizontalSize(16.00)),
+      borderRadius: BorderRadius.circular(12),
     ),
+    minimumSize: Size.fromHeight(56),
+    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
   );
 }

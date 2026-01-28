@@ -243,10 +243,11 @@ class _SignInScreenState extends State<SignInScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFFCDFF4D),
                       foregroundColor: Colors.black,
-                      padding: EdgeInsets.symmetric(vertical: 16),
+                      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
+                      minimumSize: Size.fromHeight(56),
                     ),
                     child: Text(
                       _isLoading ? 'LOADING...' : 'Sign In',
