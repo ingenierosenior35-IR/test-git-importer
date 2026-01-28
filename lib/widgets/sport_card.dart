@@ -31,36 +31,40 @@ class SportCard extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            // Card content
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Large icon
-                  Icon(
-                    icon,
-                    size: 48,
-                    color: isSelected 
-                        ? const Color(0xFFCDFF4D) 
-                        : Colors.grey[400],
-                  ),
-                  
-                  const SizedBox(height: 12),
-                  
-                  // Sport name
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                      color: isSelected ? Colors.white : Colors.grey[400],
+            // Card content - Centrado completo
+            Center(  // ← Agregado Center para centrar todo
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,  // ← Agregado para ocupar solo espacio necesario
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,  // ← Agregado para centrar horizontalmente
+                  children: [
+                    // Large icon
+                    Icon(
+                      icon,
+                      size: 40,
+                      color: isSelected 
+                          ? const Color(0xFFCDFF4D) 
+                          : Colors.grey[400],
                     ),
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+                    
+                    const SizedBox(height: 8),
+                    
+                    // Sport name
+                    Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                        color: isSelected ? Colors.white : Colors.grey[400],
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
               ),
             ),
             
@@ -70,15 +74,15 @@ class SportCard extends StatelessWidget {
                 top: 8,
                 right: 8,
                 child: Container(
-                  width: 24,
-                  height: 24,
+                  width: 22,
+                  height: 22,
                   decoration: BoxDecoration(
                     color: const Color(0xFFCDFF4D),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     Icons.check,
-                    size: 16,
+                    size: 14,
                     color: Colors.black,
                   ),
                 ),

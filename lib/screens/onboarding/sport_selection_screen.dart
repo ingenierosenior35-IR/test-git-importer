@@ -147,10 +147,10 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                          childAspectRatio: 1.0, // Square cards
+                          crossAxisCount: 3,  
+                          crossAxisSpacing: 12,  
+                          mainAxisSpacing: 12,  
+                          childAspectRatio: 1.0, 
                         ),
                         itemCount: _sports.length,
                         itemBuilder: (context, index) {
