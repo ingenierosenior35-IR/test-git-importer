@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, prefer_const_literals_to_create_immutables, deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 
 // ignore: must_be_immutable
 class CustomBottomBar extends StatelessWidget {

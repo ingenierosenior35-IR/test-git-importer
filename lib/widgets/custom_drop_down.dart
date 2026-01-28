@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors_in_immutables
 
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 
 class CustomDropDown extends StatelessWidget {
   CustomDropDown({

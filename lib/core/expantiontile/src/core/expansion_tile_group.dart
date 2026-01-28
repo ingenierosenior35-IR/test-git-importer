@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/expantiontile/src/core/toggle_type.dart';
+import 'package:Rival/core/expantiontile/src/core/toggle_type.dart';
 
 import '../types/expansion_tile_item.dart';
 import 'expansion_tile_custom.dart';

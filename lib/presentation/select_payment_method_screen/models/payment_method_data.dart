@@ -1,5 +1,5 @@
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/select_payment_method_screen/models/select_payment_method_model.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/select_payment_method_screen/models/select_payment_method_model.dart';
 
 class PaymentMethosData{
   static List<SelectPaymentMethodModel> getPaymentMethodData(){

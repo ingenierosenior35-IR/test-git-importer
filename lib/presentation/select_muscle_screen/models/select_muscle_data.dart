@@ -1,4 +1,4 @@
-import 'package:gym_app/presentation/select_muscle_screen/models/select_muscle_model.dart';
+import 'package:Rival/presentation/select_muscle_screen/models/select_muscle_model.dart';
 
 import '../../../core/utils/image_constant.dart';
 

@@ -1,4 +1,4 @@
-import 'package:gym_app/core/app_export.dart';import 'package:gym_app/presentation/home_container_screen/models/home_container_model.dart';/// A controller class for the HomeContainerScreen.
+import 'package:Rival/core/app_export.dart';import 'package:Rival/presentation/home_container_screen/models/home_container_model.dart';/// A controller class for the HomeContainerScreen.
 ///
 /// This class manages the state of the HomeContainerScreen, including the
 /// current homeContainerModelObj

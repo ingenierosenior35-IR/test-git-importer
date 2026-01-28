@@ -4,7 +4,7 @@ library expandable_page_view;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/expandable_pageview/src/size_reporting_widget.dart';
+import 'package:Rival/core/expandable_pageview/src/size_reporting_widget.dart';
 
 typedef WidgetBuilder = Widget Function(BuildContext context, int index);
 

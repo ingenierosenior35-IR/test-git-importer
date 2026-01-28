@@ -1,7 +1,7 @@
 import '../controller/week_one_controller.dart';
 import '../models/dayexercise_item_model.dart';
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 
 // ignore: must_be_immutable
 class DayexerciseItemWidget extends StatelessWidget {

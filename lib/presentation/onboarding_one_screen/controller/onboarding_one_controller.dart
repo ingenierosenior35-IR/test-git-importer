@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/onboarding_one_screen/models/onboarding_one_model.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/onboarding_one_screen/models/onboarding_one_model.dart';
 
 import '../models/workoutanywhere_item_model.dart';
 

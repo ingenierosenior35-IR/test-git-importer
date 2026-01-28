@@ -1,5 +1,5 @@
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/health_tips_screen/models/health_tips_model.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/health_tips_screen/models/health_tips_model.dart';
 
 import '../models/healthdefinitio_item_model.dart';
 

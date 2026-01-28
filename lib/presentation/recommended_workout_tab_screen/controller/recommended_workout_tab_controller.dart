@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// A controller class for the RecommendedWorkoutTabContainerScreen.
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 
 ///
 /// This class manages the state of the RecommendedWorkoutTabContainerScreen, including the

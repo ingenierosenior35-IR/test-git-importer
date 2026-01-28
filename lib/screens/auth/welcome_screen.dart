@@ -9,7 +9,6 @@ import 'otp_verification_screen.dart';
 import '../../services/auth_service.dart';
 import '../onboarding/sport_selection_screen.dart';
 import '../../routes/app_routes.dart';
-import 'otp_verification_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -31,7 +30,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   bool isEmail(String input) {
-    // More permissive email regex that supports longer TLDs
     return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$').hasMatch(input);
   }
 
@@ -85,10 +83,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 _isLoading = false;
               });
             }
-            // Navigate to OTP verification screen
+            // Navigate to OTP verification screen with correct parameters
             Get.to(() => OTPVerificationScreen(
-              identifier: phoneNumber,
-              isPhone: true,
+              identifier: phoneNumber,  // Changed from phoneNumber to identifier
+              isPhone: true,  // Added required parameter
               verificationId: verificationId,
             ));
           },
@@ -117,82 +115,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           _isLoading = false;
         });
       }
-    }
-  }
-
-  @override
-  void dispose() {
-    _identityController.dispose();
-    super.dispose();
-  }
-
-  bool _isEmail(String input) {
-    // More robust email validation
-    return RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(input);
-  }
-
-  bool _isPhone(String input) {
-    // Remove spaces, dashes, parentheses and other formatting characters
-    String cleaned = input.replaceAll(RegExp(r'[\s\-\(\)]'), '');
-    return RegExp(r'^\+?[0-9]{10,15}$').hasMatch(cleaned);
-  }
-
-  Future<void> _handleContinue() async {
-    String identity = _identityController.text.trim();
-    
-    if (identity.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Por favor ingresa tu teléfono o correo',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-      return;
-    }
-
-    if (_isEmail(identity)) {
-      // Email flow - navigate to sign in screen with email pre-filled
-      Get.to(() => SignInScreen());
-    } else if (_isPhone(identity)) {
-      // Phone flow - send OTP
-      setState(() {
-        _isLoading = true;
-      });
-
-      // Clean phone number and format with country code
-      String cleanedPhone = identity.replaceAll(RegExp(r'[\s\-\(\)]'), '');
-      String phoneNumber = cleanedPhone.startsWith('+') ? cleanedPhone : '+$cleanedPhone';
-
-      await _authService.sendPhoneVerificationCode(
-        phoneNumber,
-        onCodeSent: (verificationId) {
-          setState(() {
-            _isLoading = false;
-          });
-          Get.to(() => OTPVerificationScreen(
-            phoneNumber: phoneNumber,
-            verificationId: verificationId,
-          ));
-        },
-        onError: (error) {
-          setState(() {
-            _isLoading = false;
-          });
-          Get.snackbar(
-            'Error',
-            error,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-          );
-        },
-      );
-    } else {
-      Get.snackbar(
-        'Error',
-        'Por favor ingresa un correo o teléfono válido',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
     }
   }
 
@@ -424,10 +346,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 
                 SizedBox(height: 12),
                 
-                // Apple button
+                // Apple button - Changed from null to empty callback
                 SocialLoginButton(
                   provider: SocialLoginProvider.apple,
-                  onPressed: null, // Apple sign-in not implemented yet
+                  onPressed: () {
+                    // Apple sign-in not implemented yet
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Apple sign-in coming soon'),
+                        backgroundColor: Colors.orange,
+                      ),
+                    );
+                  },
                   isLoading: false,
                 ),
                 

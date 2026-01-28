@@ -1,14 +1,14 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/choose_level_popup_screen/choose_level_popup_screen.dart';
-import 'package:gym_app/presentation/find_a_workout_plan_goal_screen/find_a_workout_plan_choose_goal_screen.dart';
-import 'package:gym_app/presentation/find_a_workout_plan_number_weeks_screen/find_a_workout_plan_number_weeks_screen.dart';
-import 'package:gym_app/widgets/app_bar/appbar_image.dart';
-import 'package:gym_app/widgets/app_bar/appbar_title.dart';
-import 'package:gym_app/widgets/app_bar/custom_app_bar.dart';
-import 'package:gym_app/widgets/custom_elevated_button.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/choose_level_popup_screen/choose_level_popup_screen.dart';
+import 'package:Rival/presentation/find_a_workout_plan_goal_screen/find_a_workout_plan_choose_goal_screen.dart';
+import 'package:Rival/presentation/find_a_workout_plan_number_weeks_screen/find_a_workout_plan_number_weeks_screen.dart';
+import 'package:Rival/widgets/app_bar/appbar_image.dart';
+import 'package:Rival/widgets/app_bar/appbar_title.dart';
+import 'package:Rival/widgets/app_bar/custom_app_bar.dart';
+import 'package:Rival/widgets/custom_elevated_button.dart';
 
 import '../../chhose_number_of_week/number_of_hour_dialogue.dart';
 import 'controller/find_a_workout_plan_one_controller.dart';

@@ -1,5 +1,5 @@
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/password_changed_popup_screen/models/password_changed_popup_model.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/password_changed_popup_screen/models/password_changed_popup_model.dart';
 
 /// A controller class for the PasswordChangedPopupScreen.
 ///

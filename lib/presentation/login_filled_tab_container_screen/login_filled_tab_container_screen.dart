@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/signup_page/signup_page.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/signup_page/signup_page.dart';
 
 import '../login_filled_page/login_filled_page.dart';
 import 'controller/login_filled_tab_container_controller.dart';

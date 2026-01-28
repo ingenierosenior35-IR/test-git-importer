@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:gym_app/routes/app_routes.dart';
-import 'package:gym_app/theme/theme_helper.dart';
+import 'package:Rival/routes/app_routes.dart';
+import 'package:Rival/theme/theme_helper.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'core/utils/initial_bindings.dart';
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
       locale: Get.deviceLocale, //for setting localization strings
       // ignore: prefer_const_constructors
       fallbackLocale: Locale('en', 'US'),
-      title: 'gym_app',
+      title: 'Rival',
       initialBinding: InitialBindings(),
       initialRoute: AppRoutes.initialRoute,
       onGenerateRoute: (settings) {

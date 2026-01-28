@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 
 import '../chest_home_exercise_page/widgets/chestworkout_item_widget.dart';
 import 'controller/chest_home_exercise_controller.dart';

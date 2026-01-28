@@ -1,13 +1,13 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/chest_gym_exercise_page/chest_gym_exercise_page.dart';
-import 'package:gym_app/presentation/chest_home_exercise_page/chest_home_exercise_page.dart';
-import 'package:gym_app/presentation/chest_stretches_page/chest_stretches_page.dart';
-import 'package:gym_app/widgets/app_bar/appbar_image.dart';
-import 'package:gym_app/widgets/app_bar/appbar_title.dart';
-import 'package:gym_app/widgets/app_bar/custom_app_bar.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/chest_gym_exercise_page/chest_gym_exercise_page.dart';
+import 'package:Rival/presentation/chest_home_exercise_page/chest_home_exercise_page.dart';
+import 'package:Rival/presentation/chest_stretches_page/chest_stretches_page.dart';
+import 'package:Rival/widgets/app_bar/appbar_image.dart';
+import 'package:Rival/widgets/app_bar/appbar_title.dart';
+import 'package:Rival/widgets/app_bar/custom_app_bar.dart';
 
 import 'controller/recommended_workout_tab_controller.dart';
 

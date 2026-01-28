@@ -1,6 +1,6 @@
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/detail_gym_page/models/detail_gym_model.dart';
-import 'package:gym_app/presentation/full_workout_plan_screen/models/full_workout_plan_model.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/detail_gym_page/models/detail_gym_model.dart';
+import 'package:Rival/presentation/full_workout_plan_screen/models/full_workout_plan_model.dart';
 
 import '../models/full_workout_plan_screen_data.dart';
 import '../models/more_related_exercise_data_model.dart';

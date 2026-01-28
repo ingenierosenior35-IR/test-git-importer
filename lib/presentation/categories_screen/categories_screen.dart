@@ -1,13 +1,13 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/challenges_page/challenges_page.dart';
-import 'package:gym_app/presentation/exercise_screen/exercise_screen.dart';
-import 'package:gym_app/presentation/health_tips_screen/health_tips_screen.dart';
-import 'package:gym_app/widgets/app_bar/appbar_image.dart';
-import 'package:gym_app/widgets/app_bar/appbar_title.dart';
-import 'package:gym_app/widgets/app_bar/custom_app_bar.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/challenges_page/challenges_page.dart';
+import 'package:Rival/presentation/exercise_screen/exercise_screen.dart';
+import 'package:Rival/presentation/health_tips_screen/health_tips_screen.dart';
+import 'package:Rival/widgets/app_bar/appbar_image.dart';
+import 'package:Rival/widgets/app_bar/appbar_title.dart';
+import 'package:Rival/widgets/app_bar/custom_app_bar.dart';
 
 import '../categories_screen/widgets/healthtips1_item_widget.dart';
 import '../workout_plan_page/workout_plan_page.dart';

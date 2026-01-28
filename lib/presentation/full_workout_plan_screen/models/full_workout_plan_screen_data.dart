@@ -1,4 +1,4 @@
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 
 import 'full_workout_plan_model.dart';
 import 'more_related_exercise_data_model.dart';

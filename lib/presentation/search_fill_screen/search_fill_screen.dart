@@ -1,10 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/search_fill_screen/models/search_fill_model.dart';
-import 'package:gym_app/widgets/app_bar/appbar_edittext.dart';
-import 'package:gym_app/widgets/app_bar/appbar_subtitle.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/search_fill_screen/models/search_fill_model.dart';
+import 'package:Rival/widgets/app_bar/appbar_edittext.dart';
+import 'package:Rival/widgets/app_bar/appbar_subtitle.dart';
 
 import 'controller/search_fill_controller.dart';
 

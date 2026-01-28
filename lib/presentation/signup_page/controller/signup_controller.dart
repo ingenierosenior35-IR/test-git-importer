@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 /// A controller class for the SignupPage.
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/signup_page/models/signup_model.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/signup_page/models/signup_model.dart';
 
 ///
 /// This class manages the state of the SignupPage, including the

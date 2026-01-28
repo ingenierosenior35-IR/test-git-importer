@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 /// A controller class for the LoginFilledPage.
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/login_filled_page/models/login_filled_model.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/login_filled_page/models/login_filled_model.dart';
 
 ///
 /// This class manages the state of the LoginFilledPage, including the

@@ -1,4 +1,4 @@
-import 'package:gym_app/core/app_export.dart';import 'package:gym_app/presentation/feedback_screen/models/feedback_model.dart';import 'package:flutter/material.dart';/// A controller class for the FeedbackScreen.
+import 'package:Rival/core/app_export.dart';import 'package:Rival/presentation/feedback_screen/models/feedback_model.dart';import 'package:flutter/material.dart';/// A controller class for the FeedbackScreen.
 ///
 /// This class manages the state of the FeedbackScreen, including the
 /// current feedbackModelObj

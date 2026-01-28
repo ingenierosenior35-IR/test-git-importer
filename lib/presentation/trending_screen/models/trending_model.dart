@@ -1,4 +1,4 @@
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 
 import 'trending_item_model.dart';
 

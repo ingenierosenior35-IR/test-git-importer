@@ -1,4 +1,4 @@
-import 'package:gym_app/core/app_export.dart';import 'package:gym_app/presentation/add_new_card_screen/models/add_new_card_model.dart';import 'package:flutter/material.dart';/// A controller class for the AddNewCardScreen.
+import 'package:Rival/core/app_export.dart';import 'package:Rival/presentation/add_new_card_screen/models/add_new_card_model.dart';import 'package:flutter/material.dart';/// A controller class for the AddNewCardScreen.
 ///
 /// This class manages the state of the AddNewCardScreen, including the
 /// current addNewCardModelObj

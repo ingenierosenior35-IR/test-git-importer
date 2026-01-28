@@ -1,14 +1,14 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/core/utils/validation_functions.dart';
-import 'package:gym_app/widgets/app_bar/appbar_image.dart';
-import 'package:gym_app/widgets/app_bar/appbar_title.dart';
-import 'package:gym_app/widgets/app_bar/custom_app_bar.dart';
-import 'package:gym_app/widgets/custom_drop_down.dart';
-import 'package:gym_app/widgets/custom_elevated_button.dart';
-import 'package:gym_app/widgets/custom_text_form_field.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/core/utils/validation_functions.dart';
+import 'package:Rival/widgets/app_bar/appbar_image.dart';
+import 'package:Rival/widgets/app_bar/appbar_title.dart';
+import 'package:Rival/widgets/app_bar/custom_app_bar.dart';
+import 'package:Rival/widgets/custom_drop_down.dart';
+import 'package:Rival/widgets/custom_elevated_button.dart';
+import 'package:Rival/widgets/custom_text_form_field.dart';
 
 import 'controller/add_new_card_controller.dart';
 

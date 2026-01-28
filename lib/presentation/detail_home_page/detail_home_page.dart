@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_constructors_in_immutables, deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/widgets/custom_icon_button.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/widgets/custom_icon_button.dart';
 
 import '../detail_gym_page/models/detail_gym_model.dart';
 import '../full_workout_plan_screen/controller/full_workout_plan_controller.dart';

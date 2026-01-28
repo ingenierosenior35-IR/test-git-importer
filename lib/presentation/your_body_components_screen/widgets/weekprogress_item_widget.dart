@@ -1,7 +1,7 @@
 import '../controller/your_body_components_controller.dart';
 import '../models/weekprogress_item_model.dart';
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 
 // ignore: must_be_immutable
 class WeekprogressItemWidget extends StatelessWidget {

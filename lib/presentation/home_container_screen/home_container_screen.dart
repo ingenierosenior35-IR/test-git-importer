@@ -1,10 +1,10 @@
 // ignore_for_file: unreachable_switch_default, deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/home_page/home_page.dart';
-import 'package:gym_app/presentation/workout_plan_page/workout_plan_page.dart';
-import 'package:gym_app/widgets/custom_bottom_bar.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/home_page/home_page.dart';
+import 'package:Rival/presentation/workout_plan_page/workout_plan_page.dart';
+import 'package:Rival/widgets/custom_bottom_bar.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../challenges_page/challenges_page.dart';
 import '../profile_page/profile_page.dart';

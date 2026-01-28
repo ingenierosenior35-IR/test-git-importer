@@ -1,4 +1,4 @@
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 
 import '../models/chest_gym_exercise_model.dart';
 import '../models/chest_gym_item_model.dart';

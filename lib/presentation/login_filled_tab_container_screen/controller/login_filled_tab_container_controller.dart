@@ -1,5 +1,5 @@
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/login_filled_tab_container_screen/models/login_filled_tab_container_model.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/login_filled_tab_container_screen/models/login_filled_tab_container_model.dart';
 import 'package:flutter/material.dart';
 
 /// A controller class for the LoginFilledTabContainerScreen.

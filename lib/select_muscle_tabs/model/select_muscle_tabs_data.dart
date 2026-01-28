@@ -1,4 +1,4 @@
-import 'package:gym_app/select_muscle_tabs/model/select_muscle_tabs_data_model.dart';
+import 'package:Rival/select_muscle_tabs/model/select_muscle_tabs_data_model.dart';
 
 import '../../core/utils/image_constant.dart';
 

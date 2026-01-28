@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 
 import '../find_a_workout_plan_one_screen/controller/find_a_workout_plan_one_controller.dart';
 import 'controller/choose_level_popup_controller.dart';

@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/widgets/custom_icon_button.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/widgets/custom_icon_button.dart';
 
 import '../../widgets/app_bar/appbar_edittext.dart';
 import '../blog_screen/controller/blog_controller.dart';

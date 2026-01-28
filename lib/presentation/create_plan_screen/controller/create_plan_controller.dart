@@ -1,4 +1,4 @@
-import 'package:gym_app/core/app_export.dart';import 'package:gym_app/presentation/create_plan_screen/models/create_plan_model.dart';import 'package:flutter/material.dart';/// A controller class for the CreatePlanScreen.
+import 'package:Rival/core/app_export.dart';import 'package:Rival/presentation/create_plan_screen/models/create_plan_model.dart';import 'package:flutter/material.dart';/// A controller class for the CreatePlanScreen.
 ///
 /// This class manages the state of the CreatePlanScreen, including the
 /// current createPlanModelObj

@@ -2,8 +2,8 @@
 
 import 'controller/confirm_payment_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/widgets/custom_elevated_button.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/widgets/custom_elevated_button.dart';
 
 
 

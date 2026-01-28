@@ -2,7 +2,7 @@ import '../../widgets/custom_bottom_bar.dart';
 import '../../widgets/custom_elevated_button.dart';
 import 'controller/profile_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 import '../../services/auth_service.dart';
 
 // ignore: must_be_immutable

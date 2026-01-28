@@ -1,4 +1,4 @@
-import 'package:gym_app/core/app_export.dart';import 'package:gym_app/presentation/app_navigation_screen/models/app_navigation_model.dart';/// A controller class for the AppNavigationScreen.
+import 'package:Rival/core/app_export.dart';import 'package:Rival/presentation/app_navigation_screen/models/app_navigation_model.dart';/// A controller class for the AppNavigationScreen.
 ///
 /// This class manages the state of the AppNavigationScreen, including the
 /// current appNavigationModelObj

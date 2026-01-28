@@ -1,7 +1,7 @@
 
 /// A controller class for the WorkoutPlanPage.
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/workout_plan_page/models/workout_plan_model.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/workout_plan_page/models/workout_plan_model.dart';
 
 import '../models/workout_plan_data.dart';
 

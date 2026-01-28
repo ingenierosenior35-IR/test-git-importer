@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 import 'controller/splash_controller.dart';
 
 

@@ -4,7 +4,7 @@ import '../chest_gym_exercise_page/widgets/chest_gym_item_widget.dart';
 import 'controller/chest_gym_exercise_controller.dart';
 import 'models/chest_gym_item_model.dart';
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 
 
 

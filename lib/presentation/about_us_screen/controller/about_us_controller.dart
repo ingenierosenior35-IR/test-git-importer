@@ -1,4 +1,4 @@
-import 'package:gym_app/core/app_export.dart';import 'package:gym_app/presentation/about_us_screen/models/about_us_model.dart';/// A controller class for the AboutUsScreen.
+import 'package:Rival/core/app_export.dart';import 'package:Rival/presentation/about_us_screen/models/about_us_model.dart';/// A controller class for the AboutUsScreen.
 ///
 /// This class manages the state of the AboutUsScreen, including the
 /// current aboutUsModelObj

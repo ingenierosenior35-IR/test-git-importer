@@ -1,5 +1,5 @@
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/recommended_workout_one_screen/models/recommended_workout_one_model.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/recommended_workout_one_screen/models/recommended_workout_one_model.dart';
 
 class RecommendedData{
   static List<RecommendedWorkoutOneModel> getRecommendedData(){

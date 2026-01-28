@@ -1,5 +1,5 @@
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/find_a_workout_plan_one_screen/models/find_a_workout_plan_one_model.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/find_a_workout_plan_one_screen/models/find_a_workout_plan_one_model.dart';
 
 /// A controller class for the FindAWorkoutPlanOneScreen.
 ///

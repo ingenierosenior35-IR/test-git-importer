@@ -1,5 +1,5 @@
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/detail_gym_page/models/detail_gym_model.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/detail_gym_page/models/detail_gym_model.dart';
 
 import '../models/detail_gym_data.dart';
 

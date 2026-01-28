@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gym_app/widgets/app_bar/custom_app_bar.dart';
+import 'package:Rival/widgets/app_bar/custom_app_bar.dart';
 
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/size_utils.dart';

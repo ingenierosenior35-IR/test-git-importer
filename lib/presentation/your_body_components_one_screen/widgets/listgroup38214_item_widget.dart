@@ -3,7 +3,7 @@ import '../models/listgroup38214_item_model.dart';
 import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:another_stepper/widgets/another_stepper.dart';
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 
 // ignore: must_be_immutable
 class Listgroup38214ItemWidget extends StatelessWidget {

@@ -30,7 +30,7 @@ flutter pub get
 ### 3. Register Android App
 
 1. In Firebase project, click the Android icon
-2. Enter package name: `com.gymapp.app`
+2. Enter package name: `com.rivalclub.app`
 3. Enter app nickname: "Gym App Android"
 4. Click "Register app"
 5. Download `google-services.json`
@@ -50,7 +50,7 @@ Copy the SHA-1 fingerprint and add it in Firebase Console:
 ### 5. Register iOS App
 
 1. In Firebase project, click the iOS icon
-2. Enter bundle ID: `com.gymapp.app`
+2. Enter bundle ID: `com.rivalclub.app`
 3. Enter app nickname: "Gym App iOS"
 4. Click "Register app"
 5. Download `GoogleService-Info.plist`

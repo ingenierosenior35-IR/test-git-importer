@@ -1,4 +1,4 @@
-package com.gymapp.app
+package com.rivalclub.app
 
 import io.flutter.embedding.android.FlutterActivity
 

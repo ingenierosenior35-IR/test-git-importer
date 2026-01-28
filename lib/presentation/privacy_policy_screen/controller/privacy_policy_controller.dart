@@ -1,4 +1,4 @@
-import 'package:gym_app/core/app_export.dart';import 'package:gym_app/presentation/privacy_policy_screen/models/privacy_policy_model.dart';/// A controller class for the PrivacyPolicyScreen.
+import 'package:Rival/core/app_export.dart';import 'package:Rival/presentation/privacy_policy_screen/models/privacy_policy_model.dart';/// A controller class for the PrivacyPolicyScreen.
 ///
 /// This class manages the state of the PrivacyPolicyScreen, including the
 /// current privacyPolicyModelObj

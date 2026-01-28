@@ -1,4 +1,4 @@
-import 'package:gym_app/core/app_export.dart';import 'package:gym_app/presentation/home_page/models/home_model.dart';import 'package:flutter/material.dart';/// A controller class for the HomePage.
+import 'package:Rival/core/app_export.dart';import 'package:Rival/presentation/home_page/models/home_model.dart';import 'package:flutter/material.dart';/// A controller class for the HomePage.
 ///
 /// This class manages the state of the HomePage, including the
 /// current homeModelObj

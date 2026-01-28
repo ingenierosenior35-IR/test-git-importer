@@ -1,4 +1,4 @@
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 
 import '../../detail_gym_page/models/detail_gym_model.dart';
 import '../models/datail_home_data.dart';

@@ -1,10 +1,10 @@
 import 'controller/login_controller.dart';
 import 'models/login_model.dart';
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/core/utils/validation_functions.dart';
-import 'package:gym_app/widgets/custom_elevated_button.dart';
-import 'package:gym_app/widgets/custom_text_form_field.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/core/utils/validation_functions.dart';
+import 'package:Rival/widgets/custom_elevated_button.dart';
+import 'package:Rival/widgets/custom_text_form_field.dart';
 
 // ignore_for_file: must_be_immutable
 class LoginPage extends StatelessWidget {

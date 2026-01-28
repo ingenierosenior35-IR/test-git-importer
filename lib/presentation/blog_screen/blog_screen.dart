@@ -1,10 +1,10 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/widgets/app_bar/appbar_image.dart';
-import 'package:gym_app/widgets/app_bar/appbar_title.dart';
-import 'package:gym_app/widgets/app_bar/custom_app_bar.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/widgets/app_bar/appbar_image.dart';
+import 'package:Rival/widgets/app_bar/appbar_title.dart';
+import 'package:Rival/widgets/app_bar/custom_app_bar.dart';
 
 import '../blog_screen/widgets/blog_item_widget.dart';
 import 'controller/blog_controller.dart';

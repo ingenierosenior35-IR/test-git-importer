@@ -37,7 +37,7 @@ This document explains how to configure Firebase for the gym app with authentica
 ### 1. Register Android App
 
 1. In Firebase Console, click "Add app" and select Android
-2. Enter package name: `com.gymapp.app`
+2. Enter package name: `com.rivalclub.app`
 3. Download the `google-services.json` file
 4. Replace the placeholder file at `android/app/google-services.json` with the downloaded file
 
@@ -70,7 +70,7 @@ The following have already been configured in `android/app/build.gradle`:
 ### 1. Register iOS App
 
 1. In Firebase Console, click "Add app" and select iOS
-2. Enter bundle ID: `com.gymapp.app`
+2. Enter bundle ID: `com.rivalclub.app`
 3. Download the `GoogleService-Info.plist` file
 4. Replace the placeholder file at `ios/Runner/GoogleService-Info.plist` with the downloaded file
 

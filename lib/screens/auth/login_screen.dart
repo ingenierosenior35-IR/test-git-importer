@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+// Removed: import 'package:get/get.dart'; - unnecessary import
 import 'package:intl_phone_field/intl_phone_field.dart';
 import '../../services/auth_service.dart';
 import '../../core/app_export.dart';
@@ -11,7 +11,7 @@ import '../onboarding/sport_selection_screen.dart';
 /// The app flow now uses WelcomeScreen as the initial authentication screen.
 /// This file is kept for backward compatibility but should not be actively used.
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key?  key}) : super(key: key);
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
         'Error',
         'Please enter a valid phone number',
         backgroundColor: Colors.red,
-        colorText: Colors. white,
+        colorText: Colors.white,
       );
       return;
     }
@@ -51,20 +51,21 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      await _authService. sendPhoneVerificationCode(
+      await _authService.sendPhoneVerificationCode(
         _completePhoneNumber,
         onCodeSent: (verificationId) {
           setState(() {
             _isLoading = false;
           });
           
-          // Navigate to OTP verification screen
+          // Navigate to OTP verification screen with correct parameters
           Get.to(() => OTPVerificationScreen(
-            phoneNumber: _completePhoneNumber,
-            verificationId:  verificationId,
+            identifier: _completePhoneNumber,  // Changed from phoneNumber to identifier
+            isPhone: true,  // Added required parameter
+            verificationId: verificationId,
           ));
         },
-        onError:  (error) {
+        onError: (error) {
           setState(() {
             _isLoading = false;
           });
@@ -83,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Get.snackbar(
         'Error',
         'Failed to send verification code: $e',
-        backgroundColor: Colors. red,
+        backgroundColor: Colors.red,
         colorText: Colors.white,
       );
     }
@@ -108,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Get.snackbar(
           'Success',
           'Signed in successfully',
-          backgroundColor:  Colors.green,
+          backgroundColor: Colors.green,
           colorText: Colors.white,
         );
         
@@ -133,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
         'Error',
         'Failed to sign in with Google: $e',
         backgroundColor: Colors.red,
-        colorText: Colors. white,
+        colorText: Colors.white,
       );
     }
   }
@@ -181,7 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Get.snackbar(
         'Error',
         'Failed to sign in with Facebook: $e',
-        backgroundColor: Colors. red,
+        backgroundColor: Colors.red,
         colorText: Colors.white,
       );
     }
@@ -194,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: getPadding(all:  20),
+            padding: getPadding(all: 20),
             child: Form(
               key: _formKey,
               child: Column(
@@ -212,13 +213,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   
-                  SizedBox(height:  getVerticalSize(40)),
+                  SizedBox(height: getVerticalSize(40)),
                   
                   // Title
                   Text(
                     'Welcome Back!',
                     style: theme.textTheme.headlineLarge?.copyWith(
-                      fontWeight: FontWeight. bold,
+                      fontWeight: FontWeight.bold,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -227,8 +228,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   
                   Text(
                     'Sign in to continue',
-                    style: theme. textTheme.bodyLarge?. copyWith(
-                      color:  Colors.grey,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      color: Colors.grey,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -239,23 +240,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   IntlPhoneField(
                     controller: _phoneController,
                     style: const TextStyle(
-                      color: Colors.black, // ← Texto negro
+                      color: Colors.black,
                       fontSize: 16,
                     ),
                     decoration: InputDecoration(
-                      labelText:  'Phone Number',
+                      labelText: 'Phone Number',
                       labelStyle: TextStyle(
                         color: Colors.grey[700],
                       ),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius. circular(8),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                       filled: true,
                       fillColor: Colors.white,
                     ),
                     initialCountryCode: 'US',
                     dropdownTextStyle: const TextStyle(
-                      color:  Colors.black, // ← Texto del dropdown negro
+                      color: Colors.black,
                     ),
                     onChanged: (phone) {
                       _completePhoneNumber = phone.completeNumber;
@@ -266,8 +267,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   
                   // Login button
                   CustomElevatedButton(
-                    height:  getVerticalSize(54),
-                    text: _isLoading ? 'LOADING...' :  'LOGIN',
+                    height: getVerticalSize(54),
+                    text: _isLoading ? 'LOADING...' : 'LOGIN',
                     buttonStyle: CustomButtonStyles.fillPrimary,
                     buttonTextStyle: CustomTextStyles.bodyLargeUniformProExtraCondensedOnErrorContainer,
                     onTap: _isLoading ? null : _handlePhoneLogin,
@@ -285,8 +286,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       Padding(
-                        padding: getPadding(left: 16, right:  16),
-                        child:  Text(
+                        padding: getPadding(left: 16, right: 16),
+                        child: Text(
                           'Or continue with',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: Colors.grey,
@@ -295,16 +296,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       Expanded(
                         child: Divider(
-                          color: Colors. grey[300],
+                          color: Colors.grey[300],
                           thickness: 1,
                         ),
                       ),
                     ],
                   ),
                   
-                  SizedBox(height:  getVerticalSize(30)),
+                  SizedBox(height: getVerticalSize(30)),
                   
-                  // Social Login Buttons - Circular and side by side
+                  // Social Login Buttons
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -319,7 +320,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Colors.white,
                         ),
                         child: IconButton(
-                          onPressed: _isLoading ?  null : _handleGoogleSignIn,
+                          onPressed: _isLoading ? null : _handleGoogleSignIn,
                           icon: CustomImageView(
                             svgPath: ImageConstant.imgGooglepay1,
                             height: getSize(28),
@@ -330,7 +331,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       
-                      SizedBox(width:  getHorizontalSize(24)),
+                      SizedBox(width: getHorizontalSize(24)),
                       
                       // Facebook Sign In Button
                       Container(
@@ -343,14 +344,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Colors.white,
                         ),
                         child: IconButton(
-                          onPressed: _isLoading ?  null : _handleFacebookSignIn,
+                          onPressed: _isLoading ? null : _handleFacebookSignIn,
                           icon: Icon(
                             Icons.facebook,
                             color: Colors.blue[800],
                             size: getSize(28),
                           ),
                           iconSize: getSize(60),
-                          padding:  EdgeInsets.all(getSize(16)),
+                          padding: EdgeInsets.all(getSize(16)),
                         ),
                       ),
                     ],

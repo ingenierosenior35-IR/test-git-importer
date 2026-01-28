@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "400358892932-qsbj54cll4havdb0uatmen8pciq166su.apps.googleusercontent.com",
+          "client_id": "400358892932-l3rju2tf08ui7atigi3tv130dbpfihln.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.rivalclub.app",
-            "certificate_hash": "b8dafa163cd62f8d748db028d898a3cb32d07a37"
+            "certificate_hash": "3c440af8b548c01aa8f7cc4897621001082df1bb"
           }
         },
         {

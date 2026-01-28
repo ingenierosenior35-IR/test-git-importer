@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PrefUtils {
   static SharedPreferences? _sharedPreferences;
-  static String prefName = "com.gymapp.app";
+  static String prefName = "com.rivalclub.app";
   static String isIntro = "${prefName}isIntro";
   static String signIn = "${prefName}signIn";
   PrefUtils() {

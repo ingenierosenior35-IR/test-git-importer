@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 
 import '../../select_muscle_tabs/gym_execirse_tab.dart';
 import '../../select_muscle_tabs/home_exercise_tab.dart';

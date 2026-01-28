@@ -1,7 +1,7 @@
 import '../controller/categories_controller.dart';
 import '../models/healthtips1_item_model.dart';
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 
 // ignore: must_be_immutable
 class Healthtips1ItemWidget extends StatelessWidget {

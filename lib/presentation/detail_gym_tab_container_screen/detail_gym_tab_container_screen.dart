@@ -1,12 +1,12 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/detail_gym_page/detail_gym_page.dart';
-import 'package:gym_app/presentation/detail_home_page/detail_home_page.dart';
-import 'package:gym_app/widgets/app_bar/appbar_image.dart';
-import 'package:gym_app/widgets/app_bar/appbar_title.dart';
-import 'package:gym_app/widgets/app_bar/custom_app_bar.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/detail_gym_page/detail_gym_page.dart';
+import 'package:Rival/presentation/detail_home_page/detail_home_page.dart';
+import 'package:Rival/widgets/app_bar/appbar_image.dart';
+import 'package:Rival/widgets/app_bar/appbar_title.dart';
+import 'package:Rival/widgets/app_bar/custom_app_bar.dart';
 
 
 import '../../core/expandable_pageview/src/expandable_page_view.dart';

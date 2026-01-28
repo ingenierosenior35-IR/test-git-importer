@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/splash_screen/models/splash_model.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/splash_screen/models/splash_model.dart';
 
 class SplashController extends GetxController {
   Rx<SplashModel> splashModelObj = SplashModel().obs;

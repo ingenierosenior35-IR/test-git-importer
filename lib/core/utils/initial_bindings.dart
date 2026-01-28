@@ -1,5 +1,5 @@
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/data/apiClient/api_client.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/data/apiClient/api_client.dart';
 
 class InitialBindings extends Bindings {
   @override

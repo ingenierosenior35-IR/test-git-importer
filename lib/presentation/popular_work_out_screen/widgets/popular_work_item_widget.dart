@@ -12,7 +12,7 @@ import '../../../widgets/custom_icon_button.dart';
 import '../../../widgets/custom_image_view.dart';
 import '../controller/popular_work_out_controller.dart';
 import '../models/popular_work_item_model.dart';
-import 'package:gym_app/widgets/custom_elevated_button.dart';
+import 'package:Rival/widgets/custom_elevated_button.dart';
 
 // ignore: must_be_immutable
 class PopularWorkItemWidget extends StatelessWidget {

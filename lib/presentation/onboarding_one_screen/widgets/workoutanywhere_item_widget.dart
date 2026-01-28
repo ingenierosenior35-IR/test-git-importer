@@ -1,8 +1,8 @@
 import '../controller/onboarding_one_controller.dart';
 import '../models/workoutanywhere_item_model.dart';
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/widgets/custom_elevated_button.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/widgets/custom_elevated_button.dart';
 
 // ignore: must_be_immutable
 class WorkoutanywhereItemWidget extends StatelessWidget {

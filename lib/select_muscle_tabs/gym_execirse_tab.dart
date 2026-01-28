@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 
 import '../widgets/custom_icon_button.dart';
 import 'controller/select_muscle_controller.dart';

@@ -1,6 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 import 'package:flutter/material.dart';
 
 /// A class that offers pre-defined button styles for customizing button appearance.

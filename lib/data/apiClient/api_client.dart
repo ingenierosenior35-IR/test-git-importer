@@ -1,3 +1,3 @@
-import 'package:gym_app/core/app_export.dart';
+import 'package:Rival/core/app_export.dart';
 
 class ApiClient extends GetConnect {}

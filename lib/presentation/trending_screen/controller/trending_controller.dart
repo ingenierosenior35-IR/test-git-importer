@@ -1,5 +1,5 @@
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/trending_screen/models/trending_model.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/trending_screen/models/trending_model.dart';
 
 import '../models/trending_item_model.dart';
 

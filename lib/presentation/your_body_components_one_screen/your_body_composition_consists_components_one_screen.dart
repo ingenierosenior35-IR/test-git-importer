@@ -3,10 +3,10 @@
 import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:another_stepper/widgets/another_stepper.dart';
 import 'package:flutter/material.dart';
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/widgets/app_bar/appbar_image.dart';
-import 'package:gym_app/widgets/app_bar/appbar_image_3.dart';
-import 'package:gym_app/widgets/app_bar/appbar_title.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/widgets/app_bar/appbar_image.dart';
+import 'package:Rival/widgets/app_bar/appbar_image_3.dart';
+import 'package:Rival/widgets/app_bar/appbar_title.dart';
 
 import 'controller/your_body_components_one_controller.dart';
 

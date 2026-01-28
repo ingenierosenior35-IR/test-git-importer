@@ -30,7 +30,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "com.gymapp.app"
+    namespace "com.rivalclub.app"
     compileSdkVersion 35
 
 

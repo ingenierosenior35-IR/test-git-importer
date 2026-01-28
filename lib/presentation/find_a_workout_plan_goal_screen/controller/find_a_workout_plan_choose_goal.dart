@@ -1,7 +1,7 @@
 
 /// A controller class for the FindAWorkoutPlanChooseGoalScreen.
-import 'package:gym_app/core/app_export.dart';
-import 'package:gym_app/presentation/find_a_workout_plan_goal_screen/models/find_a_workout_plan_choose_goal_model.dart';
+import 'package:Rival/core/app_export.dart';
+import 'package:Rival/presentation/find_a_workout_plan_goal_screen/models/find_a_workout_plan_choose_goal_model.dart';
 
 import '../models/goal_data.dart';
 
