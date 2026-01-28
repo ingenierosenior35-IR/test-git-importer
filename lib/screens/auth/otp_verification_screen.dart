@@ -7,14 +7,32 @@ import '../../widgets/custom_elevated_button.dart';
 import '../onboarding/sport_selection_screen.dart';
 
 class OTPVerificationScreen extends StatefulWidget {
-  final String phoneNumber;
-  final String verificationId;
+  final String identifier; // Can be phone number or email
+  final bool isPhone; // true if phone, false if email
+  final String? verificationId; // Only required for phone
 
   const OTPVerificationScreen({
     Key? key,
-    required this. phoneNumber,
-    required this. verificationId,
-  }) : super(key: key);
+    required this.identifier,
+    required this.isPhone,
+    this.verificationId,
+  }) : assert(
+         !isPhone || verificationId != null,
+         'verificationId is required when isPhone is true',
+       ),
+       super(key: key);
+
+  // Legacy constructor for backward compatibility
+  factory OTPVerificationScreen.phone({
+    required String phoneNumber,
+    required String verificationId,
+  }) {
+    return OTPVerificationScreen(
+      identifier: phoneNumber,
+      isPhone: true,
+      verificationId: verificationId,
+    );
+  }
 
   @override
   State<OTPVerificationScreen> createState() => _OTPVerificationScreenState();
@@ -47,36 +65,52 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   });
 
   try {
-    final userCredential = await _authService. verifyOTP(
-      _otpController.text,
-      widget.verificationId,
-    );
+    if (widget.isPhone && widget.verificationId != null) {
+      // Phone verification
+      final userCredential = await _authService. verifyOTP(
+        _otpController.text,
+        widget.verificationId!,
+      );
 
-    if (userCredential != null) {
-      // 🚀 Navega INMEDIATAMENTE a deportes (siempre)
-      // La pantalla de deportes verificará si debe saltar al home
-      Get.offAll(() => const SportSelectionScreen());
-      
-      // Mostrar mensaje después
-      Future.delayed(const Duration(milliseconds: 300), () {
+      if (userCredential != null) {
+        // 🚀 Navega INMEDIATAMENTE a deportes (siempre)
+        // La pantalla de deportes verificará si debe saltar al home
+        Get.offAll(() => const SportSelectionScreen());
+        
+        // Mostrar mensaje después
+        Future.delayed(const Duration(milliseconds: 300), () {
+          Get.snackbar(
+            'Success',
+            'Verification successful',
+            backgroundColor:  Colors.green,
+            colorText: Colors.white,
+          );
+        });
+      } else {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+        
         Get.snackbar(
-          'Success',
-          'Verification successful',
-          backgroundColor:  Colors.green,
+          'Error',
+          'Invalid verification code',
+          backgroundColor: Colors.red,
           colorText: Colors.white,
         );
-      });
+      }
     } else {
+      // Email verification (placeholder - implement as needed)
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
       }
-      
       Get.snackbar(
-        'Error',
-        'Invalid verification code',
-        backgroundColor: Colors.red,
+        'Info',
+        'Email OTP verification not yet implemented',
+        backgroundColor: Colors.orange,
         colorText: Colors.white,
       );
     }
@@ -97,13 +131,23 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
 }
 
   Future<void> _resendOTP() async {
+    if (!widget.isPhone) {
+      Get.snackbar(
+        'Info',
+        'Email OTP resend not yet implemented',
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
 
     try {
       await _authService.sendPhoneVerificationCode(
-        widget.phoneNumber,
+        widget.identifier,
         onCodeSent: (verificationId) {
           setState(() {
             _isLoading = false;
@@ -118,7 +162,8 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
           
           // Navigate to new OTP screen with new verification ID
           Get.off(() => OTPVerificationScreen(
-            phoneNumber: widget.phoneNumber,
+            identifier: widget.identifier,
+            isPhone: true,
             verificationId: verificationId,
           ));
         },
@@ -216,7 +261,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                 SizedBox(height: getVerticalSize(8)),
                 
                 Text(
-                  widget.phoneNumber,
+                  widget.identifier,
                   style: theme. textTheme.bodyLarge?. copyWith(
                     fontWeight: FontWeight.bold,
                   ),

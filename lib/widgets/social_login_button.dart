@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 enum SocialLoginProvider {
   google,
@@ -53,9 +54,9 @@ class SocialLoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: double.infinity,
-      height: 54,
+      margin: const EdgeInsets.symmetric(horizontal: 24),
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
@@ -65,12 +66,9 @@ class SocialLoginButton extends StatelessWidget {
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
-            side: BorderSide(
-              color: const Color(0xFF3C3C3C),
-              width: 1,
-            ),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          minimumSize: Size(double.infinity, 56),
         ),
         child: isLoading
             ? const SizedBox(
@@ -92,7 +90,7 @@ class SocialLoginButton extends StatelessWidget {
                   const SizedBox(width: 12),
                   Text(
                     _buttonText,
-                    style: const TextStyle(
+                    style: GoogleFonts.urbanist(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
