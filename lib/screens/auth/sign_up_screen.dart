@@ -43,7 +43,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Please agree to Terms & Condition'),
+            content: Text('Por favor acepta los Términos y Condiciones'),
             backgroundColor: Colors.red,
           ),
         );
@@ -55,7 +55,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Passwords do not match'),
+            content: Text('Las contraseñas no coinciden'),
             backgroundColor: Colors.red,
           ),
         );
@@ -78,7 +78,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Account created successfully'),
+              content: Text('Cuenta creada correctamente'),
               backgroundColor: Colors.green,
             ),
           );
@@ -100,7 +100,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to create account: $e'),
+            content: Text('Error al crear cuenta: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -136,7 +136,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   // Title - centered
                   Center(
                     child: Text(
-                      'Sign Up',
+                      'Crear cuenta',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 28,
@@ -153,7 +153,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     controller: _nameController,
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      hintText: 'Full Name',
+                      hintText: 'Nombre completo',
                       hintStyle: TextStyle(color: Colors.grey),
                       prefixIcon: Icon(Icons.person_outline, color: Colors.grey),
                       filled: true,
@@ -166,7 +166,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your full name';
+                        return 'Por favor ingresa tu nombre completo';
                       }
                       return null;
                     },
@@ -180,7 +180,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     style: TextStyle(color: Colors.white),
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
-                      hintText: 'Your Email',
+                      hintText: 'Correo electrónico',
                       hintStyle: TextStyle(color: Colors.grey),
                       prefixIcon: Icon(Icons.email_outlined, color: Colors.grey),
                       filled: true,
@@ -193,10 +193,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
+                        return 'Por favor ingresa tu correo';
                       }
                       if (!GetUtils.isEmail(value)) {
-                        return 'Please enter a valid email';
+                        return 'Por favor ingresa un correo válido';
                       }
                       return null;
                     },
@@ -210,7 +210,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     style: TextStyle(color: Colors.white),
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
-                      hintText: 'Enter Password',
+                      hintText: 'Contraseña',
                       hintStyle: TextStyle(color: Colors.grey),
                       prefixIcon: Icon(Icons.lock_outline, color: Colors.grey),
                       suffixIcon: IconButton(
@@ -234,10 +234,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
+                        return 'Por favor ingresa tu contraseña';
                       }
                       if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
+                        return 'La contraseña debe tener al menos 6 caracteres';
                       }
                       return null;
                     },
@@ -251,7 +251,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     style: TextStyle(color: Colors.white),
                     obscureText: _obscureConfirmPassword,
                     decoration: InputDecoration(
-                      hintText: 'Confirm Password',
+                      hintText: 'Confirmar contraseña',
                       hintStyle: TextStyle(color: Colors.grey),
                       prefixIcon: Icon(Icons.lock_outline, color: Colors.grey),
                       suffixIcon: IconButton(
@@ -275,10 +275,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please confirm your password';
+                        return 'Por favor confirma tu contraseña';
                       }
                       if (value != _passwordController.text) {
-                        return 'Passwords do not match';
+                        return 'Las contraseñas no coinciden';
                       }
                       return null;
                     },
@@ -307,11 +307,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Expanded(
                         child: RichText(
                           text: TextSpan(
-                            text: 'I agree with ',
+                            text: 'Acepto los ',
                             style: TextStyle(color: Colors.white, fontSize: 14),
                             children: [
                               TextSpan(
-                                text: 'Terms & Condition',
+                                text: 'Términos y Condiciones',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
@@ -340,7 +340,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       minimumSize: Size.fromHeight(56),
                     ),
                     child: Text(
-                      _isLoading ? 'LOADING...' : 'Signup',
+                      _isLoading ? 'CARGANDO...' : 'Registrarse',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -356,7 +356,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Already have an account? ',
+                        '¿Ya tienes cuenta? ',
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 14,
@@ -367,7 +367,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           Get.off(() => SignInScreen());
                         },
                         child: Text(
-                          'Sign In',
+                          'Iniciar sesión',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,

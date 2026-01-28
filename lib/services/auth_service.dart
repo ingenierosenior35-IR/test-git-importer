@@ -174,14 +174,34 @@ class AuthService extends GetxService {
   // Sign Out
   Future<void> signOut() async {
     try {
+      // 1. Sign out from Firebase
       await _auth.signOut();
-      await _googleSignIn.signOut();
-      await FacebookAuth.instance.logOut();
       
-      // Navigate to WelcomeScreen after logout
+      // 2. Sign out from Google
+      try {
+        final googleSignIn = GoogleSignIn();
+        await googleSignIn.signOut();
+      } catch (e) {
+        debugPrint('Error signing out from Google: $e');
+      }
+      
+      // 3. Sign out from Facebook
+      try {
+        await FacebookAuth.instance.logOut();
+      } catch (e) {
+        debugPrint('Error signing out from Facebook: $e');
+      }
+      
+      // 4. Clear local storage/preferences (if using SharedPreferences)
+      // If you add SharedPreferences in the future, clear them here
+      
+      // 5. Redirect to welcome/login screen
       Get.offAllNamed(AppRoutes.welcomeScreen);
+      
+      debugPrint('✅ User signed out successfully');
     } catch (e) {
-      debugPrint('Error signing out: $e');
+      debugPrint('❌ Error signing out: $e');
+      rethrow;
     }
   }
   

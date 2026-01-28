@@ -401,7 +401,7 @@ class ProfilePage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Are you sure you want to logout?",
+                                  "¿Estás seguro que deseas cerrar sesión?",
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.left,
                                   style: CustomTextStyles.titleLarge20,
@@ -436,7 +436,7 @@ class ProfilePage extends StatelessWidget {
                                         child: CustomElevatedButton(
                                             height: getVerticalSize(54),
 
-                                            text: "Yes".toUpperCase(),
+                                            text: "Sí".toUpperCase(),
                                             margin: getMargin(left: 16),
                                             buttonStyle: CustomButtonStyles.fillPrimary,
                                             buttonTextStyle: CustomTextStyles

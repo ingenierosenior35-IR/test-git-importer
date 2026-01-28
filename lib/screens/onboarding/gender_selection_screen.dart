@@ -45,8 +45,8 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
   void _continue() {
     if (_selectedGender == null) {
       Get.snackbar(
-        'Selection Required',
-        'Please select your gender',
+        'Selección requerida',
+        'Por favor selecciona tu género',
         backgroundColor: Colors.orange,
         colorText: Colors.white,
       );
@@ -153,7 +153,7 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: CustomButton(
-                text: 'Continue',
+                text: 'Continuar',
                 onPressed: _continue,
                 height: 54,
               ),
