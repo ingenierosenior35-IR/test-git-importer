@@ -51,7 +51,7 @@ class _SignInScreenState extends State<SignInScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Signed in successfully'),
+              content: Text('Sesión iniciada correctamente'),
               backgroundColor: Colors.green,
             ),
           );
@@ -76,7 +76,7 @@ class _SignInScreenState extends State<SignInScreen> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to sign in: $e'),
+            content: Text('Error al iniciar sesión: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -111,7 +111,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   
                   // Title
                   Text(
-                    'Sign in your account',
+                    'Inicia sesión en tu cuenta',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 28,
@@ -127,7 +127,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     style: TextStyle(color: Colors.white),
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
-                      hintText: 'Your Email',
+                      hintText: 'Correo electrónico',
                       hintStyle: TextStyle(color: Colors.grey),
                       prefixIcon: Icon(Icons.email_outlined, color: Colors.grey),
                       filled: true,
@@ -140,10 +140,10 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
+                        return 'Por favor ingresa tu correo';
                       }
                       if (!GetUtils.isEmail(value)) {
-                        return 'Please enter a valid email';
+                        return 'Por favor ingresa un correo válido';
                       }
                       return null;
                     },
@@ -157,7 +157,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     style: TextStyle(color: Colors.white),
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
-                      hintText: 'Enter Password',
+                      hintText: 'Contraseña',
                       hintStyle: TextStyle(color: Colors.grey),
                       prefixIcon: Icon(Icons.lock_outline, color: Colors.grey),
                       suffixIcon: IconButton(
@@ -181,10 +181,10 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
+                        return 'Por favor ingresa tu contraseña';
                       }
                       if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
+                        return 'La contraseña debe tener al menos 6 caracteres';
                       }
                       return null;
                     },
@@ -214,7 +214,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             checkColor: Colors.black,
                           ),
                           Text(
-                            'Remember me',
+                            'Recordarme',
                             style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
                         ],
@@ -224,7 +224,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           Get.to(() => ResetPasswordScreen());
                         },
                         child: Text(
-                          'Forgot Password',
+                          '¿Olvidaste tu contraseña?',
                           style: TextStyle(
                             color: Color(0xFFCDFF4D),
                             fontSize: 14,
@@ -250,7 +250,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       minimumSize: Size.fromHeight(56),
                     ),
                     child: Text(
-                      _isLoading ? 'LOADING...' : 'Sign In',
+                      _isLoading ? 'CARGANDO...' : 'Iniciar sesión',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
