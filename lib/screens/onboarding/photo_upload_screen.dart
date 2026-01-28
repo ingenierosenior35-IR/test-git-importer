@@ -46,8 +46,8 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
       _pickImage(source);
     } else if (status.isPermanentlyDenied) {
       Get.snackbar(
-        'Permission Required',
-        'Please enable ${source == ImageSource.camera ? 'camera' : 'photo'} permission in settings',
+        'Permiso requerido',
+        'Por favor habilita el permiso de ${source == ImageSource.camera ? 'cámara' : 'fotos'} en configuración',
         backgroundColor: Colors.orange,
         colorText: Colors.white,
         duration: const Duration(seconds: 3),
@@ -55,8 +55,8 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
       await openAppSettings();
     } else {
       Get.snackbar(
-        'Permission Denied',
-        'Unable to access ${source == ImageSource.camera ? 'camera' : 'gallery'}',
+        'Permiso denegado',
+        'No se puede acceder a ${source == ImageSource.camera ? 'cámara' : 'galería'}',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -81,7 +81,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
       debugPrint('Error picking image: $e');
       Get.snackbar(
         'Error',
-        'Failed to pick image: $e',
+        'Error al seleccionar imagen: $e',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -109,7 +109,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text(
-              'Add Photo',
+              'Agregar foto',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -119,7 +119,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
             const SizedBox(height: 20),
             ListTile(
               leading: const Icon(Icons.camera_alt, color: Color(0xFFCDFF4D)),
-              title: const Text('Take Photo', style: TextStyle(color: Colors.white)),
+              title: const Text('Tomar foto', style: TextStyle(color: Colors.white)),
               onTap: () {
                 Get.back();
                 _checkAndRequestPermission(ImageSource.camera);
@@ -127,7 +127,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
             ),
             ListTile(
               leading: const Icon(Icons.photo_library, color: Color(0xFFCDFF4D)),
-              title: const Text('Choose from Gallery', style: TextStyle(color: Colors.white)),
+              title: const Text('Elegir de galería', style: TextStyle(color: Colors.white)),
               onTap: () {
                 Get.back();
                 _checkAndRequestPermission(ImageSource.gallery);
@@ -188,7 +188,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
 
       Get.snackbar(
         'Error',
-        'Failed to complete profile setup: $e',
+        'Error al completar configuración del perfil: $e',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -249,8 +249,8 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                       // Photo preview area
                       Semantics(
                         label: _photo == null 
-                            ? 'Add profile photo. Tap to upload.' 
-                            : 'Profile photo uploaded. Tap to change.',
+                            ? 'Agregar foto de perfil. Toca para subir.' 
+                            : 'Foto de perfil subida. Toca para cambiar.',
                         button: true,
                         child: GestureDetector(
                           onTap: _photo == null ? _showImageSourceDialog : null,
@@ -276,7 +276,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                                       ),
                                       const SizedBox(height: 16),
                                       Text(
-                                        'Add Photo',
+                                        'Agregar foto',
                                         style: TextStyle(
                                           fontSize: 16,
                                           color: Colors.grey[600],
@@ -302,7 +302,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                                         top: 8,
                                         right: 8,
                                         child: Semantics(
-                                          label: 'Remove photo',
+                                          label: 'Eliminar foto',
                                           button: true,
                                           child: GestureDetector(
                                             onTap: _removePhoto,
@@ -351,7 +351,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                 children: [
                   // Upload/Finish button
                   CustomButton(
-                    text: _photo == null ? 'Subir foto' : 'Continue',
+                    text: _photo == null ? 'Subir foto' : 'Continuar',
                     onPressed: _photo == null ? _showImageSourceDialog : _finish,
                     isLoading: _isLoading,
                     height: 54,

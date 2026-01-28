@@ -33,8 +33,8 @@ class _IdentityScreenState extends State<IdentityScreen> {
     
     if (input.isEmpty) {
       Get.snackbar(
-        'Required',
-        'Please enter your phone number or email',
+        'Requerido',
+        'Por favor ingresa tu teléfono o correo',
         backgroundColor: Colors.orange,
         colorText: Colors.white,
       );
@@ -91,8 +91,8 @@ class _IdentityScreenState extends State<IdentityScreen> {
         }
       } else {
         Get.snackbar(
-          'Sign In Cancelled',
-          'Google sign in was cancelled',
+          'Inicio cancelado',
+          'Inicio con Google cancelado',
           backgroundColor: Colors.orange,
           colorText: Colors.white,
         );
@@ -100,7 +100,7 @@ class _IdentityScreenState extends State<IdentityScreen> {
     } catch (e) {
       Get.snackbar(
         'Error',
-        'Failed to sign in with Google: ${e.toString()}',
+        'Error al iniciar con Google: ${e.toString()}',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -134,8 +134,8 @@ class _IdentityScreenState extends State<IdentityScreen> {
         }
       } else {
         Get.snackbar(
-          'Sign In Cancelled',
-          'Facebook sign in was cancelled',
+          'Inicio cancelado',
+          'Inicio con Facebook cancelado',
           backgroundColor: Colors.orange,
           colorText: Colors.white,
         );
@@ -143,7 +143,7 @@ class _IdentityScreenState extends State<IdentityScreen> {
     } catch (e) {
       Get.snackbar(
         'Error',
-        'Failed to sign in with Facebook: ${e.toString()}',
+        'Error al iniciar con Facebook: ${e.toString()}',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -164,8 +164,8 @@ class _IdentityScreenState extends State<IdentityScreen> {
     try {
       // Apple Sign In not implemented yet
       Get.snackbar(
-        'Coming Soon',
-        'Apple Sign In will be available soon',
+        'Próximamente',
+        'Inicio con Apple estará disponible pronto',
         backgroundColor: Colors.blue,
         colorText: Colors.white,
       );

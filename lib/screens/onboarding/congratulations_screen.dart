@@ -104,7 +104,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen>
               
               // Title
               const Text(
-                'Congratulations!',
+                '¡Felicitaciones!',
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -117,7 +117,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen>
               
               // Message
               Text(
-                'Account successfully created.\nYou\'ll be taken to the home page shortly.',
+                'Cuenta creada exitosamente.\nSerás llevado a la página principal en breve.',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[400],
@@ -130,7 +130,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen>
               
               // Back to Home Button
               CustomButton(
-                text: 'Back to Home',
+                text: 'Volver al inicio',
                 onPressed: _navigateToHome,
                 height: 54,
               ),
