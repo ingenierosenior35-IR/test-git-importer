@@ -22,11 +22,11 @@ class SocialLoginButton extends StatelessWidget {
   String get _buttonText {
     switch (provider) {
       case SocialLoginProvider.google:
-        return 'Continue with Google';
+        return 'Continuar con Google';
       case SocialLoginProvider.facebook:
-        return 'Continue with Facebook';
+        return 'Continuar con Facebook';
       case SocialLoginProvider.apple:
-        return 'Continue with Apple';
+        return 'Continuar con Apple';
     }
   }
 

@@ -53,7 +53,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   if (_otpController. text.length != 6) {
     Get.snackbar(
       'Error',
-      'Please enter a valid 6-digit code',
+      'Por favor ingresa un código de 6 dígitos válido',
       backgroundColor:  Colors.red,
       colorText: Colors.white,
     );
@@ -80,8 +80,8 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
         // Mostrar mensaje después
         Future.delayed(const Duration(milliseconds: 300), () {
           Get.snackbar(
-            'Success',
-            'Verification successful',
+            'Éxito',
+            'Verificación exitosa',
             backgroundColor:  Colors.green,
             colorText: Colors.white,
           );
@@ -95,7 +95,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
         
         Get.snackbar(
           'Error',
-          'Invalid verification code',
+          'Código de verificación inválido',
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -109,7 +109,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       }
       Get.snackbar(
         'Info',
-        'Email OTP verification not yet implemented',
+        'Verificación de correo no implementada aún',
         backgroundColor: Colors.orange,
         colorText: Colors.white,
       );
@@ -123,7 +123,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     
     Get.snackbar(
       'Error',
-      'Verification failed: $e',
+      'Verificación fallida: $e',
       backgroundColor: Colors.red,
       colorText: Colors. white,
     );
@@ -134,7 +134,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     if (!widget.isPhone) {
       Get.snackbar(
         'Info',
-        'Email OTP resend not yet implemented',
+        'Reenvío de código por correo no implementado aún',
         backgroundColor: Colors.orange,
         colorText: Colors.white,
       );
@@ -154,8 +154,8 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
           });
           
           Get.snackbar(
-            'Success',
-            'Verification code sent',
+            'Éxito',
+            'Código de verificación enviado',
             backgroundColor:  Colors.green,
             colorText: Colors.white,
           );
@@ -185,7 +185,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       });
       Get.snackbar(
         'Error',
-        'Failed to resend code: $e',
+        'Error al reenviar código: $e',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -241,7 +241,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                 
                 // Title
                 Text(
-                  'Verification Code',
+                  'Código de Verificación',
                   style:  theme.textTheme.headlineLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -251,7 +251,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                 SizedBox(height: getVerticalSize(16)),
                 
                 Text(
-                  'We sent a verification code to',
+                  'Enviamos un código de verificación a',
                   style: theme.textTheme. bodyLarge?.copyWith(
                     color: Colors.grey,
                   ),
@@ -286,7 +286,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                 // Verify button
                 CustomElevatedButton(
                   height: getVerticalSize(54),
-                  text: _isLoading ? 'VERIFYING.. .' : 'VERIFY',
+                  text: _isLoading ? 'VERIFICANDO.. .' : 'VERIFICAR',
                   buttonStyle: CustomButtonStyles.fillPrimary,
                   buttonTextStyle: CustomTextStyles.bodyLargeUniformProExtraCondensedOnErrorContainer,
                   onTap:  _isLoading ? null : _verifyOTP,
@@ -299,7 +299,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Didn't receive the code? ",
+                      "¿No recibiste el código? ",
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: Colors.grey,
                       ),
@@ -307,7 +307,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                     GestureDetector(
                       onTap: _isLoading ? null : _resendOTP,
                       child:  Text(
-                        'Resend',
+                        'Reenviar',
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme. primary,
                           fontWeight:  FontWeight.bold,

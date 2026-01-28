@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_completePhoneNumber.isEmpty) {
       Get.snackbar(
         'Error',
-        'Please enter a valid phone number',
+        'Por favor ingresa un número de teléfono válido',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
       });
       Get.snackbar(
         'Error',
-        'Failed to send verification code: $e',
+        'Error al enviar código de verificación: $e',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -107,8 +107,8 @@ class _LoginScreenState extends State<LoginScreen> {
         bool onboardingCompleted = await _authService.checkOnboardingStatus();
         
         Get.snackbar(
-          'Success',
-          'Signed in successfully',
+          'Éxito',
+          'Sesión iniciada correctamente',
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
@@ -120,8 +120,8 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       } else {
         Get.snackbar(
-          'Cancelled',
-          'Google sign-in was cancelled',
+          'Cancelado',
+          'Inicio con Google cancelado',
           backgroundColor: Colors.orange,
           colorText: Colors.white,
         );
@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
       });
       Get.snackbar(
         'Error',
-        'Failed to sign in with Google: $e',
+        'Error al iniciar con Google: $e',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -156,8 +156,8 @@ class _LoginScreenState extends State<LoginScreen> {
         bool onboardingCompleted = await _authService.checkOnboardingStatus();
         
         Get.snackbar(
-          'Success',
-          'Signed in successfully',
+          'Éxito',
+          'Sesión iniciada correctamente',
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
@@ -169,8 +169,8 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       } else {
         Get.snackbar(
-          'Cancelled',
-          'Facebook sign-in was cancelled',
+          'Cancelado',
+          'Inicio con Facebook cancelado',
           backgroundColor: Colors.orange,
           colorText: Colors.white,
         );
@@ -181,7 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
       });
       Get.snackbar(
         'Error',
-        'Failed to sign in with Facebook: $e',
+        'Error al iniciar con Facebook: $e',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -217,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   
                   // Title
                   Text(
-                    'Welcome Back!',
+                    '¡Bienvenido de nuevo!',
                     style: theme.textTheme.headlineLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -227,7 +227,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: getVerticalSize(8)),
                   
                   Text(
-                    'Sign in to continue',
+                    'Inicia sesión para continuar',
                     style: theme.textTheme.bodyLarge?.copyWith(
                       color: Colors.grey,
                     ),
@@ -244,7 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontSize: 16,
                     ),
                     decoration: InputDecoration(
-                      labelText: 'Phone Number',
+                      labelText: 'Número de teléfono',
                       labelStyle: TextStyle(
                         color: Colors.grey[700],
                       ),
@@ -268,7 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   // Login button
                   CustomElevatedButton(
                     height: getVerticalSize(54),
-                    text: _isLoading ? 'LOADING...' : 'LOGIN',
+                    text: _isLoading ? 'CARGANDO...' : 'INICIAR SESIÓN',
                     buttonStyle: CustomButtonStyles.fillPrimary,
                     buttonTextStyle: CustomTextStyles.bodyLargeUniformProExtraCondensedOnErrorContainer,
                     onTap: _isLoading ? null : _handlePhoneLogin,
@@ -288,7 +288,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Padding(
                         padding: getPadding(left: 16, right: 16),
                         child: Text(
-                          'Or continue with',
+                          'O continuar con',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: Colors.grey,
                           ),

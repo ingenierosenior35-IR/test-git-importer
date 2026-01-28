@@ -138,7 +138,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Signed in successfully'),
+              content: Text('Sesión iniciada correctamente'),
               backgroundColor: Colors.green,
             ),
           );
@@ -157,7 +157,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to sign in with Google: $e'),
+            content: Text('Error al iniciar con Google: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -185,7 +185,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Signed in successfully'),
+              content: Text('Sesión iniciada correctamente'),
               backgroundColor: Colors.green,
             ),
           );
@@ -204,7 +204,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to sign in with Facebook: $e'),
+            content: Text('Error al iniciar con Facebook: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -353,7 +353,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     // Apple sign-in not implemented yet
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Apple sign-in coming soon'),
+                        content: Text('Inicio con Apple próximamente'),
                         backgroundColor: Colors.orange,
                       ),
                     );

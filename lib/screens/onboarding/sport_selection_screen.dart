@@ -18,17 +18,17 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
   static const int maxSportsSelection = 5;
 
   final List<Map<String, dynamic>> _sports = [
-    {'name': 'Running', 'icon': Icons.directions_run},
+    {'name': 'Correr', 'icon': Icons.directions_run},
     {'name': 'Trail Running', 'icon': Icons.hiking},
-    {'name': 'Basketball', 'icon': Icons.sports_basketball},
-    {'name': 'Baseball', 'icon': Icons.sports_baseball},
-    {'name': 'Roller Skating', 'icon': Icons.roller_skating},
-    {'name': 'Volleyball', 'icon': Icons.sports_volleyball},
-    {'name': 'Swimming', 'icon': Icons.pool},
-    {'name': 'Climbing', 'icon': Icons.landscape},
-    {'name': 'Football', 'icon': Icons.sports_soccer},
-    {'name': 'Tennis', 'icon': Icons.sports_tennis},
-    {'name': 'Cycling', 'icon': Icons.directions_bike},
+    {'name': 'Baloncesto', 'icon': Icons.sports_basketball},
+    {'name': 'Béisbol', 'icon': Icons.sports_baseball},
+    {'name': 'Patinaje', 'icon': Icons.roller_skating},
+    {'name': 'Voleibol', 'icon': Icons.sports_volleyball},
+    {'name': 'Natación', 'icon': Icons.pool},
+    {'name': 'Escalada', 'icon': Icons.landscape},
+    {'name': 'Fútbol', 'icon': Icons.sports_soccer},
+    {'name': 'Tenis', 'icon': Icons.sports_tennis},
+    {'name': 'Ciclismo', 'icon': Icons.directions_bike},
     {'name': 'Yoga', 'icon': Icons.self_improvement},
   ];
 
@@ -61,8 +61,8 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
           _selectedSports.add(sport);
         } else {
           Get.snackbar(
-            'Limit Reached',
-            'You can select up to $maxSportsSelection sports',
+            'Límite alcanzado',
+            'Puedes seleccionar hasta $maxSportsSelection deportes',
             backgroundColor: Colors.orange,
             colorText: Colors.white,
           );
@@ -74,8 +74,8 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
   void _continue() {
     if (_selectedSports.isEmpty) {
       Get.snackbar(
-        'Selection Required',
-        'Please select at least one sport',
+        'Selección requerida',
+        'Por favor selecciona al menos un deporte',
         backgroundColor: Colors.orange,
         colorText: Colors.white,
       );
@@ -133,7 +133,7 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
 
                       // Info text
                       Text(
-                        'You can select up to $maxSportsSelection',
+                        'Puedes seleccionar hasta $maxSportsSelection',
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.grey,
@@ -175,7 +175,7 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: CustomButton(
-                text: 'Continue',
+                text: 'Continuar',
                 onPressed: _continue,
                 height: 54,
               ),

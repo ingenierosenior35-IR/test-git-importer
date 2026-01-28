@@ -177,7 +177,7 @@ class _WeightScreenState extends State<WeightScreen> {
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: CustomButton(
-                text: 'Continue',
+                text: 'Continuar',
                 onPressed: _continue,
                 height: 54,
               ),

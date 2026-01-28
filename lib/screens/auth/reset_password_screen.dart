@@ -63,8 +63,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       _startTimer();
       
       Get.snackbar(
-        'Success',
-        'Verification code sent',
+        'Éxito',
+        'Código de verificación enviado',
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
@@ -77,7 +77,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     if (code.length != 5) {
       Get.snackbar(
         'Error',
-        'Please enter the complete verification code',
+        'Por favor ingresa el código de verificación completo',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -96,8 +96,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         });
         
         Get.snackbar(
-          'Success',
-          'Code verified successfully',
+          'Éxito',
+          'Código verificado exitosamente',
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
@@ -133,7 +133,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 
                 // Title
                 Text(
-                  'Reset Password',
+                  'Restablecer contraseña',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 28,
@@ -146,7 +146,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 // Info message with email
                 RichText(
                   text: TextSpan(
-                    text: 'Code has been sent to ',
+                    text: 'El código ha sido enviado a ',
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: 14,
@@ -238,8 +238,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     onTap: _handleResendCode,
                     child: Text(
                       _resendTimer > 0
-                          ? 'Resend code in ${_resendTimer}s'
-                          : 'Resend code',
+                          ? 'Reenviar código en ${_resendTimer}s'
+                          : 'Reenviar código',
                       style: TextStyle(
                         color: _resendTimer > 0 ? Colors.grey : Color(0xFFCDFF4D),
                         fontSize: 14,
@@ -264,7 +264,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     minimumSize: Size.fromHeight(56),
                   ),
                   child: Text(
-                    _isLoading ? 'VERIFYING...' : 'Verify',
+                    _isLoading ? 'VERIFICANDO...' : 'Verificar',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
