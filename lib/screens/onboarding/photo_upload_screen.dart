@@ -121,21 +121,29 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
               leading: const Icon(Icons.camera_alt, color: Color(0xFFCDFF4D)),
               title: const Text('Tomar foto', style: TextStyle(color: Colors.white)),
               onTap: () {
-                Get.back();
-                _checkAndRequestPermission(ImageSource.camera);
+                Navigator.of(Get.context!).pop(); // Use Navigator instead of Get.back()
+                // Add a small delay to ensure bottom sheet is closed before requesting permission
+                Future.delayed(const Duration(milliseconds: 300), () {
+                  _checkAndRequestPermission(ImageSource.camera);
+                });
               },
             ),
             ListTile(
               leading: const Icon(Icons.photo_library, color: Color(0xFFCDFF4D)),
               title: const Text('Elegir de galería', style: TextStyle(color: Colors.white)),
               onTap: () {
-                Get.back();
-                _checkAndRequestPermission(ImageSource.gallery);
+                Navigator.of(Get.context!).pop(); // Use Navigator instead of Get.back()
+                // Add a small delay to ensure bottom sheet is closed before requesting permission
+                Future.delayed(const Duration(milliseconds: 300), () {
+                  _checkAndRequestPermission(ImageSource.gallery);
+                });
               },
             ),
           ],
         ),
       ),
+      isDismissible: true,
+      enableDrag: true,
     );
   }
 
