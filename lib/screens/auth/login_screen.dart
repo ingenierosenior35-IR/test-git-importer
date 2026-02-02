@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// Removed: import 'package:get/get.dart'; - unnecessary import
+import 'package:get/get.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import '../../services/auth_service.dart';
 import '../../core/app_export.dart';
@@ -37,12 +37,15 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     if (_completePhoneNumber.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Por favor ingresa un número de teléfono válido',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      if (mounted && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Por favor ingresa un número de teléfono válido'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
       return;
     }
 
@@ -69,24 +72,30 @@ class _LoginScreenState extends State<LoginScreen> {
           setState(() {
             _isLoading = false;
           });
-          Get.snackbar(
-            'Error',
-            error,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-          );
+          if (mounted && context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(error),
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
         },
       );
     } catch (e) {
       setState(() {
         _isLoading = false;
       });
-      Get.snackbar(
-        'Error',
-        'Error al enviar código de verificación: $e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      if (mounted && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al enviar código de verificación: $e'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
     }
   }
 
@@ -106,12 +115,15 @@ class _LoginScreenState extends State<LoginScreen> {
         // Check onboarding status
         bool onboardingCompleted = await _authService.checkOnboardingStatus();
         
-        Get.snackbar(
-          'Éxito',
-          'Sesión iniciada correctamente',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
+        if (mounted && context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Sesión iniciada correctamente'),
+              backgroundColor: Colors.green,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
         
         if (onboardingCompleted) {
           Get.offAllNamed(AppRoutes.homeContainerScreen);
@@ -119,23 +131,29 @@ class _LoginScreenState extends State<LoginScreen> {
           Get.offAll(() => const SportSelectionScreen());
         }
       } else {
-        Get.snackbar(
-          'Cancelado',
-          'Inicio con Google cancelado',
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
-        );
+        if (mounted && context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Inicio con Google cancelado'),
+              backgroundColor: Colors.orange,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
       }
     } catch (e) {
       setState(() {
         _isLoading = false;
       });
-      Get.snackbar(
-        'Error',
-        'Error al iniciar con Google: $e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      if (mounted && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al iniciar con Google: $e'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
     }
   }
 
@@ -155,12 +173,15 @@ class _LoginScreenState extends State<LoginScreen> {
         // Check onboarding status
         bool onboardingCompleted = await _authService.checkOnboardingStatus();
         
-        Get.snackbar(
-          'Éxito',
-          'Sesión iniciada correctamente',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
+        if (mounted && context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Sesión iniciada correctamente'),
+              backgroundColor: Colors.green,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
         
         if (onboardingCompleted) {
           Get.offAllNamed(AppRoutes.homeContainerScreen);
@@ -168,23 +189,29 @@ class _LoginScreenState extends State<LoginScreen> {
           Get.offAll(() => const SportSelectionScreen());
         }
       } else {
-        Get.snackbar(
-          'Cancelado',
-          'Inicio con Facebook cancelado',
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
-        );
+        if (mounted && context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Inicio con Facebook cancelado'),
+              backgroundColor: Colors.orange,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
       }
     } catch (e) {
       setState(() {
         _isLoading = false;
       });
-      Get.snackbar(
-        'Error',
-        'Error al iniciar con Facebook: $e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      if (mounted && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al iniciar con Facebook: $e'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
     }
   }
 

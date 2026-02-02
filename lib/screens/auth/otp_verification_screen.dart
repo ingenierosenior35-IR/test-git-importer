@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../services/auth_service.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../onboarding/sport_selection_screen.dart';
+import '../../routes/app_routes.dart';
 
 class OTPVerificationScreen extends StatefulWidget {
   final String identifier; // Can be phone number or email
@@ -50,13 +53,16 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   }
 
   Future<void> _verifyOTP() async {
-  if (_otpController. text.length != 6) {
-    Get.snackbar(
-      'Error',
-      'Por favor ingresa un código de 6 dígitos válido',
-      backgroundColor:  Colors.red,
-      colorText: Colors.white,
-    );
+  if (_otpController.text.length != 6) {
+    if (mounted && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor ingresa un código de 6 dígitos válido'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
     return;
   }
 
@@ -67,24 +73,44 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   try {
     if (widget.isPhone && widget.verificationId != null) {
       // Phone verification
-      final userCredential = await _authService. verifyOTP(
+      final userCredential = await _authService.verifyOTP(
         _otpController.text,
         widget.verificationId!,
       );
 
-      if (userCredential != null) {
-        // 🚀 Navega INMEDIATAMENTE a deportes (siempre)
-        // La pantalla de deportes verificará si debe saltar al home
-        Get.offAll(() => const SportSelectionScreen());
+      if (userCredential != null && userCredential.user != null) {
+        // Check if user has completed onboarding
+        User currentUser = userCredential.user!;
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUser.uid)
+            .get();
         
-        // Mostrar mensaje después
+        bool onboardingCompleted = userDoc.exists && 
+            userDoc.data() != null && 
+            (userDoc.data() as Map<String, dynamic>).containsKey('onboarding_completed') &&
+            (userDoc.data() as Map<String, dynamic>)['onboarding_completed'] == true;
+        
+        if (onboardingCompleted) {
+          // User already completed onboarding - go to home
+          Get.offAllNamed(AppRoutes.homeContainerScreen);
+        } else {
+          // User needs to complete onboarding
+          Get.offAll(() => const SportSelectionScreen());
+        }
+        
+        // Show success message after navigation
         Future.delayed(const Duration(milliseconds: 300), () {
-          Get.snackbar(
-            'Éxito',
-            'Verificación exitosa',
-            backgroundColor:  Colors.green,
-            colorText: Colors.white,
-          );
+          if (Get.context != null && Get.context!.mounted) {
+            ScaffoldMessenger.of(Get.context!).showSnackBar(
+              const SnackBar(
+                content: Text('Verificación exitosa'),
+                backgroundColor: Colors.green,
+                behavior: SnackBarBehavior.floating,
+                duration: Duration(seconds: 2),
+              ),
+            );
+          }
         });
       } else {
         if (mounted) {
@@ -93,12 +119,15 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
           });
         }
         
-        Get.snackbar(
-          'Error',
-          'Código de verificación inválido',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+        if (mounted && context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Código de verificación inválido'),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
       }
     } else {
       // Email verification (placeholder - implement as needed)
@@ -107,12 +136,15 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
           _isLoading = false;
         });
       }
-      Get.snackbar(
-        'Info',
-        'Verificación de correo no implementada aún',
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
+      if (mounted && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Verificación de correo no implementada aún'),
+            backgroundColor: Colors.orange,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
     }
   } catch (e) {
     if (mounted) {
@@ -121,23 +153,29 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       });
     }
     
-    Get.snackbar(
-      'Error',
-      'Verificación fallida: $e',
-      backgroundColor: Colors.red,
-      colorText: Colors. white,
-    );
+    if (mounted && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Verificación fallida: $e'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 }
 
   Future<void> _resendOTP() async {
     if (!widget.isPhone) {
-      Get.snackbar(
-        'Info',
-        'Reenvío de código por correo no implementado aún',
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
+      if (mounted && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Reenvío de código por correo no implementado aún'),
+            backgroundColor: Colors.orange,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
       return;
     }
 
@@ -153,12 +191,15 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
             _isLoading = false;
           });
           
-          Get.snackbar(
-            'Éxito',
-            'Código de verificación enviado',
-            backgroundColor:  Colors.green,
-            colorText: Colors.white,
-          );
+          if (mounted && context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Código de verificación enviado'),
+                backgroundColor: Colors.green,
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
           
           // Navigate to new OTP screen with new verification ID
           Get.off(() => OTPVerificationScreen(
@@ -171,24 +212,30 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
           setState(() {
             _isLoading = false;
           });
-          Get.snackbar(
-            'Error',
-            error,
-            backgroundColor:  Colors.red,
-            colorText: Colors.white,
-          );
+          if (mounted && context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(error),
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
         },
       );
     } catch (e) {
       setState(() {
         _isLoading = false;
       });
-      Get.snackbar(
-        'Error',
-        'Error al reenviar código: $e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      if (mounted && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al reenviar código: $e'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
     }
   }
 

@@ -62,12 +62,15 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       });
       _startTimer();
       
-      Get.snackbar(
-        'Éxito',
-        'Código de verificación enviado',
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      if (mounted && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Código de verificación enviado'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
     }
   }
 
@@ -75,12 +78,15 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     String code = _controllers.map((c) => c.text).join();
     
     if (code.length != 5) {
-      Get.snackbar(
-        'Error',
-        'Por favor ingresa el código de verificación completo',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      if (mounted && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Por favor ingresa el código de verificación completo'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
       return;
     }
 
@@ -95,12 +101,15 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           _isLoading = false;
         });
         
-        Get.snackbar(
-          'Éxito',
-          'Código verificado exitosamente',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
+        if (mounted && context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Código verificado exitosamente'),
+              backgroundColor: Colors.green,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
         
         // Navigate back or to next screen
         Get.back();

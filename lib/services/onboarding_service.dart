@@ -18,7 +18,7 @@ class OnboardingService {
   }) async {
     try {
       await _firestore.collection('users').doc(uid).set({
-        'onboardingCompleted': true,
+        'onboarding_completed': true,
         'sports': sports,
         'gender': gender,
         'height': height,
@@ -26,8 +26,9 @@ class OnboardingService {
         'profilePhotos': photoUrls ?? [],
         'profileCompletedAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true));
+      debugPrint('✅ Onboarding data saved successfully');
     } catch (e) {
-      debugPrint('Error saving onboarding data: $e');
+      debugPrint('❌ Error saving onboarding data: $e');
       rethrow;
     }
   }
@@ -41,19 +42,44 @@ class OnboardingService {
 
     try {
       for (int i = 0; i < photos.length; i++) {
-        String fileName = 'profile_${DateTime.now().millisecondsSinceEpoch}_$i.jpg';
-        Reference ref = _storage.ref().child('users/$uid/photos/$fileName');
+        final file = photos[i];
         
-        UploadTask uploadTask = ref.putFile(photos[i]);
-        TaskSnapshot snapshot = await uploadTask;
+        // Create reference with proper path
+        final String fileName = 'profile_${uid}_${DateTime.now().millisecondsSinceEpoch}_$i.jpg';
+        final Reference storageRef = _storage
+            .ref()
+            .child('user_profiles')
+            .child(uid)
+            .child(fileName);
         
-        String downloadUrl = await snapshot.ref.getDownloadURL();
+        debugPrint('📤 Uploading photo to: ${storageRef.fullPath}');
+        
+        // Upload file with metadata
+        final UploadTask uploadTask = storageRef.putFile(
+          file,
+          SettableMetadata(
+            contentType: 'image/jpeg',
+            customMetadata: {'uploaded_by': uid},
+          ),
+        );
+        
+        // Wait for completion
+        final TaskSnapshot snapshot = await uploadTask;
+        
+        // Get download URL
+        final String downloadUrl = await snapshot.ref.getDownloadURL();
         photoUrls.add(downloadUrl);
+        
+        debugPrint('✅ Photo uploaded successfully: $downloadUrl');
       }
       
       return photoUrls;
     } catch (e) {
-      debugPrint('Error uploading photos: $e');
+      debugPrint('❌ Error uploading photos: $e');
+      if (e is FirebaseException) {
+        debugPrint('Firebase error code: ${e.code}');
+        debugPrint('Firebase error message: ${e.message}');
+      }
       rethrow;
     }
   }

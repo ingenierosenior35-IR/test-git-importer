@@ -45,21 +45,27 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
     if (status.isGranted) {
       _pickImage(source);
     } else if (status.isPermanentlyDenied) {
-      Get.snackbar(
-        'Permiso requerido',
-        'Por favor habilita el permiso de ${source == ImageSource.camera ? 'cámara' : 'fotos'} en configuración',
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-        duration: const Duration(seconds: 3),
-      );
+      if (mounted && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Por favor habilita el permiso de ${source == ImageSource.camera ? 'cámara' : 'fotos'} en configuración'),
+            backgroundColor: Colors.orange,
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
       await openAppSettings();
     } else {
-      Get.snackbar(
-        'Permiso denegado',
-        'No se puede acceder a ${source == ImageSource.camera ? 'cámara' : 'galería'}',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      if (mounted && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No se puede acceder a ${source == ImageSource.camera ? 'cámara' : 'galería'}'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
     }
   }
 
@@ -79,12 +85,15 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
       }
     } catch (e) {
       debugPrint('Error picking image: $e');
-      Get.snackbar(
-        'Error',
-        'Error al seleccionar imagen: $e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      if (mounted && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al seleccionar imagen: $e'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
     }
   }
 
@@ -157,13 +166,29 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
       // Upload photo if any
       List<String> photoUrls = [];
       if (_photo != null) {
-        photoUrls = await _onboardingService.uploadPhotos(
-          uid: currentUser.uid,
-          photos: [_photo!],
-        );
+        try {
+          photoUrls = await _onboardingService.uploadPhotos(
+            uid: currentUser.uid,
+            photos: [_photo!],
+          );
+          debugPrint('✅ Photo uploaded successfully');
+        } catch (uploadError) {
+          debugPrint('⚠️ Error uploading photo, continuing without it: $uploadError');
+          // Continue without photo instead of failing completely
+          if (mounted && context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('No se pudo subir la foto, pero continuaremos con tu perfil'),
+                backgroundColor: Colors.orange,
+                behavior: SnackBarBehavior.floating,
+                duration: Duration(seconds: 3),
+              ),
+            );
+          }
+        }
       }
 
-      // Save all onboarding data
+      // Save all onboarding data (even if photo upload failed)
       await _onboardingService.saveOnboardingData(
         uid: currentUser.uid,
         sports: widget.selectedSports,
@@ -182,7 +207,46 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
       // Navigate to congratulations screen
       Get.off(() => const CongratulationsScreen());
     } catch (e) {
-      debugPrint('Error completing onboarding: $e');
+      debugPrint('❌ Error completing onboarding: $e');
+
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error al completar configuración: $e'),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _skip() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) {
+        throw Exception('No user logged in');
+      }
+
+      // Save onboarding data WITHOUT photo
+      await _onboardingService.saveOnboardingData(
+        uid: currentUser.uid,
+        sports: widget.selectedSports,
+        gender: widget.selectedGender,
+        height: widget.height,
+        weight: widget.weight,
+        photoUrls: [], // Empty list
+      );
 
       if (mounted) {
         setState(() {
@@ -190,17 +254,27 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
         });
       }
 
-      Get.snackbar(
-        'Error',
-        'Error al completar configuración del perfil: $e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-    }
-  }
+      // Navigate to congratulations screen
+      Get.off(() => const CongratulationsScreen());
+    } catch (e) {
+      debugPrint('❌ Error completing onboarding: $e');
 
-  Future<void> _skip() async {
-    _finish(); // Just finish without photo
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error al completar configuración: $e'),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      }
+    }
   }
 
   @override

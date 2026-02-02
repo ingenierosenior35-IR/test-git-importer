@@ -30,7 +30,7 @@ class FirestoreService {
           if (photoURL != null) 'photoURL': photoURL,
         });
       } else {
-        // Create new user - ESTABLECER onboardingCompleted: false
+        // Create new user - ESTABLECER onboarding_completed: false
         await userDoc.set({
           'uid': uid,
           'phoneNumber': phoneNumber,
@@ -38,7 +38,7 @@ class FirestoreService {
           'displayName': displayName,
           'photoURL': photoURL,
           'provider': provider,
-          'onboardingCompleted': false,  // ← Campo crítico
+          'onboarding_completed': false,  // ← Campo crítico
           'createdAt':  FieldValue.serverTimestamp(),
           'lastLogin': FieldValue.serverTimestamp(),
         });
@@ -101,7 +101,7 @@ class FirestoreService {
       DocumentSnapshot doc = await usersCollection.doc(uid).get();
       if (doc.exists) {
         Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
-        return data?['onboardingCompleted'] == true;
+        return data?['onboarding_completed'] == true;
       }
       return false;
     } catch (e) {
@@ -127,7 +127,7 @@ class FirestoreService {
         'height': height,
         'weight': weight,
         'profilePhotos': profilePhotos ?? [],
-        'onboardingCompleted': true,  // ← SOLO AQUÍ se pone en true
+        'onboarding_completed': true,  // ← SOLO AQUÍ se pone en true
         'profileCompletedAt': FieldValue.serverTimestamp(),
       });
       debugPrint('✅ Onboarding data saved successfully');
