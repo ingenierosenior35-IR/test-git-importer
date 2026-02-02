@@ -44,11 +44,13 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
 
   void _continue() {
     if (_selectedGender == null) {
-      Get.snackbar(
-        'Selección requerida',
-        'Por favor selecciona tu género',
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
+      // Use ScaffoldMessenger instead of Get.snackbar to avoid Overlay error
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor selecciona tu género'),
+          backgroundColor: Colors.orange,
+          duration: Duration(seconds: 2),
+        ),
       );
       return;
     }
@@ -106,10 +108,10 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
                             width: 2,
                           ),
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.person_add,
                           size: 48,
-                          color: Colors.grey[600],
+                          color: Color(0xFFCDFF4D),
                         ),
                       ),
 

@@ -81,7 +81,7 @@ class _ScrollPickerState extends State<ScrollPicker> {
                   child: Text(
                     '${widget.items[index]}${widget.suffix}',
                     style: TextStyle(
-                      fontSize: isSelected ? 32 : 20,
+                      fontSize: isSelected ? 24 : 16, // Reduced from 32/20 for minimalist look
                       fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                       color: isSelected 
                           ? const Color(0xFFCDFF4D) 

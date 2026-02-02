@@ -60,11 +60,13 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
         if (_selectedSports.length < maxSportsSelection) {
           _selectedSports.add(sport);
         } else {
-          Get.snackbar(
-            'Límite alcanzado',
-            'Puedes seleccionar hasta $maxSportsSelection deportes',
-            backgroundColor: Colors.orange,
-            colorText: Colors.white,
+          // Show snackbar using ScaffoldMessenger to avoid Overlay error
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Puedes seleccionar hasta $maxSportsSelection deportes'),
+              backgroundColor: Colors.orange,
+              duration: const Duration(seconds: 2),
+            ),
           );
         }
       }
@@ -73,11 +75,13 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
 
   void _continue() {
     if (_selectedSports.isEmpty) {
-      Get.snackbar(
-        'Selección requerida',
-        'Por favor selecciona al menos un deporte',
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
+      // Use ScaffoldMessenger instead of Get.snackbar to avoid Overlay error
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor selecciona al menos un deporte'),
+          backgroundColor: Colors.orange,
+          duration: Duration(seconds: 2),
+        ),
       );
       return;
     }
