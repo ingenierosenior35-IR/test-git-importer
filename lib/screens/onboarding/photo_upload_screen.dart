@@ -45,21 +45,26 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
     if (status.isGranted) {
       _pickImage(source);
     } else if (status.isPermanentlyDenied) {
-      Get.snackbar(
-        'Permiso requerido',
-        'Por favor habilita el permiso de ${source == ImageSource.camera ? 'cámara' : 'fotos'} en configuración',
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-        duration: const Duration(seconds: 3),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Por favor habilita el permiso de ${source == ImageSource.camera ? 'cámara' : 'fotos'} en configuración'),
+            backgroundColor: Colors.orange,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
       await openAppSettings();
     } else {
-      Get.snackbar(
-        'Permiso denegado',
-        'No se puede acceder a ${source == ImageSource.camera ? 'cámara' : 'galería'}',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No se puede acceder a ${source == ImageSource.camera ? 'cámara' : 'galería'}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
     }
   }
 
@@ -79,12 +84,15 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
       }
     } catch (e) {
       debugPrint('Error picking image: $e');
-      Get.snackbar(
-        'Error',
-        'Error al seleccionar imagen: $e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al seleccionar imagen: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
     }
   }
 
@@ -188,14 +196,15 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
         setState(() {
           _isLoading = false;
         });
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al completar configuración del perfil: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
       }
-
-      Get.snackbar(
-        'Error',
-        'Error al completar configuración del perfil: $e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
     }
   }
 
