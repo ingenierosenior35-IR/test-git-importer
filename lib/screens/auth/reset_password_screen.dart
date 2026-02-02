@@ -62,12 +62,15 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       });
       _startTimer();
       
-      Get.snackbar(
-        'Éxito',
-        'Código de verificación enviado',
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Código de verificación enviado'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
     }
   }
 
@@ -75,12 +78,15 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     String code = _controllers.map((c) => c.text).join();
     
     if (code.length != 5) {
-      Get.snackbar(
-        'Error',
-        'Por favor ingresa el código de verificación completo',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Por favor ingresa el código de verificación completo'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
       return;
     }
 
@@ -95,11 +101,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           _isLoading = false;
         });
         
-        Get.snackbar(
-          'Éxito',
-          'Código verificado exitosamente',
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Código verificado exitosamente'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
         );
         
         // Navigate back or to next screen

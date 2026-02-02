@@ -44,17 +44,44 @@ class OnboardingService {
         String fileName = 'profile_${DateTime.now().millisecondsSinceEpoch}_$i.jpg';
         Reference ref = _storage.ref().child('users/$uid/photos/$fileName');
         
+        debugPrint('🔵 Uploading photo to: users/$uid/photos/$fileName');
+        
         UploadTask uploadTask = ref.putFile(photos[i]);
         TaskSnapshot snapshot = await uploadTask;
         
         String downloadUrl = await snapshot.ref.getDownloadURL();
         photoUrls.add(downloadUrl);
+        
+        debugPrint('✅ Photo uploaded successfully: $downloadUrl');
       }
       
       return photoUrls;
+    } on FirebaseException catch (e) {
+      debugPrint('❌ Firebase Storage Error: ${e.code} - ${e.message}');
+      
+      // Provide more specific error messages
+      String errorMessage;
+      switch (e.code) {
+        case 'storage/object-not-found':
+          errorMessage = 'Error de configuración de almacenamiento. Contacta al administrador.';
+          break;
+        case 'storage/unauthorized':
+          errorMessage = 'No tienes permiso para subir archivos. Verifica tu sesión.';
+          break;
+        case 'storage/canceled':
+          errorMessage = 'Subida cancelada. Intenta de nuevo.';
+          break;
+        case 'storage/unknown':
+          errorMessage = 'Error desconocido al subir la foto. Verifica tu conexión.';
+          break;
+        default:
+          errorMessage = 'Error al subir la foto: ${e.message}';
+      }
+      
+      throw Exception(errorMessage);
     } catch (e) {
-      debugPrint('Error uploading photos: $e');
-      rethrow;
+      debugPrint('❌ Error uploading photos: $e');
+      throw Exception('Error al subir la foto. Verifica tu conexión.');
     }
   }
 

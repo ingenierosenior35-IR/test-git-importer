@@ -50,13 +50,16 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   }
 
   Future<void> _verifyOTP() async {
-  if (_otpController. text.length != 6) {
-    Get.snackbar(
-      'Error',
-      'Por favor ingresa un código de 6 dígitos válido',
-      backgroundColor:  Colors.red,
-      colorText: Colors.white,
-    );
+  if (_otpController.text.length != 6) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor ingresa un código de 6 dígitos válido'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ),
+      );
+    }
     return;
   }
 
@@ -79,26 +82,30 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
         
         // Mostrar mensaje después
         Future.delayed(const Duration(milliseconds: 300), () {
-          Get.snackbar(
-            'Éxito',
-            'Verificación exitosa',
-            backgroundColor:  Colors.green,
-            colorText: Colors.white,
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Verificación exitosa'),
+                backgroundColor: Colors.green,
+                duration: Duration(seconds: 2),
+              ),
+            );
+          }
         });
       } else {
         if (mounted) {
           setState(() {
             _isLoading = false;
           });
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Código de verificación inválido'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+            ),
+          );
         }
-        
-        Get.snackbar(
-          'Error',
-          'Código de verificación inválido',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
       }
     } else {
       // Email verification (placeholder - implement as needed)
@@ -106,38 +113,44 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
         setState(() {
           _isLoading = false;
         });
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Verificación de correo no implementada aún'),
+            backgroundColor: Colors.orange,
+            duration: Duration(seconds: 3),
+          ),
+        );
       }
-      Get.snackbar(
-        'Info',
-        'Verificación de correo no implementada aún',
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
     }
   } catch (e) {
     if (mounted) {
       setState(() {
         _isLoading = false;
       });
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Verificación fallida: $e'),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 3),
+        ),
+      );
     }
-    
-    Get.snackbar(
-      'Error',
-      'Verificación fallida: $e',
-      backgroundColor: Colors.red,
-      colorText: Colors. white,
-    );
   }
 }
 
   Future<void> _resendOTP() async {
     if (!widget.isPhone) {
-      Get.snackbar(
-        'Info',
-        'Reenvío de código por correo no implementado aún',
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Reenvío de código por correo no implementado aún'),
+            backgroundColor: Colors.orange,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
       return;
     }
 
@@ -153,12 +166,15 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
             _isLoading = false;
           });
           
-          Get.snackbar(
-            'Éxito',
-            'Código de verificación enviado',
-            backgroundColor:  Colors.green,
-            colorText: Colors.white,
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Código de verificación enviado'),
+                backgroundColor: Colors.green,
+                duration: Duration(seconds: 3),
+              ),
+            );
+          }
           
           // Navigate to new OTP screen with new verification ID
           Get.off(() => OTPVerificationScreen(
@@ -171,24 +187,32 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
           setState(() {
             _isLoading = false;
           });
-          Get.snackbar(
-            'Error',
-            error,
-            backgroundColor:  Colors.red,
-            colorText: Colors.white,
-          );
+          
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(error),
+                backgroundColor: Colors.red,
+                duration: const Duration(seconds: 3),
+              ),
+            );
+          }
         },
       );
     } catch (e) {
       setState(() {
         _isLoading = false;
       });
-      Get.snackbar(
-        'Error',
-        'Error al reenviar código: $e',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al reenviar código: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
     }
   }
 

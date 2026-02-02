@@ -32,12 +32,15 @@ class _IdentityScreenState extends State<IdentityScreen> {
     final input = _phoneEmailController.text.trim();
     
     if (input.isEmpty) {
-      Get.snackbar(
-        'Requerido',
-        'Por favor ingresa tu teléfono o correo',
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Por favor ingresa tu teléfono o correo'),
+            backgroundColor: Colors.orange,
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
       return;
     }
 
@@ -55,12 +58,15 @@ class _IdentityScreenState extends State<IdentityScreen> {
         Get.toNamed(AppRoutes.firebaseLoginScreen, arguments: {'phone': input});
       }
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        e.toString(),
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
     } finally {
       if (mounted) {
         setState(() {
@@ -90,20 +96,26 @@ class _IdentityScreenState extends State<IdentityScreen> {
           Get.off(() => const SportSelectionScreen());
         }
       } else {
-        Get.snackbar(
-          'Inicio cancelado',
-          'Inicio con Google cancelado',
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Inicio con Google cancelado'),
+              backgroundColor: Colors.orange,
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
       }
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Error al iniciar con Google: ${e.toString()}',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al iniciar con Google: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
     } finally {
       if (mounted) {
         setState(() {
@@ -133,20 +145,26 @@ class _IdentityScreenState extends State<IdentityScreen> {
           Get.off(() => const SportSelectionScreen());
         }
       } else {
-        Get.snackbar(
-          'Inicio cancelado',
-          'Inicio con Facebook cancelado',
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Inicio con Facebook cancelado'),
+              backgroundColor: Colors.orange,
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
       }
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Error al iniciar con Facebook: ${e.toString()}',
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al iniciar con Facebook: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
     } finally {
       if (mounted) {
         setState(() {
@@ -163,12 +181,15 @@ class _IdentityScreenState extends State<IdentityScreen> {
 
     try {
       // Apple Sign In not implemented yet
-      Get.snackbar(
-        'Próximamente',
-        'Inicio con Apple estará disponible pronto',
-        backgroundColor: Colors.blue,
-        colorText: Colors.white,
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Inicio con Apple estará disponible pronto'),
+            backgroundColor: Colors.blue,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
     } finally {
       if (mounted) {
         setState(() {

@@ -32,6 +32,44 @@ This document explains how to configure Firebase for the gym app with authentica
 4. Select a location for your database
 5. The `users` collection will be created automatically when the first user signs up
 
+### 4. Configure Firebase Storage
+
+**CRITICAL**: Firebase Storage must be enabled for profile photo uploads to work.
+
+1. Go to **Storage** in Firebase Console
+2. Click "Get Started"
+3. Choose production mode or test mode
+4. Select the same location as your Firestore database
+5. Click "Done"
+
+#### Firebase Storage Security Rules
+
+**IMPORTANT**: Configure Storage rules to allow authenticated users to upload photos:
+
+```javascript
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Allow users to upload and manage their own photos
+    match /users/{userId}/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
+
+To set these rules:
+1. Go to Firebase Console > Storage > Rules
+2. Replace the default rules with the above
+3. Click "Publish"
+
+#### Storage Structure
+
+Profile photos are stored at: `users/{userId}/photos/profile_{timestamp}_{index}.jpg`
+
+Example: `users/abc123/photos/profile_1234567890_0.jpg`
+
 ## Android Configuration
 
 ### 1. Register Android App
@@ -178,6 +216,22 @@ service cloud.firestore {
 }
 ```
 
+## Firebase Storage Rules
+
+Set up security rules for Firebase Storage (see Configuration section above for details):
+
+```javascript
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /users/{userId}/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
+
 ## Troubleshooting
 
 ### Common Issues
@@ -186,6 +240,13 @@ service cloud.firestore {
 2. **Google Sign-In fails**: Check SHA-1 certificate is added in Firebase Console
 3. **Phone auth fails**: Ensure Phone authentication is enabled in Firebase Console
 4. **Facebook login fails**: Verify Facebook App ID and Secret are correct in Firebase
+5. **Photo upload fails with "object-not-found"**: 
+   - Ensure Firebase Storage is enabled in Firebase Console
+   - Check that Storage rules are configured correctly (see Configuration section)
+   - Verify the default Storage bucket exists
+6. **Photo upload fails with "unauthorized"**:
+   - Check Firebase Storage rules allow write access for authenticated users
+   - Verify the user is properly authenticated before uploading
 
 ### Debug Mode
 
@@ -199,6 +260,7 @@ The following Firebase dependencies are included in `pubspec.yaml`:
 firebase_core: ^3.8.1
 firebase_auth: ^5.3.4
 cloud_firestore: ^5.5.2
+firebase_storage: ^12.3.6
 google_sign_in: ^6.2.3
 flutter_facebook_auth: ^7.1.5
 intl_phone_field: ^3.2.0
