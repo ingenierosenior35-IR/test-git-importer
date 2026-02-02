@@ -6,6 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../widgets/custom_button.dart';
 import '../../services/onboarding_service.dart';
+import '../../core/constants/app_colors.dart';
 import 'congratulations_screen.dart';
 
 class PhotoUploadScreen extends StatefulWidget {
@@ -118,7 +119,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
             ),
             const SizedBox(height: 20),
             ListTile(
-              leading: const Icon(Icons.camera_alt, color: Color(0xFFCDFF4D)),
+              leading: const Icon(Icons.camera_alt, color: AppColors.primary),
               title: const Text('Tomar foto', style: TextStyle(color: Colors.white)),
               onTap: () {
                 Navigator.of(Get.context!).pop(); // Use Navigator instead of Get.back()
@@ -129,7 +130,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.photo_library, color: Color(0xFFCDFF4D)),
+              leading: const Icon(Icons.photo_library, color: AppColors.primary),
               title: const Text('Elegir de galería', style: TextStyle(color: Colors.white)),
               onTap: () {
                 Navigator.of(Get.context!).pop(); // Use Navigator instead of Get.back()
@@ -277,17 +278,17 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                                 ? Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.add_a_photo_outlined,
                                         size: 64,
-                                        color: Colors.grey[600],
+                                        color: AppColors.primary,
                                       ),
                                       const SizedBox(height: 16),
-                                      Text(
+                                      const Text(
                                         'Agregar foto',
                                         style: TextStyle(
                                           fontSize: 16,
-                                          color: Colors.grey[600],
+                                          color: AppColors.textGreyLight,
                                         ),
                                       ),
                                     ],
@@ -338,11 +339,11 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                       const SizedBox(height: 32),
 
                       // Microcopy
-                      Text(
+                      const Text(
                         'Tu avatar, tu estilo.',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.grey[600],
+                          color: AppColors.textGreyDark,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -370,11 +371,11 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                   // Skip button
                   TextButton(
                     onPressed: _isLoading ? null : _skip,
-                    child: Text(
+                    child: const Text(
                       'Omitir',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.grey[600],
+                        color: AppColors.textGreyDark,
                       ),
                     ),
                   ),
