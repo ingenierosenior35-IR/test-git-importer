@@ -1,9 +1,8 @@
-// ignore_for_file: use_key_in_widget_constructors
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:Rival/routes/app_routes.dart';
 import 'package:Rival/theme/theme_helper.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,8 +18,12 @@ void main() async {
   // Initialize Firebase
   try {
     await Firebase.initializeApp();
+    
+    // Verify that Firebase Storage is available
+    debugPrint('✅ Firebase initialized successfully');
+    debugPrint('📦 Firebase Storage Bucket: ${FirebaseStorage.instance.bucket}');
   } catch (e) {
-    print('Firebase initialization error: $e');
+    debugPrint('❌ Firebase initialization error: $e');
   }
   
   SystemChrome.setPreferredOrientations([
