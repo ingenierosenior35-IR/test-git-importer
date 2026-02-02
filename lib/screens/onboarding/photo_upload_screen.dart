@@ -273,10 +273,10 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                                 ? Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.add_a_photo_outlined,
                                         size: 64,
-                                        color: Colors.grey[600],
+                                        color: Color(0xFFCDFF4D),
                                       ),
                                       const SizedBox(height: 16),
                                       Text(

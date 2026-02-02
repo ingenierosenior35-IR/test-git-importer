@@ -146,10 +146,10 @@ class _MeasurementsScreenState extends State<MeasurementsScreen> {
                             width: 2,
                           ),
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.monitor_weight_outlined,
                           size: 40,
-                          color: Colors.grey[600],
+                          color: Color(0xFFCDFF4D),
                         ),
                       ),
 
