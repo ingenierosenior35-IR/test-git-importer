@@ -137,21 +137,23 @@ class _WeightScreenState extends State<WeightScreen> {
                             width: 2,
                           ),
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.monitor_weight_outlined,
                           size: 40,
-                          color: Colors.grey[600],
+                          color: Color(0xFFCDFF4D),
                         ),
                       ),
 
                       const SizedBox(height: 48),
 
-                      // Weight Picker
+                      // Weight Picker (minimalist design)
                       ScrollPicker(
                         items: _weightOptions,
                         initialItem: _currentWeight,
                         suffix: _weightUnit == 'kg' ? ' kg' : ' lb',
                         onSelectedItemChanged: _onWeightChanged,
+                        itemHeight: 40.0, // Reduced from default 50
+                        visibleItemCount: 5,
                       ),
 
                       const SizedBox(height: 24),
@@ -192,8 +194,8 @@ class _WeightScreenState extends State<WeightScreen> {
     return GestureDetector(
       onTap: _toggleWeightUnit,
       child: Container(
-        width: 60,
-        height: 60,
+        width: 50,
+        height: 50,
         decoration: BoxDecoration(
           color: isSelected 
               ? const Color(0xFFCDFF4D) 
@@ -210,7 +212,7 @@ class _WeightScreenState extends State<WeightScreen> {
           child: Text(
             unit,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: FontWeight.bold,
               color: isSelected ? Colors.black : Colors.white,
             ),

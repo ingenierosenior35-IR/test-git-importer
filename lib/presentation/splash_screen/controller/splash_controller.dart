@@ -19,10 +19,8 @@ class SplashController extends GetxController {
       debugPrint("is intro ====== $isIntro");
       debugPrint("isSignIn ====== $isSignIn");
       
-      // Navegar según el estado
-      if (isIntro) {
-        Get.toNamed(AppRoutes.onboardingOneScreen);
-      } else if (isSignIn) {
+      // Navigate directly to welcome screen, skipping initial onboarding
+      if (isSignIn) {
         Get.toNamed(AppRoutes.welcomeScreen);
       } else {
         Get.toNamed(AppRoutes.homeContainerScreen);

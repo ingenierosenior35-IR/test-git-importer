@@ -18,18 +18,19 @@ class _SplashScreenState extends State<SplashScreen> {
  Widget build(BuildContext context) {
   mediaQueryData = MediaQuery.of(context);
   return Scaffold(
-      backgroundColor: theme.colorScheme.onErrorContainer,
-      body: SizedBox(
-          width: double.maxFinite,
-          child: CustomImageView(
-              svgPath: ImageConstant.imgGroup,
-              height: getVerticalSize(118),
-              width: getHorizontalSize(145),
-              alignment: Alignment.center,
-              margin: getMargin(bottom: 5),
-              onTap: () {
-               onTapImgImage();
-              })));
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Text(
+          'Rival',
+          style: TextStyle(
+            fontSize: 48,
+            fontWeight: FontWeight.bold,
+            color: const Color(0xFFCDFF4D),
+            letterSpacing: 2,
+          ),
+        ),
+      ),
+  );
  }
 
 
