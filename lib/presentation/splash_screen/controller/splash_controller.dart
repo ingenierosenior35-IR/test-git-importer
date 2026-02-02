@@ -15,14 +15,13 @@ class SplashController extends GetxController {
     bool isSignIn = await PrefUtils.getIsSignIn();
     bool isIntro = await PrefUtils. getIsIntro();
     
-    Timer(const Duration(seconds:  3), () {
+    Timer(const Duration(seconds:  2), () {
       debugPrint("is intro ====== $isIntro");
       debugPrint("isSignIn ====== $isSignIn");
       
-      // Navegar según el estado
-      if (isIntro) {
-        Get.toNamed(AppRoutes.onboardingOneScreen);
-      } else if (isSignIn) {
+      // Always navigate to welcome screen (login) after splash
+      // Skip the old onboarding pages completely
+      if (isSignIn) {
         Get.toNamed(AppRoutes.welcomeScreen);
       } else {
         Get.toNamed(AppRoutes.homeContainerScreen);

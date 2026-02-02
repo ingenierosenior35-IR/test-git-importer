@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/scroll_picker.dart';
+import '../../core/constants/app_colors.dart';
 import 'photo_upload_screen.dart';
 
 class MeasurementsScreen extends StatefulWidget {
@@ -139,17 +140,17 @@ class _MeasurementsScreenState extends State<MeasurementsScreen> {
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF2C2C2C),
+                          color: AppColors.backgroundDarker,
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: const Color(0xFF3C3C3C),
+                            color: AppColors.borderGrey,
                             width: 2,
                           ),
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.monitor_weight_outlined,
                           size: 40,
-                          color: Colors.grey[600],
+                          color: AppColors.primary,
                         ),
                       ),
 
@@ -222,11 +223,11 @@ class _MeasurementsScreenState extends State<MeasurementsScreen> {
                       const SizedBox(height: 32),
 
                       // Microcopy
-                      Text(
+                      const Text(
                         'Cada jugador tiene sus números.',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.grey[600],
+                          color: AppColors.textGreyDark,
                         ),
                         textAlign: TextAlign.center,
                       ),

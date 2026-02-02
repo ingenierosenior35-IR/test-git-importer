@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/custom_button.dart';
+import '../../core/constants/app_colors.dart';
 import 'height_screen.dart';
 
 class GenderSelectionScreen extends StatefulWidget {
@@ -99,17 +100,17 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
                         width: 100,
                         height: 100,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF2C2C2C),
+                          color: AppColors.backgroundDarker,
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: const Color(0xFF3C3C3C),
+                            color: AppColors.borderGrey,
                             width: 2,
                           ),
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.person_add,
                           size: 48,
-                          color: Colors.grey[600],
+                          color: AppColors.primary,
                         ),
                       ),
 
@@ -135,11 +136,11 @@ class _GenderSelectionScreenState extends State<GenderSelectionScreen> {
                       const SizedBox(height: 24),
 
                       // Helper text
-                      Text(
+                      const Text(
                         'Esto ayuda a calibrar tu avatar.',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.grey[600],
+                          color: AppColors.textGreyDark,
                         ),
                         textAlign: TextAlign.center,
                       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/constants/app_colors.dart';
 
 class ScrollPicker extends StatefulWidget {
   final List<int> items;
@@ -13,7 +14,7 @@ class ScrollPicker extends StatefulWidget {
     required this.items,
     required this.initialItem,
     required this.onSelectedItemChanged,
-    this.itemHeight = 50.0,
+    this.itemHeight = 40.0,
     this.visibleItemCount = 5,
     this.suffix = '',
   }) : super(key: key);
@@ -51,10 +52,10 @@ class _ScrollPickerState extends State<ScrollPicker> {
             child: Container(
               height: widget.itemHeight,
               decoration: BoxDecoration(
-                color: const Color(0xFFCDFF4D).withOpacity(0.1),
+                color: AppColors.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: const Color(0xFFCDFF4D),
+                  color: AppColors.primary,
                   width: 2,
                 ),
               ),
@@ -81,10 +82,10 @@ class _ScrollPickerState extends State<ScrollPicker> {
                   child: Text(
                     '${widget.items[index]}${widget.suffix}',
                     style: TextStyle(
-                      fontSize: isSelected ? 32 : 20,
+                      fontSize: isSelected ? 28 : 18,
                       fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                       color: isSelected 
-                          ? const Color(0xFFCDFF4D) 
+                          ? AppColors.primary 
                           : Colors.white.withOpacity(0.5),
                     ),
                   ),

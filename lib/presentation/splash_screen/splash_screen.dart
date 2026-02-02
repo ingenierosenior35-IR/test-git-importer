@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:Rival/core/app_export.dart';
+import '../../core/constants/app_colors.dart';
 import 'controller/splash_controller.dart';
-
-
-
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -18,25 +17,18 @@ class _SplashScreenState extends State<SplashScreen> {
  Widget build(BuildContext context) {
   mediaQueryData = MediaQuery.of(context);
   return Scaffold(
-      backgroundColor: theme.colorScheme.onErrorContainer,
-      body: SizedBox(
-          width: double.maxFinite,
-          child: CustomImageView(
-              svgPath: ImageConstant.imgGroup,
-              height: getVerticalSize(118),
-              width: getHorizontalSize(145),
-              alignment: Alignment.center,
-              margin: getMargin(bottom: 5),
-              onTap: () {
-               onTapImgImage();
-              })));
- }
-
-
- onTapImgImage() {
-  Get.toNamed(
-   AppRoutes.onboardingOneScreen,
-  );
+      backgroundColor: AppColors.backgroundBlack,
+      body: Center(
+        child: Text(
+          'Rival',
+          style: GoogleFonts.urbanist(
+            fontSize: 48,
+            fontWeight: FontWeight.bold,
+            color: AppColors.primary,
+            letterSpacing: 2,
+          ),
+        ),
+      ));
  }
 }
 

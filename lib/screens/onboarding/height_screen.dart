@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/scroll_picker.dart';
+import '../../core/constants/app_colors.dart';
 import 'weight_screen.dart';
 
 class HeightScreen extends StatefulWidget {
@@ -19,40 +20,15 @@ class HeightScreen extends StatefulWidget {
 }
 
 class _HeightScreenState extends State<HeightScreen> {
-  // Height
-  String _heightUnit = 'cm';
+  // Height - only metric (cm)
   int _heightCm = 170;
 
   // Generate height options (100-250 cm for inclusivity)
   List<int> get _heightOptions => List.generate(151, (index) => 100 + index);
 
-  // Get current height value in the selected unit
-  int get _currentHeight {
-    if (_heightUnit == 'cm') {
-      return _heightCm;
-    } else {
-      // Convert cm to feet/inches (displayed as total inches)
-      return (_heightCm / 2.54).round();
-    }
-  }
-
-  void _toggleHeightUnit() {
-    setState(() {
-      if (_heightUnit == 'cm') {
-        _heightUnit = 'ft';
-      } else {
-        _heightUnit = 'cm';
-      }
-    });
-  }
-
   void _onHeightChanged(int value) {
     setState(() {
-      if (_heightUnit == 'cm') {
-        _heightCm = value;
-      } else {
-        _heightCm = (value * 2.54).round(); // Convert inches to cm
-      }
+      _heightCm = value;
     });
   }
 
@@ -96,66 +72,56 @@ class _HeightScreenState extends State<HeightScreen> {
                       const Text(
                         '¿Cuál es tu altura?',
                         style: TextStyle(
-                          fontSize: 28,
+                          fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                         textAlign: TextAlign.center,
                       ),
 
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
 
                       // Subtitle
                       Text(
                         'Estos números ayudan a calibrar tu avatar.',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
                           color: Colors.grey[400],
                         ),
                         textAlign: TextAlign.center,
                       ),
 
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 32),
 
-                      // Central icon (ruler/height)
+                      // Central icon (ruler/height) - now yellow
                       Container(
-                        width: 80,
-                        height: 80,
+                        width: 60,
+                        height: 60,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF2C2C2C),
+                          color: AppColors.backgroundDarker,
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: const Color(0xFF3C3C3C),
+                            color: AppColors.borderGrey,
                             width: 2,
                           ),
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.straighten,
-                          size: 40,
-                          color: Colors.grey[600],
+                          size: 30,
+                          color: AppColors.primary,
                         ),
                       ),
 
-                      const SizedBox(height: 48),
+                      const SizedBox(height: 32),
 
-                      // Height Picker
+                      // Height Picker (more compact)
                       ScrollPicker(
                         items: _heightOptions,
-                        initialItem: _currentHeight,
-                        suffix: _heightUnit == 'cm' ? ' cm' : ' in',
+                        initialItem: _heightCm,
+                        suffix: ' cm',
                         onSelectedItemChanged: _onHeightChanged,
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      // Cm/Ft Toggle
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _buildUnitToggle('Metros', _heightUnit == 'cm'),
-                          const SizedBox(width: 12),
-                          _buildUnitToggle('Pies', _heightUnit == 'ft'),
-                        ],
+                        itemHeight: 40.0,
+                        visibleItemCount: 5,
                       ),
 
                       const SizedBox(height: 40),
@@ -180,32 +146,5 @@ class _HeightScreenState extends State<HeightScreen> {
     );
   }
 
-  Widget _buildUnitToggle(String unit, bool isSelected) {
-    return GestureDetector(
-      onTap: _toggleHeightUnit,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected 
-              ? const Color(0xFFCDFF4D) 
-              : const Color(0xFF2C2C2C),
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: isSelected 
-                ? const Color(0xFFCDFF4D) 
-                : const Color(0xFF3C3C3C),
-            width: 2,
-          ),
-        ),
-        child: Text(
-          unit,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: isSelected ? Colors.black : Colors.white,
-          ),
-        ),
-      ),
-    );
-  }
+
 }

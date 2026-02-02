@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/scroll_picker.dart';
+import '../../core/constants/app_colors.dart';
 import 'photo_upload_screen.dart';
 
 class WeightScreen extends StatefulWidget {
@@ -21,45 +22,15 @@ class WeightScreen extends StatefulWidget {
 }
 
 class _WeightScreenState extends State<WeightScreen> {
-  // Weight
-  String _weightUnit = 'kg';
+  // Weight - only metric (kg)
   int _weightKg = 70;
 
-  // Generate weight options based on unit
-  List<int> get _weightOptions {
-    if (_weightUnit == 'kg') {
-      return List.generate(171, (index) => 30 + index); // 30-200 kg
-    } else {
-      return List.generate(376, (index) => 66 + index); // 66-440 lbs (30-200 kg converted)
-    }
-  }
-
-  // Get current weight value in the selected unit
-  int get _currentWeight {
-    if (_weightUnit == 'kg') {
-      return _weightKg;
-    } else {
-      return (_weightKg * 2.20462).round(); // Convert kg to lbs
-    }
-  }
-
-  void _toggleWeightUnit() {
-    setState(() {
-      if (_weightUnit == 'kg') {
-        _weightUnit = 'lb';
-      } else {
-        _weightUnit = 'kg';
-      }
-    });
-  }
+  // Generate weight options (30-200 kg)
+  List<int> get _weightOptions => List.generate(171, (index) => 30 + index);
 
   void _onWeightChanged(int value) {
     setState(() {
-      if (_weightUnit == 'kg') {
-        _weightKg = value;
-      } else {
-        _weightKg = (value / 2.20462).round(); // Convert lbs to kg
-      }
+      _weightKg = value;
     });
   }
 
@@ -104,66 +75,56 @@ class _WeightScreenState extends State<WeightScreen> {
                       const Text(
                         '¿Cuál es tu peso?',
                         style: TextStyle(
-                          fontSize: 28,
+                          fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                         textAlign: TextAlign.center,
                       ),
 
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
 
                       // Subtitle
                       Text(
                         'Cada jugador tiene sus números.',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
                           color: Colors.grey[400],
                         ),
                         textAlign: TextAlign.center,
                       ),
 
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 32),
 
-                      // Central icon (scale/weight)
+                      // Central icon (scale/weight) - now yellow
                       Container(
-                        width: 80,
-                        height: 80,
+                        width: 60,
+                        height: 60,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF2C2C2C),
+                          color: AppColors.backgroundDarker,
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: const Color(0xFF3C3C3C),
+                            color: AppColors.borderGrey,
                             width: 2,
                           ),
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.monitor_weight_outlined,
-                          size: 40,
-                          color: Colors.grey[600],
+                          size: 30,
+                          color: AppColors.primary,
                         ),
                       ),
 
-                      const SizedBox(height: 48),
+                      const SizedBox(height: 32),
 
-                      // Weight Picker
+                      // Weight Picker (more compact)
                       ScrollPicker(
                         items: _weightOptions,
-                        initialItem: _currentWeight,
-                        suffix: _weightUnit == 'kg' ? ' kg' : ' lb',
+                        initialItem: _weightKg,
+                        suffix: ' kg',
                         onSelectedItemChanged: _onWeightChanged,
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      // Kg/Lb Toggle
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _buildUnitToggle('Kg', _weightUnit == 'kg'),
-                          const SizedBox(width: 12),
-                          _buildUnitToggle('Lb', _weightUnit == 'lb'),
-                        ],
+                        itemHeight: 40.0,
+                        visibleItemCount: 5,
                       ),
 
                       const SizedBox(height: 40),
@@ -188,35 +149,5 @@ class _WeightScreenState extends State<WeightScreen> {
     );
   }
 
-  Widget _buildUnitToggle(String unit, bool isSelected) {
-    return GestureDetector(
-      onTap: _toggleWeightUnit,
-      child: Container(
-        width: 60,
-        height: 60,
-        decoration: BoxDecoration(
-          color: isSelected 
-              ? const Color(0xFFCDFF4D) 
-              : const Color(0xFF2C2C2C),
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: isSelected 
-                ? const Color(0xFFCDFF4D) 
-                : const Color(0xFF3C3C3C),
-            width: 2,
-          ),
-        ),
-        child: Center(
-          child: Text(
-            unit,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: isSelected ? Colors.black : Colors.white,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+
 }
