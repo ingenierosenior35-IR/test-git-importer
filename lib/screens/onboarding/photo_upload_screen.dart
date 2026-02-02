@@ -152,6 +152,53 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
     );
   }
 
+  Future<void> _saveOnboardingAndNavigate(List<String> photoUrls) async {
+    try {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) {
+        throw Exception('No user logged in');
+      }
+
+      // Save all onboarding data
+      await _onboardingService.saveOnboardingData(
+        uid: currentUser.uid,
+        sports: widget.selectedSports,
+        gender: widget.selectedGender,
+        height: widget.height,
+        weight: widget.weight,
+        photoUrls: photoUrls,
+      );
+
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+
+      // Navigate to congratulations screen
+      Get.off(() => const CongratulationsScreen());
+    } catch (e) {
+      debugPrint('❌ Error completing onboarding: $e');
+
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error al completar configuración: $e'),
+              backgroundColor: Colors.red,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      }
+      rethrow;
+    }
+  }
+
   Future<void> _finish() async {
     setState(() {
       _isLoading = true;
@@ -188,42 +235,10 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
         }
       }
 
-      // Save all onboarding data (even if photo upload failed)
-      await _onboardingService.saveOnboardingData(
-        uid: currentUser.uid,
-        sports: widget.selectedSports,
-        gender: widget.selectedGender,
-        height: widget.height,
-        weight: widget.weight,
-        photoUrls: photoUrls,
-      );
-
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-
-      // Navigate to congratulations screen
-      Get.off(() => const CongratulationsScreen());
+      // Save and navigate
+      await _saveOnboardingAndNavigate(photoUrls);
     } catch (e) {
-      debugPrint('❌ Error completing onboarding: $e');
-
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-        
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error al completar configuración: $e'),
-              backgroundColor: Colors.red,
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-        }
-      }
+      // Error already handled in _saveOnboardingAndNavigate
     }
   }
 
@@ -233,47 +248,10 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
     });
 
     try {
-      User? currentUser = FirebaseAuth.instance.currentUser;
-      if (currentUser == null) {
-        throw Exception('No user logged in');
-      }
-
       // Save onboarding data WITHOUT photo
-      await _onboardingService.saveOnboardingData(
-        uid: currentUser.uid,
-        sports: widget.selectedSports,
-        gender: widget.selectedGender,
-        height: widget.height,
-        weight: widget.weight,
-        photoUrls: [], // Empty list
-      );
-
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-
-      // Navigate to congratulations screen
-      Get.off(() => const CongratulationsScreen());
+      await _saveOnboardingAndNavigate([]);
     } catch (e) {
-      debugPrint('❌ Error completing onboarding: $e');
-
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-        
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error al completar configuración: $e'),
-              backgroundColor: Colors.red,
-              behavior: SnackBarBehavior.floating,
-            ),
-          );
-        }
-      }
+      // Error already handled in _saveOnboardingAndNavigate
     }
   }
 

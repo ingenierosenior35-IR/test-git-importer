@@ -32,6 +32,47 @@ This document explains how to configure Firebase for the gym app with authentica
 4. Select a location for your database
 5. The `users` collection will be created automatically when the first user signs up
 
+### 4. Configure Firebase Storage
+
+Firebase Storage is required for uploading profile photos during onboarding.
+
+1. Go to **Storage** in the Firebase Console
+2. Click **"Get Started"**
+3. Choose security rules mode (start in test mode, then configure production rules)
+4. Select a storage location (same region as your Firestore database is recommended)
+5. Click **"Done"**
+
+#### Storage Security Rules
+
+Configure the following security rules for Firebase Storage:
+
+```javascript
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Allow users to upload and read their own profile photos
+    match /user_profiles/{userId}/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
+
+These rules ensure:
+- Only authenticated users can upload photos
+- Users can only upload to their own profile folder
+- Anyone authenticated can view profile photos
+- The path structure is: `user_profiles/{userId}/{filename}`
+
+#### Verify Storage Configuration
+
+After enabling Storage, verify the bucket name:
+1. In Firebase Console, go to Storage
+2. Copy the bucket name (format: `your-project-id.appspot.com`)
+3. The app will automatically use this bucket
+4. Check the console logs on app startup to see: `📦 Firebase Storage Bucket: your-project-id.appspot.com`
+
 ## Android Configuration
 
 ### 1. Register Android App
@@ -161,7 +202,7 @@ flutter run
 
 ## Firestore Security Rules
 
-Set up basic security rules for the `users` collection:
+Set up security rules for the `users` collection:
 
 ```javascript
 rules_version = '2';
@@ -171,8 +212,25 @@ service cloud.firestore {
       // Allow users to read and write their own data
       allow read, write: if request.auth != null && request.auth.uid == userId;
       
-      // Allow anyone to check if a phone number exists (for registration flow)
+      // Allow anyone authenticated to check if a phone number exists (for registration flow)
       allow read: if request.auth != null;
+    }
+  }
+}
+```
+
+## Firebase Storage Security Rules
+
+Set up security rules for photo uploads (already covered in Configuration section above):
+
+```javascript
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Allow users to upload and read their own profile photos
+    match /user_profiles/{userId}/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
     }
   }
 }
@@ -186,6 +244,12 @@ service cloud.firestore {
 2. **Google Sign-In fails**: Check SHA-1 certificate is added in Firebase Console
 3. **Phone auth fails**: Ensure Phone authentication is enabled in Firebase Console
 4. **Facebook login fails**: Verify Facebook App ID and Secret are correct in Firebase
+5. **Photo upload fails (object-not-found)**: 
+   - Ensure Firebase Storage is enabled in Firebase Console
+   - Verify Storage security rules are configured correctly
+   - Check the bucket name in the console logs
+   - Make sure the user is authenticated before uploading
+6. **Overlay error with snackbars**: This has been fixed - the app now uses ScaffoldMessenger instead of Get.snackbar
 
 ### Debug Mode
 
@@ -199,9 +263,12 @@ The following Firebase dependencies are included in `pubspec.yaml`:
 firebase_core: ^3.8.1
 firebase_auth: ^5.3.4
 cloud_firestore: ^5.5.2
+firebase_storage: ^12.0.1
 google_sign_in: ^6.2.3
 flutter_facebook_auth: ^7.1.5
 intl_phone_field: ^3.2.0
+image_picker: ^1.0.7
+permission_handler: ^11.2.0
 ```
 
 ## Support

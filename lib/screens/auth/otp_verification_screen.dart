@@ -86,10 +86,13 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
             .doc(currentUser.uid)
             .get();
         
-        bool onboardingCompleted = userDoc.exists && 
-            userDoc.data() != null && 
-            (userDoc.data() as Map<String, dynamic>).containsKey('onboarding_completed') &&
-            (userDoc.data() as Map<String, dynamic>)['onboarding_completed'] == true;
+        Map<String, dynamic>? userData = userDoc.exists && userDoc.data() != null
+            ? userDoc.data() as Map<String, dynamic>
+            : null;
+        
+        bool onboardingCompleted = userData != null &&
+            userData.containsKey('onboarding_completed') &&
+            userData['onboarding_completed'] == true;
         
         if (onboardingCompleted) {
           // User already completed onboarding - go to home
