@@ -82,7 +82,7 @@ import 'package:Rival/presentation/trending_detail/trending_detail_screen.dart';
 import 'package:Rival/presentation/workout_plan_page/workout_plan_page.dart';
 import 'package:Rival/presentation/screens/main_container_screen.dart';
 import 'package:Rival/presentation/screens/matches/create_match_screen.dart';
-import 'package:Rival/features/profile/presentation/screens/edit_profile_screen.dart';
+import 'package:Rival/features/profile/presentation/edit_profile_screen.dart';
 
 class AppRoutes {
   static const String mainContainerScreen = '/main_container_screen';
