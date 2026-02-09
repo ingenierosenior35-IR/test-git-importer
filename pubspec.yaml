@@ -46,6 +46,10 @@ dependencies:
   # Clean Architecture
   dartz: ^0.10.1
   equatable: ^2.0.5
+  # Location services
+  geolocator: ^10.1.0
+  # URL launcher for maps
+  url_launcher: ^6.2.4
 dev_dependencies:
   flutter_test: 
     sdk: flutter
