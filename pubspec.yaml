@@ -37,6 +37,12 @@ dependencies:
   permission_handler: ^11.2.0
   # Google Fonts
   google_fonts: ^6.1.0
+  # HTTP client
+  http: ^1.1.0
+  # File picker
+  file_picker: ^6.1.1
+  # Charts
+  fl_chart: ^0.66.0
 dev_dependencies:
   flutter_test: 
     sdk: flutter
