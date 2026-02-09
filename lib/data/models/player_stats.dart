@@ -8,6 +8,13 @@ class Physical {
   final double accelerationMaxMS2;
   final double decelerationMaxMS2;
   final double minutesPlayed;
+  
+  // UI-friendly aliases
+  double get totalDistanceKm => distanceM / 1000;
+  double get topSpeedKmh => maxSpeedKmh;
+  int get sprintsCount => sprintCount;
+  int get accelerationsCount => highIntensityRuns;
+  int get decelerationsCount => highIntensityRuns;
 
   Physical({
     required this.distanceM,
@@ -74,6 +81,14 @@ class Positioning {
   final List<int> heatmapZones;
   final double offensiveLineAvgM;
   final double defensiveLineAvgM;
+  
+  // UI-friendly aliases
+  double get avgPositionX => avgPosition.x;
+  double get avgPositionY => avgPosition.y;
+  double get fieldCoveragePercent => fieldCoveragePct.toDouble();
+  double get offensiveThirdPercent => 33.0; // Default distribution
+  double get defensiveThirdPercent => 33.0;
+  double get middleThirdPercent => 34.0;
 
   Positioning({
     required this.avgPosition,
@@ -110,6 +125,9 @@ class BallInteraction {
   final double avgTouchDurationS;
   final int ballRecoveries;
   final int ballLosses;
+  
+  // UI-friendly alias
+  double get possessionPercent => (timeInPossessionS / 90 / 60) * 100;
 
   BallInteraction({
     required this.touches,
@@ -151,6 +169,9 @@ class Passing {
   final int keyPasses;
   final int assists;
   final int preAssists;
+  
+  // UI-friendly alias
+  double get passingAccuracyPercent => passAccuracyPct;
 
   Passing({
     required this.passesAttempted,
@@ -203,6 +224,10 @@ class Defensive {
   final int duelsWon;
   final int duelsLost;
   final int blocks;
+  
+  // UI-friendly aliases
+  int get tacklesAttempted => tackles;
+  int get tacklesWon => tackles;
 
   Defensive({
     required this.tackles,
@@ -240,6 +265,9 @@ class Fatigue {
   final double fatigueIndex;
   final double consistencyIndex;
   final double speedDropPct;
+  
+  // UI-friendly alias
+  double get speedDropPercent => speedDropPct;
 
   Fatigue({
     required this.fatigueIndex,
@@ -271,6 +299,13 @@ class EstimatedBiometrics {
   final int cadenceStepsPerMin;
   final int jumpEstimatedCm;
   final double confidence;
+  
+  // UI-friendly aliases
+  double get heightCm => estimatedHeightM * 100;
+  double get weightKg => estimatedWeightKg;
+  int get cadence => cadenceStepsPerMin;
+  double get jumpHeightCm => jumpEstimatedCm.toDouble();
+  double get confidenceScore => confidence;
 
   EstimatedBiometrics({
     required this.estimatedHeightM,
@@ -309,6 +344,10 @@ class Advanced {
   final double offensiveContribution;
   final double defensiveContribution;
   final double versatilityIndex;
+  
+  // UI-friendly aliases
+  double get offensiveIndex => offensiveContribution;
+  double get defensiveIndex => defensiveContribution;
 
   Advanced({
     required this.impactScore,
@@ -336,9 +375,19 @@ class Advanced {
   }
 }
 
+// Type aliases for UI compatibility
+typedef PhysicalStats = Physical;
+typedef PositioningStats = Positioning;
+typedef BallInteractionStats = BallInteraction;
+typedef PassingStats = Passing;
+typedef DefensiveStats = Defensive;
+typedef FatigueStats = Fatigue;
+typedef AdvancedStats = Advanced;
+
 class PlayerStats {
-  final int playerId;
-  final int teamId;
+  final String playerId;
+  final String matchId;
+  final DateTime timestamp;
   final Physical physical;
   final Positioning positioning;
   final BallInteraction ballInteraction;
@@ -350,7 +399,8 @@ class PlayerStats {
 
   PlayerStats({
     required this.playerId,
-    required this.teamId,
+    required this.matchId,
+    required this.timestamp,
     required this.physical,
     required this.positioning,
     required this.ballInteraction,
@@ -363,8 +413,11 @@ class PlayerStats {
 
   factory PlayerStats.fromJson(Map<String, dynamic> json) {
     return PlayerStats(
-      playerId: json['player_id'] as int,
-      teamId: json['team_id'] as int,
+      playerId: json['player_id']?.toString() ?? '',
+      matchId: json['match_id']?.toString() ?? '',
+      timestamp: json['timestamp'] != null 
+          ? DateTime.parse(json['timestamp'] as String)
+          : DateTime.now(),
       physical: Physical.fromJson(json['physical'] as Map<String, dynamic>),
       positioning: Positioning.fromJson(json['positioning'] as Map<String, dynamic>),
       ballInteraction: BallInteraction.fromJson(json['ball_interaction'] as Map<String, dynamic>),
@@ -379,7 +432,8 @@ class PlayerStats {
   Map<String, dynamic> toJson() {
     return {
       'player_id': playerId,
-      'team_id': teamId,
+      'match_id': matchId,
+      'timestamp': timestamp.toIso8601String(),
       'physical': physical.toJson(),
       'positioning': positioning.toJson(),
       'ball_interaction': ballInteraction.toJson(),

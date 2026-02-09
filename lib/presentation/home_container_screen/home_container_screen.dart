@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:Rival/core/app_export.dart';
-import 'package:Rival/presentation/home_page/home_page.dart';
+import 'package:Rival/features/home/presentation/screens/home_page.dart';
 import 'package:Rival/presentation/workout_plan_page/workout_plan_page.dart';
 import 'package:Rival/widgets/custom_bottom_bar.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../challenges_page/challenges_page.dart';
-import '../profile_page/profile_page.dart';
+import '../screens/profile/profile_screen.dart';
 import 'controller/home_container_controller.dart';
 
 class HomeContainerScreen extends StatefulWidget {
@@ -22,7 +22,7 @@ class _HomeContainerScreenState extends State<HomeContainerScreen> {
     HomePage(),
     WorkoutPlanPage(isNavigateHomeTab: true),
     ChallengesPage(),
-    ProfilePage()
+    ProfileScreen()
   ];
 
   @override
