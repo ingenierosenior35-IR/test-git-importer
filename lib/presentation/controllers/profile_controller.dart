@@ -121,7 +121,7 @@ class ProfileController extends GetxController {
   }
 
   void navigateToEditProfile() {
-    Get.toNamed('/edit_profile');
+    Get.toNamed(AppRoutes.editProfileScreenNew);
   }
 
   Future<void> signOut() async {

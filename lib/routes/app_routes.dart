@@ -81,9 +81,13 @@ import '../presentation/select_muscle_tab/selectmuscletabScreen.dart';
 import '../presentation/trending_detail/trending_detail_screen.dart';
 import '../presentation/workout_plan_page/workout_plan_page.dart';
 import '../presentation/screens/main_container_screen.dart';
+import '../presentation/screens/matches/create_match_screen.dart';
+import '../presentation/screens/profile/edit_profile_screen.dart';
 
 class AppRoutes {
   static const String mainContainerScreen = '/main_container_screen';
+  static const String createMatchScreen = '/create_match_screen';
+  static const String editProfileScreenNew = '/edit_profile_screen_new';
   static const String splashScreen = '/splash_screen';
 
   static const String onboardingOneScreen = '/onboarding_one_screen';
@@ -294,6 +298,8 @@ class AppRoutes {
         return getPage(HomePage(), settings);
       case AppRoutes.mainContainerScreen:
         return getPage(MainContainerScreen(), settings);
+      case AppRoutes.createMatchScreen:
+        return getPage(CreateMatchScreen(), settings);
       case AppRoutes.homeContainerScreen:
         return getPage(HomeContainerScreen(), settings);
       case AppRoutes.searchFillScreen:
@@ -352,6 +358,8 @@ class AppRoutes {
         return getPage(FindAWorkoutPlanOneScreen(), settings);
       case AppRoutes.myProfileScreen:
         return getPage(MyProfileScreen(), settings);
+      case AppRoutes.editProfileScreenNew:
+        return getPage(EditProfileScreen(), settings);
       case AppRoutes.editProfileScreen:
         return getPage(EditProfileScreen(), settings);
       case AppRoutes.createPlanScreen:

@@ -50,7 +50,7 @@ class MatchesController extends GetxController {
   }
 
   void navigateToCreateMatch() {
-    Get.toNamed('/create_match');
+    Get.toNamed(AppRoutes.createMatchScreen);
   }
 
   void navigateToMatchDetail(String matchId) {
