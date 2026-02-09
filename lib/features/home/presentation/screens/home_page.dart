@@ -15,6 +15,7 @@ import 'package:Rival/services/location_service.dart';
 import 'package:Rival/services/auth_service.dart';
 import 'package:Rival/services/firestore_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 import '../controllers/home_controller.dart';
 import '../../data/models/home_model.dart';
 
@@ -54,7 +55,7 @@ class _HomePageState extends State<HomePage> {
       if (position != null) {
         final prefs = await SharedPreferences.getInstance();
         final repository = WeatherRepositoryImpl(
-          remoteDataSource: SabRemoteDataSource(),
+          remoteDataSource: SabRemoteDataSourceImpl(client: http.Client()),
           sharedPreferences: prefs,
         );
         
