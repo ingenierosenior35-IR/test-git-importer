@@ -1,5 +1,52 @@
 
-# Rival
+# 🏆 Rival - Sports Performance Tracking App
+
+A modern Flutter application for tracking sports performance, managing matches, analyzing player statistics, and building a competitive sports community.
+
+## 🎯 Features
+
+- **🔐 Authentication**: Phone OTP, Google, and Facebook login
+- **👤 Smart Onboarding**: Sport selection, profile setup, photo upload with avatar creation
+- **🏠 Home Dashboard**: Player card, scoreboards, match agenda, quick actions
+- **⚽ Matches**: Create and manage matches, invite players, track status
+- **🎥 Video Analysis**: Upload match videos, processing status tracking
+- **📊 Performance Analysis**: Player metrics, match history, highlights
+- **👥 Profile**: User stats, evolution charts, rating system
+
+## 🎨 Design System
+
+**Theme**: Dark mode with neon yellow accent
+- Primary: #CDFF4D (Neon Yellow)
+- Background: #000000 (Black)
+- Cards: #192126, #252D32 (Dark Grey)
+
+## 🏗️ Architecture
+
+Built with **Clean Architecture** and feature-first organization:
+
+```
+lib/
+├── app/              # App configuration, routes, bindings
+├── core/             # Constants, utilities, network
+├── features/         # Feature modules (auth, home, matches, etc.)
+│   └── [feature]/
+│       ├── domain/   # Entities, repositories, use cases
+│       ├── data/     # Models, datasources, implementations
+│       └── presentation/  # Screens, controllers, widgets
+├── services/         # Global services (Auth, Firestore, etc.)
+└── shared/           # Shared widgets and utilities
+```
+
+## 📋 Tech Stack
+
+- **Framework**: Flutter 3.5.3+
+- **State Management**: GetX
+- **Backend**: Firebase (Auth, Firestore, Storage)
+- **UI Components**: Material Design + Custom widgets
+- **Image Handling**: Image Picker, Cached Network Image
+- **Permissions**: Permission Handler
+
+
 ### Table of contents
 - [System requirements](#system-requirements)
 - [Figma design guidelines for better UI accuracy](#figma-design-guideline-for-better-accuracy)
@@ -12,68 +59,168 @@
 
 ### System requirements
 
-Dart SDK Version 2.18.0 or greater.
-Flutter SDK Version 3.3.0 or greater.
+- Dart SDK Version 3.5.3 or greater
+- Flutter SDK Version 3.3.0 or greater
+- iOS 12.0+ / Android 21+ (API Level 21)
 
-### Figma design guidelines for better UI accuracy
+## 🚀 Getting Started
 
-Read our guidelines to increase the accuracy of design-to-code conversion by optimizing Figma designs.
-https://docs.dhiwise.com/docs/Designguidelines/intro
+### Installation
 
-### Check the UI of the entire app
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/ingenierosenior35-IR/test-git-importer.git
+   cd test-git-importer
+   ```
 
-Check the UI of all the app screens from a single place by setting up the 'initialRoute'  to AppNavigation in the AppRoutes.dart file.
+2. **Install dependencies**
+   ```bash
+   flutter pub get
+   ```
 
-### Application structure
+3. **Configure Firebase**
+   - Add `google-services.json` to `android/app/`
+   - Add `GoogleService-Info.plist` to `ios/Runner/`
+   - Enable Auth methods (Phone, Google, Facebook) in Firebase Console
+   - Enable Cloud Firestore and Storage
+   - See `FIREBASE_SETUP.md` for detailed instructions
 
-After successful build, your application structure should look like this:
+4. **Run the app**
+   ```bash
+   flutter run
+   ```
 
+### Build for Production
+
+```bash
+# Android
+flutter build apk --release
+
+# iOS
+flutter build ios --release
 ```
-.
-├── android                         - It contains files required to run the application on an Android platform.
-├── assets                          - It contains all images and fonts of your application.
-├── ios                             - It contains files required to run the application on an iOS platform.
-├── lib                             - Most important folder in the application, used to write most of the Dart code..
-    ├── main.dart                   - Starting point of the application
-    ├── core
-    │   ├── app_export.dart         - It contains commonly used file imports
-    │   ├── constants               - It contains all constants classes
-    │   ├── errors                  - It contains error handling classes                  
-    │   ├── network                 - It contains network-related classes
-    │   └── utils                   - It contains common files and utilities of the application
-    ├── data
-    │   ├── apiClient               - It contains API calling methods 
-    │   ├── models                  - It contains request/response models 
-    │   └── repository              - Network repository
-    ├── localization                - It contains localization classes
-    ├── presentation                - It contains widgets of the screens with their controllers and the models of the whole application.
-    ├── routes                      - It contains all the routes of the application
-    └── theme                       - It contains app theme and decoration classes
-    └── widgets                     - It contains all custom widget classes
+
+## 📱 App Flow
+
+1. **Splash Screen** (3s) → Check authentication status
+2. **Welcome/Login** → Phone OTP, Google, or Facebook
+3. **Onboarding** (first-time users):
+   - Sport Selection (up to 5 sports)
+   - Gender Selection
+   - Height (metric only, cm)
+   - Weight (metric only, kg)
+   - Photo Upload (camera/gallery)
+   - Congratulations (avatar creation animation)
+4. **Main App** (bottom navigation):
+   - Home
+   - Matches
+   - Video
+   - Analysis
+   - Profile
+
+## 🎬 Key Screens
+
+### Authentication
+- `WelcomeScreen`: Modal design with social login options
+- `OTPVerificationScreen`: 6-digit PIN input with Pinput widget
+- `SportSelectionScreen`: Grid of sports with max 5 selection
+
+### Onboarding
+- `HeightScreen`: Scroll picker for height (100-250 cm)
+- `WeightScreen`: Scroll picker for weight (30-200 kg)
+- `PhotoUploadScreen`: Camera/gallery with permission handling
+- `CongratulationsScreen`: Avatar creation animation + success
+
+### Main Features
+- `HomeScreen`: Player card, scoreboards, matches agenda
+- `MatchesListScreen`: Upcoming and past matches
+- `CreateMatchScreen`: Match details, pitch, time, players
+- `VideoUploadScreen`: Upload and link videos to matches
+- `MatchHistoryScreen`: Statistics and player metrics
+- `ProfileScreen`: User info, stats, settings
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+flutter test
+
+# Run specific test
+flutter test test/widget_test.dart
+
+# Code coverage
+flutter test --coverage
 ```
 
-### How to format your code?
+## 🔧 Development
 
-- if your code is not formatted then run following command in your terminal to format code
-  ```
-  dart format .
-  ```
+### Code Formatting
+```bash
+dart format .
+```
 
-### How you can improve code readability?
+### Code Analysis
+```bash
+flutter analyze
+```
 
-Resolve the errors and warnings that are shown in the application.
+### Useful Commands
+```bash
+# Clean build cache
+flutter clean && flutter pub get
 
-### Libraries and tools used
+# Check Flutter version
+flutter doctor -v
 
-- get - State management
-  https://pub.dev/packages/get
-- connectivity_plus - For status of network connectivity
-  https://pub.dev/packages/connectivity_plus
-- shared_preferences - Provide persistent storage for simple data
-  https://pub.dev/packages/shared_preferences
-- cached_network_image - For storing internet image into cache
-  https://pub.dev/packages/cached_network_image
+# Update dependencies
+flutter pub upgrade
+```
 
-### Support
+## 📖 Documentation
 
-If you have any problems or questions, go to our Discord channel, where we will help you as quickly as possible: https://discord.com/invite/rFMnCG5MZ7
+- **[REFACTOR_SUMMARY.md](REFACTOR_SUMMARY.md)** - Complete refactoring overview
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Architecture documentation
+- **[FIREBASE_SETUP.md](FIREBASE_SETUP.md)** - Firebase configuration guide
+- **[BUG_FIXES_SUMMARY.md](BUG_FIXES_SUMMARY.md)** - Bug fixes changelog
+
+## 🤝 Contributing
+
+This is a private project. For questions or issues, contact the development team.
+
+
+## 📚 Libraries and Tools Used
+
+### Core
+- **[get](https://pub.dev/packages/get)** - State management & navigation
+- **[firebase_core](https://pub.dev/packages/firebase_core)** - Firebase initialization
+- **[firebase_auth](https://pub.dev/packages/firebase_auth)** - Authentication
+- **[cloud_firestore](https://pub.dev/packages/cloud_firestore)** - Database
+- **[firebase_storage](https://pub.dev/packages/firebase_storage)** - File storage
+
+### UI & Media
+- **[google_fonts](https://pub.dev/packages/google_fonts)** - Typography
+- **[cached_network_image](https://pub.dev/packages/cached_network_image)** - Image caching
+- **[flutter_svg](https://pub.dev/packages/flutter_svg)** - SVG support
+- **[image_picker](https://pub.dev/packages/image_picker)** - Camera & gallery
+- **[permission_handler](https://pub.dev/packages/permission_handler)** - Permissions
+
+### Authentication & Input
+- **[google_sign_in](https://pub.dev/packages/google_sign_in)** - Google login
+- **[flutter_facebook_auth](https://pub.dev/packages/flutter_facebook_auth)** - Facebook login
+- **[pinput](https://pub.dev/packages/pinput)** - PIN input for OTP
+- **[pin_code_fields](https://pub.dev/packages/pin_code_fields)** - Alternative PIN input
+
+### Utilities
+- **[shared_preferences](https://pub.dev/packages/shared_preferences)** - Local storage
+- **[connectivity_plus](https://pub.dev/packages/connectivity_plus)** - Network status
+- **[intl](https://pub.dev/packages/intl)** - Internationalization
+- **[dartz](https://pub.dev/packages/dartz)** - Functional programming
+- **[equatable](https://pub.dev/packages/equatable)** - Value equality
+
+## 📄 License
+
+Copyright © 2024 Rival. All rights reserved.
+
+---
+
+Made with ❤️ using Flutter
