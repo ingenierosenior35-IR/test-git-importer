@@ -1,6 +1,7 @@
+import 'package:Rival/features/profile/presentation/controller/profile_controller.dart';
+
 import '../../widgets/custom_bottom_bar.dart';
 import '../../widgets/custom_elevated_button.dart';
-import 'controller/profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:Rival/core/app_export.dart';
 import '../../services/auth_service.dart';

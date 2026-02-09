@@ -51,32 +51,43 @@ class AuthController extends GetxController {
   User? get currentUser => authRepository.currentUser;
 
   // Phone Authentication - Send OTP
-  Future<bool> sendPhoneVerificationCode(String phoneNumber) async {
-    isLoading.value = true;
-    errorMessage.value = '';
-    
-    final result = await sendPhoneVerificationCodeUseCase.call(
-      phoneNumber,
-      onCodeSent: (verificationId) {
-        this.verificationId = verificationId;
-        debugPrint('Code sent, verification ID: $verificationId');
-      },
-      onError: (error) {
-        errorMessage.value = error;
-        debugPrint('Error: $error');
-      },
-    );
-    
-    isLoading.value = false;
-    
-    return result.fold(
-      (failure) {
-        errorMessage.value = failure.message;
-        return false;
-      },
-      (success) => success,
-    );
-  }
+  Future<bool> sendPhoneVerificationCode(
+      String phoneNumber, {
+      required void Function(String verificationId) onCodeSent,
+      required void Function(String error) onError,
+    }) async {
+      isLoading.value = true;
+      errorMessage.value = '';
+
+      final result = await sendPhoneVerificationCodeUseCase.call(
+        phoneNumber,
+        onCodeSent: (verificationId) {
+          // Guardamos el verificationId en el controller
+          this.verificationId = verificationId;
+          debugPrint('Code sent, verification ID: $verificationId');
+
+          // Notificamos a la UI
+          onCodeSent(verificationId);
+        },
+        onError: (error) {
+          errorMessage.value = error;
+          debugPrint('Error: $error');
+
+          // Notificamos a la UI
+          onError(error);
+        },
+      );
+
+      isLoading.value = false;
+
+      return result.fold(
+        (failure) {
+          errorMessage.value = failure.message;
+          return false;
+        },
+        (success) => success,
+      );
+    }
 
   // Verify OTP and Sign In/Sign Up
   Future<UserCredential?> verifyOTP(String otp) async {

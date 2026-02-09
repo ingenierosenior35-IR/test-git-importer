@@ -71,7 +71,6 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       // Phone verification
       final userCredential = await _authController.verifyOTP(
         _otpController.text,
-        widget.verificationId!,
       );
 
       if (userCredential != null) {

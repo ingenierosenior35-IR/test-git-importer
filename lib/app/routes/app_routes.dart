@@ -35,7 +35,6 @@ import 'package:Rival/presentation/select_muscle_one_screen/select_muscle_one_sc
 import 'package:Rival/presentation/your_body_components_one_screen/your_body_composition_consists_components_one_screen.dart';
 import 'package:Rival/presentation/week_1_day_one_screen/week_1_day_one_screen.dart';
 import 'package:Rival/presentation/my_profile_screen/my_profile_screen.dart';
-import 'package:Rival/presentation/edit_profile_screen/edit_profile_screen.dart';
 import 'package:Rival/presentation/wishlist_screen/wishlist_screen.dart';
 import 'package:Rival/presentation/settings_screen/settings_screen.dart';
 import 'package:Rival/presentation/about_us_screen/about_us_screen.dart';
@@ -51,7 +50,6 @@ import 'package:page_transition/page_transition.dart';
 
 // Firebase Auth Screens
 import 'package:Rival/features/auth/presentation/screens/login_screen.dart';
-import 'package:Rival/features/auth/presentation/screens/otp_verification_screen.dart';
 import 'package:Rival/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:Rival/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:Rival/features/auth/presentation/screens/sign_up_screen.dart';
@@ -229,6 +227,8 @@ class AppRoutes {
   static const String myProfileScreen = '/my_profile_screen';
 
   static const String editProfileScreen = '/edit_profile_screen';
+
+  static const String matchDetailScreen = '/match_detail_screen';
 
   static const String wishlistScreen = '/wishlist_screen';
 
@@ -434,17 +434,4 @@ class AppRoutes {
         return null;
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
