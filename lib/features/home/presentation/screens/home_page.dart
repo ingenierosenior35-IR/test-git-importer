@@ -2,29 +2,29 @@
 
 import 'package:flutter/material.dart';
 import 'package:Rival/core/app_export.dart';
-import 'package:Rival/widgets/custom_icon_button.dart';
+import 'package:Rival/shared/widgets/custom_icon_button.dart';
 
-import '../../widgets/app_bar/appbar_edittext.dart';
-import '../blog_screen/controller/blog_controller.dart';
-import '../blog_screen/models/blog_item_model.dart';
-import '../categories_screen/controller/categories_controller.dart';
-import '../categories_screen/models/healthtips1_item_model.dart';
-import '../categories_screen/widgets/healthtips1_item_widget.dart';
-import '../challenges_page/challenges_page.dart';
-import '../exercise_screen/exercise_screen.dart';
-import '../health_tips_screen/health_tips_screen.dart';
-import '../popular_work_out_screen/controller/popular_work_out_controller.dart';
-import '../popular_work_out_screen/models/popular_work_item_model.dart';
-import '../popular_work_out_screen/widgets/popular_work_item_widget.dart';
-import '../recommended_detail/controller/recommended_workout_detail_controller.dart';
-import '../recommended_workout_one_screen/controller/recommended_workout_one_controller.dart';
-import '../recommended_workout_one_screen/models/recommended_workout_one_model.dart';
-import '../recommended_workout_one_screen/recommended_workout_one_screen.dart';
-import '../trending_detail/controller/trending_detail_screen_controller.dart';
-import '../trending_screen/controller/trending_controller.dart';
-import '../trending_screen/models/trending_item_model.dart';
-import 'controller/home_controller.dart';
-import 'models/home_model.dart';
+import 'package:Rival/shared/widgets/app_bar/appbar_edittext.dart';
+import 'package:Rival/presentation/blog_screen/controller/blog_controller.dart';
+import 'package:Rival/presentation/blog_screen/models/blog_item_model.dart';
+import 'package:Rival/presentation/categories_screen/controller/categories_controller.dart';
+import 'package:Rival/presentation/categories_screen/models/healthtips1_item_model.dart';
+import 'package:Rival/presentation/categories_screen/widgets/healthtips1_item_widget.dart';
+import 'package:Rival/presentation/challenges_page/challenges_page.dart';
+import 'package:Rival/presentation/exercise_screen/exercise_screen.dart';
+import 'package:Rival/presentation/health_tips_screen/health_tips_screen.dart';
+import 'package:Rival/presentation/popular_work_out_screen/controller/popular_work_out_controller.dart';
+import 'package:Rival/presentation/popular_work_out_screen/models/popular_work_item_model.dart';
+import 'package:Rival/presentation/popular_work_out_screen/widgets/popular_work_item_widget.dart';
+import 'package:Rival/presentation/recommended_detail/controller/recommended_workout_detail_controller.dart';
+import 'package:Rival/presentation/recommended_workout_one_screen/controller/recommended_workout_one_controller.dart';
+import 'package:Rival/presentation/recommended_workout_one_screen/models/recommended_workout_one_model.dart';
+import 'package:Rival/presentation/recommended_workout_one_screen/recommended_workout_one_screen.dart';
+import 'package:Rival/presentation/trending_detail/controller/trending_detail_screen_controller.dart';
+import 'package:Rival/presentation/trending_screen/controller/trending_controller.dart';
+import 'package:Rival/presentation/trending_screen/models/trending_item_model.dart';
+import '../controllers/home_controller.dart';
+import '../../data/models/home_model.dart';
 
 // ignore_for_file: must_be_immutable
 class HomePage extends StatefulWidget {

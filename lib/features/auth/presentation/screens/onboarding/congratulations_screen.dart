@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../routes/app_routes.dart';
-import '../../widgets/custom_button.dart';
+import '../../../../../app/routes/app_routes.dart';
+import '../../../../../shared/widgets/custom_button.dart';
 
 class CongratulationsScreen extends StatefulWidget {
   const CongratulationsScreen({Key? key}) : super(key: key);

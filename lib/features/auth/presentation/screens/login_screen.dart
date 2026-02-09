@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 // Removed: import 'package:get/get.dart'; - unnecessary import
 import 'package:intl_phone_field/intl_phone_field.dart';
-import '../../services/auth_service.dart';
-import '../../core/app_export.dart';
-import '../../widgets/custom_elevated_button.dart';
+import '../controllers/auth_controller.dart';
+import '../../../../core/app_export.dart';
+import '../../../../shared/widgets/custom_elevated_button.dart';
 import 'otp_verification_screen.dart';
 import '../onboarding/sport_selection_screen.dart';
 
@@ -18,7 +18,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final AuthService _authService = Get.put(AuthService());
+  final AuthController _authController = Get.find<AuthController>();
   final TextEditingController _phoneController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   
@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      await _authService.sendPhoneVerificationCode(
+      await _authController.sendPhoneVerificationCode(
         _completePhoneNumber,
         onCodeSent: (verificationId) {
           setState(() {
@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      final userCredential = await _authService.signInWithGoogle();
+      final userCredential = await _authController.signInWithGoogle();
       
       setState(() {
         _isLoading = false;
@@ -115,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (userCredential != null) {
         // Check onboarding status
-        bool onboardingCompleted = await _authService.checkOnboardingStatus();
+        bool onboardingCompleted = await _authController.checkOnboardingStatus();
         
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -166,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      final userCredential = await _authService.signInWithFacebook();
+      final userCredential = await _authController.signInWithFacebook();
       
       setState(() {
         _isLoading = false;
@@ -174,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (userCredential != null) {
         // Check onboarding status
-        bool onboardingCompleted = await _authService.checkOnboardingStatus();
+        bool onboardingCompleted = await _authController.checkOnboardingStatus();
         
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

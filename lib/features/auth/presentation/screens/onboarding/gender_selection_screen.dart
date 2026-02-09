@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../widgets/custom_button.dart';
+import '../../../../../shared/widgets/custom_button.dart';
 import 'height_screen.dart';
 
 class GenderSelectionScreen extends StatefulWidget {

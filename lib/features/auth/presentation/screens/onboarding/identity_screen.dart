@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../services/auth_service.dart';
-import '../../routes/app_routes.dart';
-import '../../widgets/custom_button.dart';
-import '../../widgets/social_login_button.dart';
+import '../../controllers/auth_controller.dart';
+import '../../../../../app/routes/app_routes.dart';
+import '../../../../../shared/widgets/custom_button.dart';
+import '../../../../../shared/widgets/social_login_button.dart';
 import 'sport_selection_screen.dart';
 
 class IdentityScreen extends StatefulWidget {
@@ -82,11 +82,11 @@ class _IdentityScreenState extends State<IdentityScreen> {
     });
 
     try {
-      UserCredential? userCredential = await _authService.signInWithGoogle();
+      UserCredential? userCredential = await _authController.signInWithGoogle();
       
       if (userCredential != null && userCredential.user != null) {
         // Check if onboarding is completed
-        bool onboardingCompleted = await _authService.checkOnboardingStatus();
+        bool onboardingCompleted = await _authController.checkOnboardingStatus();
         
         if (onboardingCompleted) {
           // Navigate to home
@@ -131,11 +131,11 @@ class _IdentityScreenState extends State<IdentityScreen> {
     });
 
     try {
-      UserCredential? userCredential = await _authService.signInWithFacebook();
+      UserCredential? userCredential = await _authController.signInWithFacebook();
       
       if (userCredential != null && userCredential.user != null) {
         // Check if onboarding is completed
-        bool onboardingCompleted = await _authService.checkOnboardingStatus();
+        bool onboardingCompleted = await _authController.checkOnboardingStatus();
         
         if (onboardingCompleted) {
           // Navigate to home

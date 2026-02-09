@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../core/app_export.dart';
-import '../../services/auth_service.dart';
+import '../../../../core/app_export.dart';
+import '../controllers/auth_controller.dart';
 import '../onboarding/sport_selection_screen.dart';
-import '../../routes/app_routes.dart';
+import '../../../../app/routes/app_routes.dart';
 import 'reset_password_screen.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -14,7 +14,7 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  final AuthService _authService = Get.put(AuthService());
+  final AuthController _authController = Get.find<AuthController>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -40,13 +40,13 @@ class _SignInScreenState extends State<SignInScreen> {
     });
 
     try {
-      final userCredential = await _authService.signInWithEmailPassword(
+      final userCredential = await _authController.signInWithEmailPassword(
         _emailController.text.trim(),
         _passwordController.text,
       );
 
       if (userCredential != null) {
-        bool onboardingCompleted = await _authService.checkOnboardingStatus();
+        bool onboardingCompleted = await _authController.checkOnboardingStatus();
         
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../core/app_export.dart';
-import '../../widgets/primary_button.dart';
-import '../../widgets/social_login_button.dart';
+import '../../../../core/app_export.dart';
+import '../../../../shared/widgets/primary_button.dart';
+import '../../../../shared/widgets/social_login_button.dart';
 import 'sign_up_screen.dart';
 import 'otp_verification_screen.dart';
-import '../../services/auth_service.dart';
-import '../onboarding/sport_selection_screen.dart';
-import '../../routes/app_routes.dart';
+import '../controllers/auth_controller.dart';
+import 'onboarding/sport_selection_screen.dart';
+import '../../../../app/routes/app_routes.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -18,7 +18,7 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  final AuthService _authService = Get.put(AuthService());
+  final AuthController _authController = Get.find<AuthController>();
   final TextEditingController _inputController = TextEditingController();
   bool _isLoading = false;
   String? _errorMessage;
@@ -75,7 +75,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         String phoneNumber = cleaned.startsWith('+') ? cleaned : '+$cleaned';
         
         // Send OTP via SMS
-        await _authService.sendPhoneVerificationCode(
+        await _authController.sendPhoneVerificationCode(
           phoneNumber,
           onCodeSent: (verificationId) {
             if (mounted) {
@@ -124,7 +124,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     });
 
     try {
-      final userCredential = await _authService.signInWithGoogle();
+      final userCredential = await _authController.signInWithGoogle();
       
       if (mounted) {
         setState(() {
@@ -133,7 +133,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       }
 
       if (userCredential != null) {
-        bool onboardingCompleted = await _authService.checkOnboardingStatus();
+        bool onboardingCompleted = await _authController.checkOnboardingStatus();
         
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -171,7 +171,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     });
 
     try {
-      final userCredential = await _authService.signInWithFacebook();
+      final userCredential = await _authController.signInWithFacebook();
       
       if (mounted) {
         setState(() {
@@ -180,7 +180,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       }
 
       if (userCredential != null) {
-        bool onboardingCompleted = await _authService.checkOnboardingStatus();
+        bool onboardingCompleted = await _authController.checkOnboardingStatus();
         
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

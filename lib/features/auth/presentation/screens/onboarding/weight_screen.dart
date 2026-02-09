@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../widgets/custom_button.dart';
-import '../../widgets/scroll_picker.dart';
+import '../../../../../shared/widgets/custom_button.dart';
+import '../../../../../shared/widgets/scroll_picker.dart';
 import 'photo_upload_screen.dart';
 
 class WeightScreen extends StatefulWidget {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
-import '../../services/auth_service.dart';
-import '../../core/app_export.dart';
-import '../../widgets/custom_elevated_button.dart';
+import '../controllers/auth_controller.dart';
+import '../../../../core/app_export.dart';
+import '../../../../shared/widgets/custom_elevated_button.dart';
 import '../onboarding/sport_selection_screen.dart';
 
 class OTPVerificationScreen extends StatefulWidget {
@@ -70,7 +70,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   try {
     if (widget.isPhone && widget.verificationId != null) {
       // Phone verification
-      final userCredential = await _authService. verifyOTP(
+      final userCredential = await _authController. verifyOTP(
         _otpController.text,
         widget.verificationId!,
       );
@@ -159,7 +159,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     });
 
     try {
-      await _authService.sendPhoneVerificationCode(
+      await _authController.sendPhoneVerificationCode(
         widget.identifier,
         onCodeSent: (verificationId) {
           setState(() {

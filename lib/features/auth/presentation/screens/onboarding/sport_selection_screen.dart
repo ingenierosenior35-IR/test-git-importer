@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../widgets/custom_button.dart';
-import '../../widgets/sport_card.dart';
-import '../../services/auth_service.dart';
-import '../../routes/app_routes.dart';
+import '../../../../../shared/widgets/custom_button.dart';
+import '../../../../../shared/widgets/sport_card.dart';
+import '../../controllers/auth_controller.dart';
+import '../../../../../app/routes/app_routes.dart';
 import 'gender_selection_screen.dart';
 
 class SportSelectionScreen extends StatefulWidget {

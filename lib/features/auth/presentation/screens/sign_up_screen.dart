@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../core/app_export.dart';
-import '../../services/auth_service.dart';
+import '../../../../core/app_export.dart';
+import '../controllers/auth_controller.dart';
 import '../onboarding/sport_selection_screen.dart';
 import 'sign_in_screen.dart';
 
@@ -13,7 +13,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final AuthService _authService = Get.put(AuthService());
+  final AuthController _authController = Get.find<AuthController>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -68,7 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
 
     try {
-      final userCredential = await _authService.signUpWithEmailPassword(
+      final userCredential = await _authController.signUpWithEmailPassword(
         _emailController.text.trim(),
         _passwordController.text,
         _nameController.text.trim(),
