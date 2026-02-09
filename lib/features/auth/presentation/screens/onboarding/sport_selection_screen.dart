@@ -40,7 +40,7 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
 
   Future<void> _checkOnboardingStatus() async {
     try {
-      final authService = Get.find<AuthService>();
+      final authService = Get.find<AuthController>();
       final onboardingCompleted = await authService.checkOnboardingStatus();
       
       if (onboardingCompleted && mounted) {

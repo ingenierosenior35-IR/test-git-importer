@@ -16,7 +16,7 @@ class IdentityScreen extends StatefulWidget {
 
 class _IdentityScreenState extends State<IdentityScreen> {
   final TextEditingController _phoneEmailController = TextEditingController();
-  final AuthService _authService = Get.find<AuthService>();
+  final AuthController _authController = Get.find<AuthController>();
   bool _isLoading = false;
   bool _isGoogleLoading = false;
   bool _isFacebookLoading = false;

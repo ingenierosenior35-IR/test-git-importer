@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// Removed: import 'package:get/get.dart'; - unnecessary import
+import 'package:get/get.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import '../controllers/auth_controller.dart';
 import '../../../../core/app_export.dart';

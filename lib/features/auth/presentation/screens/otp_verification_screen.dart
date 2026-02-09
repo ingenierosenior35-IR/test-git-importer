@@ -39,7 +39,7 @@ class OTPVerificationScreen extends StatefulWidget {
 }
 
 class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
-  final AuthService _authService = Get. find<AuthService>();
+  final AuthController _authController = Get.find<AuthController>();
   final TextEditingController _otpController = TextEditingController();
   bool _isLoading = false;
 
@@ -70,7 +70,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   try {
     if (widget.isPhone && widget.verificationId != null) {
       // Phone verification
-      final userCredential = await _authController. verifyOTP(
+      final userCredential = await _authController.verifyOTP(
         _otpController.text,
         widget.verificationId!,
       );
@@ -233,7 +233,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     );
 
     final focusedPinTheme = defaultPinTheme.copyDecorationWith(
-      border: Border.all(color: theme.colorScheme. primary),
+      border: Border.all(color: theme.colorScheme.primary),
       borderRadius: BorderRadius.circular(8),
     );
 
@@ -333,7 +333,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                       child:  Text(
                         'Reenviar',
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme. primary,
+                          color: theme.colorScheme.primary,
                           fontWeight:  FontWeight.bold,
                         ),
                       ),
