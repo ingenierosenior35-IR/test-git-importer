@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, deprecated_member_use
-
 import '../full_workout_plan_screen/controller/full_workout_plan_controller.dart';
 import 'controller/detail_gym_controller.dart';
 import 'models/detail_gym_model.dart';

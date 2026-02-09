@@ -1,6 +1,6 @@
-import 'package:Rival/select_muscle_tabs/model/select_muscle_tabs_data_model.dart';
+import 'package:Rival/core/utils/image_constant.dart';
+import 'package:Rival/features/workout/data/models/select_muscle_tabs_data_model.dart';
 
-import '../../core/utils/image_constant.dart';
 
 class SelectMuscleTabData{
   static List<SelectMuscleTabsDataModel> getGymExercirseData(){

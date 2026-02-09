@@ -1,9 +1,10 @@
+import 'package:Rival/features/workout/data/models/select_muscle_tabs_data_model.dart';
+import 'package:Rival/features/workout/presentation/controllers/select_muscle_controller.dart';
+import 'package:Rival/shared/widgets/custom_icon_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:Rival/core/app_export.dart';
 
-import '../widgets/custom_icon_button.dart';
-import 'controller/select_muscle_controller.dart';
-import 'model/select_muscle_tabs_data_model.dart';
+
 
 class GymExecirseTab extends StatefulWidget {
   const GymExecirseTab({super.key});

@@ -1,4 +1,4 @@
-import '../controller/my_profile_controller.dart';
+import '../controllers/my_profile_controller.dart';
 import 'package:get/get.dart';
 
 /// A binding class for the MyProfileScreen.

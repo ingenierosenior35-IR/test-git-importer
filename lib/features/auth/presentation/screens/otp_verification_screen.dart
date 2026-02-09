@@ -1,10 +1,9 @@
+import 'package:Rival/features/auth/presentation/screens/onboarding/sport_selection_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
 import '../controllers/auth_controller.dart';
 import '../../../../core/app_export.dart';
 import '../../../../shared/widgets/custom_elevated_button.dart';
-import '../onboarding/sport_selection_screen.dart';
 
 class OTPVerificationScreen extends StatefulWidget {
   final String identifier; // Can be phone number or email

@@ -105,6 +105,7 @@ class MatchHistoryScreen extends StatelessWidget {
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
+                                  // ignore: deprecated_member_use
                                   color: AppColors.kYellowAccent.withOpacity(0.15),
                                   borderRadius: BorderRadius.circular(12),
                                 ),

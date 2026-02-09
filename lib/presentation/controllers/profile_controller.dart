@@ -1,3 +1,4 @@
+import 'package:Rival/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';

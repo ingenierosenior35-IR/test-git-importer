@@ -1,7 +1,6 @@
+import 'package:Rival/features/workout/data/models/select_muscle_tabs_data.dart';
+import 'package:Rival/features/workout/data/models/select_muscle_tabs_data_model.dart';
 import 'package:get/get.dart';
-
-import '../model/select_muscle_tabs_data.dart';
-import '../model/select_muscle_tabs_data_model.dart';
 
 class SelectMusclesTabsController extends GetxController{
   List<SelectMuscleTabsDataModel> gymExercise = SelectMuscleTabData.getGymExercirseData();

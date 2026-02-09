@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/errors/failures.dart';
-import '../entities/user_entity.dart';
 
 abstract class AuthRepository {
   // Stream of current user

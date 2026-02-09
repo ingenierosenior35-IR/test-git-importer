@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../../core/constants/colors.dart';
 import 'home/home_screen.dart';
 import 'matches/matches_list_screen.dart';
@@ -44,6 +43,7 @@ class _MainContainerScreenState extends State<MainContainerScreen> {
           color: AppColors.kDarkCard,
           boxShadow: [
             BoxShadow(
+              // ignore: deprecated_member_use
               color: Colors.black.withOpacity(0.3),
               blurRadius: 10,
               offset: const Offset(0, -2),

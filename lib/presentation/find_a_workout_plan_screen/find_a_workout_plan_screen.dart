@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:Rival/core/app_export.dart';
 import 'package:Rival/widgets/app_bar/appbar_image.dart';

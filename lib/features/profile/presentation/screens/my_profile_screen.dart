@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:Rival/features/profile/presentation/controllers/my_profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as fs;
 import 'package:Rival/core/app_export.dart';
@@ -9,7 +10,6 @@ import 'package:Rival/widgets/app_bar/appbar_title.dart';
 import 'package:Rival/widgets/app_bar/custom_app_bar.dart';
 import 'package:Rival/widgets/custom_icon_button.dart';
 
-import 'controller/my_profile_controller.dart';
 
 
 

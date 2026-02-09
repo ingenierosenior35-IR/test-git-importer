@@ -2,18 +2,18 @@ import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../data/datasources/auth_local_datasource.dart';
-import '../data/datasources/auth_remote_datasource.dart';
-import '../data/repositories/auth_repository_impl.dart';
-import '../domain/repositories/auth_repository.dart';
-import '../domain/usecases/send_phone_verification_code.dart';
-import '../domain/usecases/verify_otp.dart';
-import '../domain/usecases/sign_in_with_google.dart';
-import '../domain/usecases/sign_in_with_facebook.dart';
-import '../domain/usecases/sign_in_with_email_password.dart';
-import '../domain/usecases/sign_up_with_email_password.dart';
-import '../domain/usecases/sign_out.dart';
-import '../presentation/controllers/auth_controller.dart';
+import './data/datasources/auth_local_datasource.dart';
+import './data/datasources/auth_remote_datasource.dart';
+import './data/repositories/auth_repository_impl.dart';
+import './domain/repositories/auth_repository.dart';
+import './domain/usecases/send_phone_verification_code.dart';
+import './domain/usecases/verify_otp.dart';
+import './domain/usecases/sign_in_with_google.dart';
+import './domain/usecases/sign_in_with_facebook.dart';
+import './domain/usecases/sign_in_with_email_password.dart';
+import './domain/usecases/sign_up_with_email_password.dart';
+import './domain/usecases/sign_out.dart';
+import './presentation/controllers/auth_controller.dart';
 
 class AuthBinding extends Bindings {
   @override

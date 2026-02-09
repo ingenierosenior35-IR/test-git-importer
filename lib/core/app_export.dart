@@ -11,7 +11,7 @@ export 'package:Rival/core/utils/pref_utils.dart';
 export 'package:Rival/core/utils/size_utils.dart';
 export 'package:Rival/data/models/selectionPopupModel/selection_popup_model.dart';
 export 'package:Rival/localization/app_localization.dart';
-export 'package:Rival/routes/app_routes.dart';
+export 'package:Rival/app/routes/app_routes.dart';
 export 'package:Rival/theme/app_decoration.dart';
 export 'package:Rival/theme/custom_text_style.dart';
 export 'package:Rival/theme/theme_helper.dart';

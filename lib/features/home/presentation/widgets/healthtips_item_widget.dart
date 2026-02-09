@@ -1,5 +1,5 @@
-import '../controller/home_controller.dart';
-import '../models/healthtips_item_model.dart';
+import './../controllers/home_controller.dart';
+import '../../data/models/healthtips_item_model.dart';
 import 'package:flutter/material.dart';
 import 'package:Rival/core/app_export.dart';
 

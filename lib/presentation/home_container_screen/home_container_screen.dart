@@ -1,5 +1,3 @@
-// ignore_for_file: unreachable_switch_default, deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:Rival/core/app_export.dart';
 import 'package:Rival/presentation/home_page/home_page.dart';
@@ -162,9 +160,7 @@ class _HomeContainerScreenState extends State<HomeContainerScreen> {
         return AppRoutes.challengesPage;
       case BottomBarEnum.Profile:
         return AppRoutes.profilePage;
-      default:
-        return "/";
-    }
+      }
   }
 
   ///Handling page based on route

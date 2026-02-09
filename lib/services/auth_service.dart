@@ -13,10 +13,7 @@ class AuthService extends GetxService {
   
   // Observable user
   Rx<User?> user = Rx<User?>(null);
-  
-  // Verification ID for phone authentication
-  String? _verificationId;
-  
+    
   @override
   void onInit() {
     super.onInit();
@@ -58,11 +55,9 @@ class AuthService extends GetxService {
           onError(e.message ?? 'Verification failed');
         },
         codeSent: (String verificationId, int? resendToken) {
-          _verificationId = verificationId;
           onCodeSent(verificationId);
         },
         codeAutoRetrievalTimeout: (String verificationId) {
-          _verificationId = verificationId;
         },
       );
       return true;

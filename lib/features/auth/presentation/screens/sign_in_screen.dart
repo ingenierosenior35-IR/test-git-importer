@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../../../../core/app_export.dart';
 import '../controllers/auth_controller.dart';
-import '../onboarding/sport_selection_screen.dart';
-import '../../../../app/routes/app_routes.dart';
+import './onboarding/sport_selection_screen.dart';
 import 'reset_password_screen.dart';
 
 class SignInScreen extends StatefulWidget {

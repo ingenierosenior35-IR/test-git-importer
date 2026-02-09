@@ -26,13 +26,10 @@ abstract class AuthRemoteDataSource {
   Future<void> sendPasswordResetEmail(String email);
   Future<void> signOut();
 }
-
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuth firebaseAuth;
   final GoogleSignIn googleSignIn;
   
-  String? _verificationId;
-
   AuthRemoteDataSourceImpl({
     required this.firebaseAuth,
     required this.googleSignIn,
@@ -65,11 +62,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           onError(e.message ?? 'Verification failed');
         },
         codeSent: (String verificationId, int? resendToken) {
-          _verificationId = verificationId;
           onCodeSent(verificationId);
         },
         codeAutoRetrievalTimeout: (String verificationId) {
-          _verificationId = verificationId;
         },
       );
       return true;

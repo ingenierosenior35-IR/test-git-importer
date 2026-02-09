@@ -1,3 +1,4 @@
+import 'package:Rival/app/routes/app_routes.dart';
 import 'package:get/get.dart';
 import '../../services/auth_service.dart';
 import '../../data/repositories/match_repository.dart';

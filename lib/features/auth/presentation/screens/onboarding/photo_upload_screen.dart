@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../../shared/widgets/custom_button.dart';
-import '../../services/onboarding_service.dart';
+import '/../services/onboarding_service.dart';
 import 'congratulations_screen.dart';
 
 class PhotoUploadScreen extends StatefulWidget {
@@ -322,6 +322,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
                                             child: Container(
                                               padding: const EdgeInsets.all(6),
                                               decoration: BoxDecoration(
+                                                // ignore: deprecated_member_use
                                                 color: Colors.black.withOpacity(0.6),
                                                 shape: BoxShape.circle,
                                               ),

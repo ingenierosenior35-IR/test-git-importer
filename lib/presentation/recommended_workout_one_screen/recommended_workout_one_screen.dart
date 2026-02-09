@@ -66,10 +66,6 @@ class _RecommendedWorkoutOneScreenState
                     recommendedWorkoutDetailController.setCurrentWorkOut(data);
                     Get.toNamed(AppRoutes.recommendedDetailScreen);
                   },child: RecommendedDataFormate(data: data)));
-
-
-
-
                 },
               ),
 

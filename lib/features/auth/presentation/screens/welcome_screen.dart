@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/app_export.dart';
 import '../../../../shared/widgets/primary_button.dart';
@@ -8,7 +7,6 @@ import 'sign_up_screen.dart';
 import 'otp_verification_screen.dart';
 import '../controllers/auth_controller.dart';
 import 'onboarding/sport_selection_screen.dart';
-import '../../../../app/routes/app_routes.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);

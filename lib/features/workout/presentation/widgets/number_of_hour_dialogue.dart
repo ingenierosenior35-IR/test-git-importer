@@ -1,8 +1,16 @@
+import 'package:Rival/core/utils/image_constant.dart';
+import 'package:Rival/core/utils/size_utils.dart';
+import 'package:Rival/features/workout/presentation/controllers/choose_number_of_week_controller.dart';
+import 'package:Rival/presentation/find_a_workout_plan_one_screen/controller/find_a_workout_plan_one_controller.dart';
+import 'package:Rival/shared/widgets/custom_image_view.dart';
+import 'package:Rival/theme/theme_helper.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-import '../core/app_export.dart';
-import '../presentation/find_a_workout_plan_one_screen/controller/find_a_workout_plan_one_controller.dart';
-import 'controller/choose_number_of_week_controller.dart';
 
 class NumberOfWeekDays extends StatefulWidget {
   const NumberOfWeekDays({super.key});

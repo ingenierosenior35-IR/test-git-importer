@@ -1,13 +1,10 @@
 
-// ignore_for_file: deprecated_member_use
-
 import '../../health_tips_details_screen/controller/health_tips_details_controller.dart';
 import '../controller/health_tips_controller.dart';
 import '../models/healthdefinitio_item_model.dart';
 import 'package:flutter/material.dart';
 import 'package:Rival/core/app_export.dart';
 import 'package:Rival/widgets/custom_icon_button.dart';
-
 // ignore: must_be_immutable
 class HealthdefinitioItemWidget extends StatelessWidget {
   HealthdefinitioItemWidget(

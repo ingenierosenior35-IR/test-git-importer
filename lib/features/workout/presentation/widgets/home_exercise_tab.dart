@@ -1,15 +1,15 @@
+import 'package:Rival/core/utils/image_constant.dart';
+import 'package:Rival/core/utils/size_utils.dart';
+import 'package:Rival/features/workout/data/models/select_muscle_tabs_data_model.dart';
+import 'package:Rival/features/workout/presentation/controllers/select_muscle_controller.dart';
+import 'package:Rival/shared/widgets/custom_image_view.dart';
+import 'package:Rival/theme/app_decoration.dart';
+import 'package:Rival/theme/custom_text_style.dart';
+import 'package:Rival/theme/theme_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:Rival/shared/widgets/custom_icon_button.dart';
 
-import '../core/utils/image_constant.dart';
-import '../core/utils/size_utils.dart';
-import '../theme/app_decoration.dart';
-import '../theme/custom_text_style.dart';
-import '../theme/theme_helper.dart';
-import '../widgets/custom_icon_button.dart';
-import '../widgets/custom_image_view.dart';
-import 'controller/select_muscle_controller.dart';
-import 'model/select_muscle_tabs_data_model.dart';
 
 class HomeExerciseTab extends StatefulWidget {
   const HomeExerciseTab({super.key});

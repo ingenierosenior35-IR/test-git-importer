@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import '../controllers/auth_controller.dart';
 import '../../../../core/app_export.dart';
 import '../../../../shared/widgets/custom_elevated_button.dart';
 import 'otp_verification_screen.dart';
-import '../onboarding/sport_selection_screen.dart';
+import './onboarding/sport_selection_screen.dart';
 
 /// DEPRECATED: This screen uses phone number authentication and is being replaced by WelcomeScreen.
 /// The app flow now uses WelcomeScreen as the initial authentication screen.
