@@ -50,39 +50,39 @@ import 'package:Rival/presentation/app_navigation_screen/app_navigation_screen.d
 import 'package:page_transition/page_transition.dart';
 
 // Firebase Auth Screens
-import 'package:Rival/screens/auth/login_screen.dart';
-import 'package:Rival/screens/auth/otp_verification_screen.dart';
-import 'package:Rival/screens/auth/welcome_screen.dart';
-import 'package:Rival/screens/auth/sign_in_screen.dart';
-import 'package:Rival/screens/auth/sign_up_screen.dart';
-import 'package:Rival/screens/auth/reset_password_screen.dart';
+import 'package:Rival/features/auth/presentation/screens/login_screen.dart';
+import 'package:Rival/features/auth/presentation/screens/otp_verification_screen.dart';
+import 'package:Rival/features/auth/presentation/screens/welcome_screen.dart';
+import 'package:Rival/features/auth/presentation/screens/sign_in_screen.dart';
+import 'package:Rival/features/auth/presentation/screens/sign_up_screen.dart';
+import 'package:Rival/features/auth/presentation/screens/reset_password_screen.dart';
 
 // Onboarding Screens
-import 'package:Rival/screens/onboarding/identity_screen.dart';
-import 'package:Rival/screens/onboarding/sport_selection_screen.dart';
-import 'package:Rival/screens/onboarding/gender_selection_screen.dart';
-import 'package:Rival/screens/onboarding/height_screen.dart';
-import 'package:Rival/screens/onboarding/weight_screen.dart';
-import 'package:Rival/screens/onboarding/measurements_screen.dart';
-import 'package:Rival/screens/onboarding/photo_upload_screen.dart';
-import 'package:Rival/screens/onboarding/congratulations_screen.dart';
+import 'package:Rival/features/auth/presentation/screens/onboarding/identity_screen.dart';
+import 'package:Rival/features/auth/presentation/screens/onboarding/sport_selection_screen.dart';
+import 'package:Rival/features/auth/presentation/screens/onboarding/gender_selection_screen.dart';
+import 'package:Rival/features/auth/presentation/screens/onboarding/height_screen.dart';
+import 'package:Rival/features/auth/presentation/screens/onboarding/weight_screen.dart';
+import 'package:Rival/features/auth/presentation/screens/onboarding/measurements_screen.dart';
+import 'package:Rival/features/auth/presentation/screens/onboarding/photo_upload_screen.dart';
+import 'package:Rival/features/auth/presentation/screens/onboarding/congratulations_screen.dart';
 
-import '../presentation/challenges_page/challenges_page.dart';
-import '../presentation/chest_gym_exercise_page/chest_gym_exercise_page.dart';
-import '../presentation/chest_home_exercise_page/chest_home_exercise_page.dart';
-import '../presentation/chest_stretches_page/chest_stretches_page.dart';
-import '../presentation/detail_gym_page/detail_gym_page.dart';
-import '../presentation/detail_home_page/detail_home_page.dart';
-import '../presentation/health_tips_details_screen/health_tips_details_screen.dart';
-import '../presentation/home_page/home_page.dart';
-import '../presentation/profile_page/profile_page.dart';
-import '../presentation/recommended_detail/recommended_workout_detail_screen.dart';
-import '../presentation/select_muscle_tab/selectmuscletabScreen.dart';
-import '../presentation/trending_detail/trending_detail_screen.dart';
-import '../presentation/workout_plan_page/workout_plan_page.dart';
-import '../presentation/screens/main_container_screen.dart';
-import '../presentation/screens/matches/create_match_screen.dart';
-import '../presentation/screens/profile/edit_profile_screen.dart';
+import 'package:Rival/presentation/challenges_page/challenges_page.dart';
+import 'package:Rival/presentation/chest_gym_exercise_page/chest_gym_exercise_page.dart';
+import 'package:Rival/presentation/chest_home_exercise_page/chest_home_exercise_page.dart';
+import 'package:Rival/presentation/chest_stretches_page/chest_stretches_page.dart';
+import 'package:Rival/presentation/detail_gym_page/detail_gym_page.dart';
+import 'package:Rival/presentation/detail_home_page/detail_home_page.dart';
+import 'package:Rival/presentation/health_tips_details_screen/health_tips_details_screen.dart';
+import 'package:Rival/features/home/presentation/screens/home_page.dart';
+import 'package:Rival/features/profile/presentation/screens/profile_page.dart';
+import 'package:Rival/presentation/recommended_detail/recommended_workout_detail_screen.dart';
+import 'package:Rival/presentation/select_muscle_tab/selectmuscletabScreen.dart';
+import 'package:Rival/presentation/trending_detail/trending_detail_screen.dart';
+import 'package:Rival/presentation/workout_plan_page/workout_plan_page.dart';
+import 'package:Rival/presentation/screens/main_container_screen.dart';
+import 'package:Rival/presentation/screens/matches/create_match_screen.dart';
+import 'package:Rival/features/profile/presentation/screens/edit_profile_screen.dart';
 
 class AppRoutes {
   static const String mainContainerScreen = '/main_container_screen';
