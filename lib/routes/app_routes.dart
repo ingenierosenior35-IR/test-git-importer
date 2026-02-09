@@ -80,8 +80,10 @@ import '../presentation/recommended_detail/recommended_workout_detail_screen.dar
 import '../presentation/select_muscle_tab/selectmuscletabScreen.dart';
 import '../presentation/trending_detail/trending_detail_screen.dart';
 import '../presentation/workout_plan_page/workout_plan_page.dart';
+import '../presentation/screens/main_container_screen.dart';
 
 class AppRoutes {
+  static const String mainContainerScreen = '/main_container_screen';
   static const String splashScreen = '/splash_screen';
 
   static const String onboardingOneScreen = '/onboarding_one_screen';
@@ -290,6 +292,8 @@ class AppRoutes {
         return getPage(PasswordChangedPopupScreen(), settings);
       case AppRoutes.homePage:
         return getPage(HomePage(), settings);
+      case AppRoutes.mainContainerScreen:
+        return getPage(MainContainerScreen(), settings);
       case AppRoutes.homeContainerScreen:
         return getPage(HomeContainerScreen(), settings);
       case AppRoutes.searchFillScreen:
