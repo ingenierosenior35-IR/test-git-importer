@@ -13,17 +13,17 @@ class SplashController extends GetxController {
 
   _getIsFirst() async {
     bool isSignIn = await PrefUtils.getIsSignIn();
-    bool isIntro = await PrefUtils. getIsIntro();
+    bool isIntro = await PrefUtils.getIsIntro();
     
-    Timer(const Duration(seconds:  3), () {
+    Timer(const Duration(seconds: 3), () {
       debugPrint("is intro ====== $isIntro");
       debugPrint("isSignIn ====== $isSignIn");
       
-      // Navigate directly to welcome screen, skipping initial onboarding
+      // If signed in, go to main app; otherwise show welcome/login
       if (isSignIn) {
-        Get.toNamed(AppRoutes.welcomeScreen);
-      } else {
         Get.toNamed(AppRoutes.mainContainerScreen);
+      } else {
+        Get.toNamed(AppRoutes.welcomeScreen);
       }
     });
   }

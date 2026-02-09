@@ -45,7 +45,7 @@ class _SportSelectionScreenState extends State<SportSelectionScreen> {
       
       if (onboardingCompleted && mounted) {
         debugPrint('✅ Onboarding already completed, redirecting to home');
-        Get.offAllNamed(AppRoutes.homeContainerScreen);
+        Get.offAllNamed(AppRoutes.mainContainerScreen);
       }
     } catch (e) {
       debugPrint('⚠️ Error checking onboarding status: $e');

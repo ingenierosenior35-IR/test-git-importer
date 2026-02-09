@@ -4,7 +4,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart';
 import 'firestore_service.dart';
-import '../routes/app_routes.dart';
+import '../app/routes/app_routes.dart';
 
 class AuthService extends GetxService {
   final FirebaseAuth _auth = FirebaseAuth.instance;

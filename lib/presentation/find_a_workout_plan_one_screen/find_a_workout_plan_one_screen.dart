@@ -10,7 +10,7 @@ import 'package:Rival/widgets/app_bar/appbar_title.dart';
 import 'package:Rival/widgets/app_bar/custom_app_bar.dart';
 import 'package:Rival/widgets/custom_elevated_button.dart';
 
-import '../../chhose_number_of_week/number_of_hour_dialogue.dart';
+import '../../features/workout/presentation/widgets/number_of_hour_dialogue.dart';
 import 'controller/find_a_workout_plan_one_controller.dart';
 
 class FindAWorkoutPlanOneScreen extends StatefulWidget {
