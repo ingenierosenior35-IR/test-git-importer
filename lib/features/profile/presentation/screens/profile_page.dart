@@ -1,4 +1,4 @@
-import 'package:Rival/features/profile/presentation/controller/profile_controller.dart';
+import 'package:Rival/presentation/controllers/profile_controller.dart';
 import 'package:Rival/services/auth_service.dart';
 
 import '../../../../shared/widgets/custom_bottom_bar.dart';
