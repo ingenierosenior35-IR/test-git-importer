@@ -6,7 +6,7 @@ import 'package:Rival/core/app_export.dart';
 import 'package:Rival/core/constants/colors.dart';
 import 'package:Rival/shared/widgets/app_bar/appbar_edittext.dart';
 import 'package:Rival/presentation/controllers/matches_controller.dart';
-import 'package:Rival/features/matches/data/models/match.dart';
+import 'package:Rival/data/models/match.dart';
 import 'package:Rival/features/weather/domain/entities/weather_condition.dart';
 import 'package:Rival/features/weather/domain/repositories/weather_repository.dart';
 import 'package:Rival/features/weather/data/repositories/weather_repository_impl.dart';
