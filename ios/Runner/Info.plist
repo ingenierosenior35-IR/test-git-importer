@@ -51,5 +51,9 @@
 	<string>Rival necesita acceso a tu galería para seleccionar tu foto de perfil</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Rival necesita acceso para guardar fotos en tu galería</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Rival necesita tu ubicación para mostrarte el clima y las condiciones del campo cerca de ti</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Rival necesita tu ubicación para mostrarte el clima y las condiciones del campo</string>
 </dict>
 </plist>

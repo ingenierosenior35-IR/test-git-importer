@@ -12,6 +12,8 @@ class Match {
   final String name;
   final DateTime dateTime;
   final String venue;
+  final double? venueLatitude;
+  final double? venueLongitude;
   final List<String> playerIds;
   final Map<String, bool> confirmations;
   final String? videoUrl;
@@ -19,12 +21,17 @@ class Match {
   final String inviteCode;
   final String createdBy;
   final DateTime createdAt;
+  final String? competition; // League or tournament name
+  final String? team1;
+  final String? team2;
 
   Match({
     required this.id,
     required this.name,
     required this.dateTime,
     required this.venue,
+    this.venueLatitude,
+    this.venueLongitude,
     required this.playerIds,
     required this.confirmations,
     this.videoUrl,
@@ -32,6 +39,9 @@ class Match {
     required this.inviteCode,
     required this.createdBy,
     required this.createdAt,
+    this.competition,
+    this.team1,
+    this.team2,
   });
 
   factory Match.fromMap(Map<String, dynamic> map, String id) {
@@ -40,6 +50,8 @@ class Match {
       name: map['name'] as String,
       dateTime: (map['dateTime'] as Timestamp).toDate(),
       venue: map['venue'] as String,
+      venueLatitude: map['venueLatitude'] as double?,
+      venueLongitude: map['venueLongitude'] as double?,
       playerIds: List<String>.from(map['playerIds'] as List),
       confirmations: Map<String, bool>.from(map['confirmations'] as Map),
       videoUrl: map['videoUrl'] as String?,
@@ -50,6 +62,9 @@ class Match {
       inviteCode: map['inviteCode'] as String,
       createdBy: map['createdBy'] as String,
       createdAt: (map['createdAt'] as Timestamp).toDate(),
+      competition: map['competition'] as String?,
+      team1: map['team1'] as String?,
+      team2: map['team2'] as String?,
     );
   }
 
@@ -58,6 +73,8 @@ class Match {
       'name': name,
       'dateTime': Timestamp.fromDate(dateTime),
       'venue': venue,
+      'venueLatitude': venueLatitude,
+      'venueLongitude': venueLongitude,
       'playerIds': playerIds,
       'confirmations': confirmations,
       'videoUrl': videoUrl,
@@ -65,6 +82,9 @@ class Match {
       'inviteCode': inviteCode,
       'createdBy': createdBy,
       'createdAt': Timestamp.fromDate(createdAt),
+      'competition': competition,
+      'team1': team1,
+      'team2': team2,
     };
   }
 
@@ -73,6 +93,8 @@ class Match {
     String? name,
     DateTime? dateTime,
     String? venue,
+    double? venueLatitude,
+    double? venueLongitude,
     List<String>? playerIds,
     Map<String, bool>? confirmations,
     String? videoUrl,
@@ -80,12 +102,17 @@ class Match {
     String? inviteCode,
     String? createdBy,
     DateTime? createdAt,
+    String? competition,
+    String? team1,
+    String? team2,
   }) {
     return Match(
       id: id ?? this.id,
       name: name ?? this.name,
       dateTime: dateTime ?? this.dateTime,
       venue: venue ?? this.venue,
+      venueLatitude: venueLatitude ?? this.venueLatitude,
+      venueLongitude: venueLongitude ?? this.venueLongitude,
       playerIds: playerIds ?? this.playerIds,
       confirmations: confirmations ?? this.confirmations,
       videoUrl: videoUrl ?? this.videoUrl,
@@ -93,6 +120,9 @@ class Match {
       inviteCode: inviteCode ?? this.inviteCode,
       createdBy: createdBy ?? this.createdBy,
       createdAt: createdAt ?? this.createdAt,
+      competition: competition ?? this.competition,
+      team1: team1 ?? this.team1,
+      team2: team2 ?? this.team2,
     );
   }
 }
