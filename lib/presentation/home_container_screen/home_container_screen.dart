@@ -5,7 +5,7 @@ import 'package:Rival/presentation/workout_plan_page/workout_plan_page.dart';
 import 'package:Rival/widgets/custom_bottom_bar.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../challenges_page/challenges_page.dart';
-import 'package:Rival/features/profile/presentation/screens/profile_page.dart';
+import '../screens/profile/profile_screen.dart';
 import 'controller/home_container_controller.dart';
 
 class HomeContainerScreen extends StatefulWidget {
@@ -22,7 +22,7 @@ class _HomeContainerScreenState extends State<HomeContainerScreen> {
     HomePage(),
     WorkoutPlanPage(isNavigateHomeTab: true),
     ChallengesPage(),
-    ProfilePage()
+    ProfileScreen()
   ];
 
   @override
