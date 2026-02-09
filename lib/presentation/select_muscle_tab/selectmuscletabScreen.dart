@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:Rival/core/app_export.dart';
 
-import '../../select_muscle_tabs/gym_execirse_tab.dart';
-import '../../select_muscle_tabs/home_exercise_tab.dart';
-import '../../select_muscle_tabs/stretches_exercise_tab.dart';
+import '../../features/workout/presentation/widgets/gym_execirse_tab.dart';
+import '../../features/workout/presentation/widgets/home_exercise_tab.dart';
+import '../../features/workout/presentation/widgets/stretches_exercise_tab.dart';
 import '../../widgets/app_bar/appbar_image.dart';
 import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/constants/colors.dart';
-import '../screens/home/home_screen.dart';
-import '../screens/matches/matches_list_screen.dart';
-import '../screens/video/video_upload_screen.dart';
-import '../screens/analysis/match_history_screen.dart';
-import '../screens/profile/profile_screen.dart';
+import 'home/home_screen.dart';
+import 'matches/matches_list_screen.dart';
+import 'video/video_upload_screen.dart';
+import 'analysis/match_history_screen.dart';
+import 'profile/profile_screen.dart';
 
 class MainContainerScreen extends StatefulWidget {
   const MainContainerScreen({Key? key}) : super(key: key);
