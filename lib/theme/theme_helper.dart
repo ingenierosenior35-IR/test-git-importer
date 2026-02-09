@@ -186,50 +186,42 @@ class TextThemes {
 /// Class containing the supported color schemes.
 class ColorSchemes {
   static final primaryColorScheme = ColorScheme.light(
-    // Primary colors
-    primary: Color(0XFFBBF246),
+    primary: Color(0XFFCDFF4D),
     primaryContainer: Color(0XFF384046),
     secondary: Color(0XFF384046),
     secondaryContainer: Color(0XFFD9D9D9),
     tertiary: Color(0XFF384046),
     tertiaryContainer: Color(0XFFD9D9D9),
 
-    // Background colors
-    background: Color(0XFF384046),
+    background: Color(0XFF192126),
 
-    // Surface colors
-    surface: Color(0XFF384046),
+    surface: Color(0XFF252D32),
     surfaceTint: Color(0XFF242C31),
     surfaceVariant: Color(0XFFD9D9D9),
 
-    // Error colors
     error: Color(0XFF242C31),
     errorContainer: Color(0XFF34C057),
     onError: Color(0XFFEAEAEA),
     onErrorContainer: Color(0XFF192126),
 
-    // On colors(text colors)
     onBackground: Color(0X75FFFFFF),
     onInverseSurface: Color(0XFFEAEAEA),
-    onPrimary: Color(0XFF242C31),
-    onPrimaryContainer: Color(0X75FFFFFF),
+    onPrimary: Color(0XFF000000),
+    onPrimaryContainer: Color(0XFFFFFFFF),
     onSecondary: Color(0X75FFFFFF),
     onSecondaryContainer: Color(0XFF242C31),
     onTertiary: Color(0X75FFFFFF),
     onTertiaryContainer: Color(0XFF242C31),
 
-    // Other colors
     outline: Color(0XFF242C31),
     outlineVariant: Color(0XFF384046),
     scrim: Color(0XFF384046),
     shadow: Color(0XFF242C31),
 
-    // Inverse colors
     inversePrimary: Color(0XFF384046),
     inverseSurface: Color(0XFF242C31),
 
-    // Pending colors
-    onSurface: Color(0X75FFFFFF),
+    onSurface: Color(0XFFFFFFFF),
     onSurfaceVariant: Color(0XFF242C31),
   );
 }
@@ -239,7 +231,7 @@ class PrimaryColors {
   // Black
   Color get black900 => Color(0XFF000000);
 
-  Color get buttonColor => Color(0XFFBBF246);
+  Color get buttonColor => Color(0XFFCDFF4D);
   Color get whiteColor => Color(0XFFFFFFFF);
   Color get dark3Color => Color(0XFF252D32);
   Color get dark1Color => Color(0XFF192126);

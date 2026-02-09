@@ -84,7 +84,7 @@ class _CongratulationsScreenState extends State<CongratulationsScreen>
   }
 
   void _navigateToHome() {
-    Get.offAllNamed(AppRoutes.homeContainerScreen);
+    Get.offAllNamed(AppRoutes.mainContainerScreen);
   }
 
   @override
