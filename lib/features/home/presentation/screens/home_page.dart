@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:Rival/core/app_export.dart';
 import 'package:Rival/core/constants/colors.dart';
+import 'package:Rival/core/constants/strings.dart';
 import 'package:Rival/shared/widgets/app_bar/appbar_edittext.dart';
 import 'package:Rival/presentation/controllers/matches_controller.dart';
 import 'package:Rival/data/models/match.dart';
@@ -15,6 +16,29 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../controllers/home_controller.dart';
 import '../../data/models/home_model.dart';
+
+// Models for new sections
+class FavoriteClub {
+  final String name;
+  final String status;
+  final String logoUrl;
+  
+  FavoriteClub({required this.name, required this.status, required this.logoUrl});
+}
+
+class ToolItem {
+  final String label;
+  final IconData icon;
+  final bool isPrimary;
+  final VoidCallback? onTap;
+  
+  ToolItem({
+    required this.label,
+    required this.icon,
+    this.isPrimary = false,
+    this.onTap,
+  });
+}
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -33,6 +57,17 @@ class _HomePageState extends State<HomePage> {
   final Rx<WeatherCondition?> weatherCondition = Rx<WeatherCondition?>(null);
   final RxBool isLoadingWeather = false.obs;
   final RxMap<String, dynamic> userData = RxMap<String, dynamic>({});
+  
+  // Dummy data for favorites - TODO: Replace with actual user favorites from data source
+  final List<FavoriteClub> _favoriteClubs = [
+    FavoriteClub(name: 'Real Madrid', status: AppStrings.won, logoUrl: ''),
+    FavoriteClub(name: 'Barcelona', status: AppStrings.won, logoUrl: ''),
+    FavoriteClub(name: 'Atlético', status: AppStrings.drew, logoUrl: ''),
+    FavoriteClub(name: 'Valencia', status: AppStrings.lost, logoUrl: ''),
+    FavoriteClub(name: 'Sevilla', status: AppStrings.won, logoUrl: ''),
+  ];
+  
+  final List<String> _gameDays = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 
   @override
   void initState() {
@@ -88,22 +123,21 @@ class _HomePageState extends State<HomePage> {
     mediaQueryData = MediaQuery.of(context);
     return Column(
       children: [
-        _buildHeader(),
-        _buildSearchBar(),
-        SizedBox(height: getVerticalSize(24)),
+        _buildTopMatchStrip(),
         Expanded(
           child: SingleChildScrollView(
             child: Column(
               children: [
-                _buildWeatherCard(),
-                SizedBox(height: getVerticalSize(20)),
-                _buildPlayerCard(),
-                SizedBox(height: getVerticalSize(20)),
+                SizedBox(height: getVerticalSize(16)),
+                _buildPerformanceHeroCard(),
+                SizedBox(height: getVerticalSize(24)),
+                _buildFavoritesSection(),
+                SizedBox(height: getVerticalSize(24)),
+                _buildToolsSection(),
+                SizedBox(height: getVerticalSize(24)),
+                _buildGameDaysSection(),
+                SizedBox(height: getVerticalSize(24)),
                 _buildMatchesSection(),
-                SizedBox(height: getVerticalSize(20)),
-                _buildFieldConditionsSection(),
-                SizedBox(height: getVerticalSize(20)),
-                _buildTournamentCTA(),
                 SizedBox(height: getVerticalSize(32)),
               ],
             ),
@@ -113,229 +147,570 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildHeader() {
-    return Padding(
-      padding: getPadding(top: 16, left: 20, right: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          CustomImageView(
-            svgPath: ImageConstant.imgFrame34501Onprimarycontainer,
-          ),
-          CustomImageView(
-            svgPath: ImageConstant.imgNotification,
-            height: getSize(24),
-            width: getSize(24),
-            margin: getMargin(top: 4, bottom: 4),
-            onTap: () => Get.toNamed(AppRoutes.notificationsScreen),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return Padding(
-      padding: getPadding(left: 20, right: 20, top: 32),
-      child: AppbarEdittext(
-        function: () => Get.toNamed(AppRoutes.searchFillScreen),
-        action: TextInputType.none,
-        hintText: "Buscar",
-        controller: controller.searchController,
-      ),
-    );
-  }
-
-  Widget _buildWeatherCard() {
+  Widget _buildTopMatchStrip() {
     return Obx(() {
       final weather = weatherCondition.value;
-      final isLoading = isLoadingWeather.value;
-
+      final matches = matchesController.matches;
+      final nextMatch = matches.isEmpty 
+          ? null 
+          : matches.firstWhere(
+              (m) => m.dateTime.isAfter(DateTime.now()),
+              orElse: () => matches.first,
+            );
+      
       return Container(
-        margin: getPadding(left: 20, right: 20),
-        padding: getPadding(all: 20),
+        padding: getPadding(top: 16, left: 20, right: 20, bottom: 12),
         decoration: BoxDecoration(
-          color: AppColors.kDarkCard,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: isLoading
-            ? Center(child: CircularProgressIndicator(color: AppColors.kYellowAccent))
-            : weather != null
-                ? Row(
-                    children: [
-                      _getWeatherIcon(weather.fieldCondition),
-                      SizedBox(width: getHorizontalSize(16)),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              weather.stationName,
-                              style: TextStyle(
-                                color: AppColors.kWhite,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: getVerticalSize(4)),
-                            Text(
-                              weather.description,
-                              style: TextStyle(
-                                color: AppColors.kGreyLight,
-                                fontSize: 14,
-                              ),
-                            ),
-                            SizedBox(height: getVerticalSize(4)),
-                            Text(
-                              '${weather.rainfallMm.toStringAsFixed(1)}mm - ${weather.distanceKm.toStringAsFixed(1)}km',
-                              style: TextStyle(
-                                color: AppColors.kYellowAccent,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                : Row(
-                    children: [
-                      Icon(Icons.location_off, color: AppColors.kGrey, size: 40),
-                      SizedBox(width: getHorizontalSize(16)),
-                      Text(
-                        'No se pudo obtener el clima',
-                        style: TextStyle(color: AppColors.kGrey, fontSize: 14),
-                      ),
-                    ],
-                  ),
-      );
-    });
-  }
-
-  Widget _getWeatherIcon(FieldCondition condition) {
-    IconData icon;
-    Color color;
-
-    switch (condition) {
-      case FieldCondition.excellent:
-        icon = Icons.wb_sunny;
-        color = AppColors.kYellowAccent;
-        break;
-      case FieldCondition.good:
-        icon = Icons.wb_cloudy;
-        color = AppColors.kYellowAccent;
-        break;
-      case FieldCondition.fair:
-        icon = Icons.cloud;
-        color = AppColors.kOrange;
-        break;
-      case FieldCondition.poor:
-        icon = Icons.grain;
-        color = AppColors.kOrange;
-        break;
-      case FieldCondition.unplayable:
-        icon = Icons.thunderstorm;
-        color = AppColors.kRed;
-        break;
-    }
-
-    return Icon(icon, color: color, size: 40);
-  }
-
-  Widget _buildPlayerCard() {
-    return Obx(() {
-      // ignore: invalid_use_of_protected_member
-      final userDataMap = userData.value;
-
-      return Container(
-        margin: getPadding(left: 20, right: 20),
-        padding: getPadding(all: 20),
-        decoration: BoxDecoration(
-          color: AppColors.kDarkCard,
-          borderRadius: BorderRadius.circular(16),
+          color: AppColors.kDarkCard.withOpacity(0.8),
+          border: Border(
+            bottom: BorderSide(
+              color: AppColors.kDarkSurface,
+              width: 1,
+            ),
+          ),
         ),
         child: Row(
           children: [
+            // Weather icon
             Container(
-              width: 70,
-              height: 70,
+              width: 32,
+              height: 32,
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: AppColors.kYellowAccent, width: 3),
+                color: AppColors.kDarkSurface,
+                borderRadius: BorderRadius.circular(8),
               ),
-              child: ClipOval(
-                child: userDataMap['photoURL'] != null
-                    ? Image.network(
-                        userDataMap['photoURL'],
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => 
-                          Icon(Icons.person, size: 40, color: AppColors.kGrey),
-                      )
-                    : Icon(Icons.person, size: 40, color: AppColors.kGrey),
+              child: Icon(
+                weather != null ? _getWeatherIconData(weather.fieldCondition) : Icons.wb_cloudy,
+                color: weather != null ? _getWeatherIconColor(weather.fieldCondition) : AppColors.kGrey,
+                size: 20,
               ),
             ),
-            SizedBox(width: getHorizontalSize(16)),
+            SizedBox(width: getHorizontalSize(12)),
+            // Match info
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    userDataMap['displayName'] ?? 'Jugador',
+                    AppStrings.nextLeagueMatch,
                     style: TextStyle(
-                      color: AppColors.kWhite,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      color: AppColors.kGreyLight,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(height: getVerticalSize(8)),
-                  Obx(() {
-                    final matches = matchesController.matches;
-                    final nextMatch = matches.isEmpty 
-                        ? null 
-                        : matches.firstWhere(
-                            (m) => m.dateTime.isAfter(DateTime.now()),
-                            orElse: () => matches.first,
-                          );
-                    
-                    if (nextMatch != null) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Próximo partido',
-                            style: TextStyle(
-                              color: AppColors.kGreyLight,
-                              fontSize: 12,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            nextMatch.name,
-                            style: TextStyle(
-                              color: AppColors.kYellowAccent,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      );
-                    } else {
-                      return Text(
-                        'Sin partidos programados',
-                        style: TextStyle(
-                          color: AppColors.kGreyLight,
-                          fontSize: 14,
-                        ),
-                      );
-                    }
-                  }),
+                  SizedBox(height: 2),
+                  Text(
+                    nextMatch?.name ?? 'Liga Local',
+                    style: TextStyle(
+                      color: AppColors.kWhite,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ],
+              ),
+            ),
+            // Action icons
+            GestureDetector(
+              onTap: () => Get.toNamed(AppRoutes.searchFillScreen),
+              child: Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: AppColors.kDarkSurface,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.search,
+                  color: AppColors.kGreyLight,
+                  size: 18,
+                ),
+              ),
+            ),
+            SizedBox(width: getHorizontalSize(8)),
+            GestureDetector(
+              onTap: () => Get.toNamed(AppRoutes.notificationsScreen),
+              child: Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: AppColors.kDarkSurface,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.notifications_outlined,
+                  color: AppColors.kGreyLight,
+                  size: 18,
+                ),
               ),
             ),
           ],
         ),
       );
     });
+  }
+
+  Widget _buildPerformanceHeroCard() {
+    return Obx(() {
+      final userDataMap = userData.value;
+      
+      return Container(
+        margin: getPadding(left: 20, right: 20),
+        padding: getPadding(all: 24),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              AppColors.kYellowAccent,
+              AppColors.kYellowAccent.withOpacity(0.9),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Row(
+          children: [
+            // Left side - Stats
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    AppStrings.performance.toUpperCase(),
+                    style: TextStyle(
+                      color: AppColors.kBlack,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    AppStrings.lastMatch,
+                    style: TextStyle(
+                      color: AppColors.kBlack.withOpacity(0.8),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                  Text(
+                    AppStrings.playedMinutes,
+                    style: TextStyle(
+                      color: AppColors.kBlack.withOpacity(0.7),
+                      fontSize: 12,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  // Big stat - TODO: Replace with actual player performance data
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '108 ',
+                          style: TextStyle(
+                            color: AppColors.kBlack,
+                            fontSize: 36,
+                            fontWeight: FontWeight.w900,
+                            height: 1.0,
+                          ),
+                        ),
+                        TextSpan(
+                          text: AppStrings.totalPasses,
+                          style: TextStyle(
+                            color: AppColors.kBlack.withOpacity(0.8),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: getHorizontalSize(16)),
+            // Right side - Rating and Photo
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                // Rating chip
+                Container(
+                  padding: getPadding(left: 12, right: 12, top: 6, bottom: 6),
+                  decoration: BoxDecoration(
+                    color: AppColors.kBlack,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Text(
+                    '8.5',
+                    style: TextStyle(
+                      color: AppColors.kYellowAccent,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ),
+                SizedBox(height: getVerticalSize(12)),
+                // Player photo
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.kBlack, width: 3),
+                  ),
+                  child: ClipOval(
+                    child: userDataMap['photoURL'] != null
+                        ? Image.network(
+                            userDataMap['photoURL'],
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) => 
+                              Icon(Icons.person, size: 40, color: AppColors.kBlack.withOpacity(0.3)),
+                          )
+                        : Icon(Icons.person, size: 40, color: AppColors.kBlack.withOpacity(0.3)),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget _buildFavoritesSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: getPadding(left: 20, right: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                AppStrings.yourFavorites,
+                style: TextStyle(
+                  color: AppColors.kWhite,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Get.snackbar(
+                    AppStrings.yourFavorites,
+                    'Ver todos los favoritos',
+                    backgroundColor: AppColors.kDarkCard,
+                    colorText: AppColors.kWhite,
+                  );
+                },
+                child: Text(
+                  AppStrings.viewAll,
+                  style: TextStyle(
+                    color: AppColors.kYellowAccent,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: getVerticalSize(16)),
+        SizedBox(
+          height: 100,
+          child: ListView.builder(
+            padding: getPadding(left: 20, right: 20),
+            scrollDirection: Axis.horizontal,
+            itemCount: _favoriteClubs.length,
+            itemBuilder: (context, index) {
+              final club = _favoriteClubs[index];
+              return _buildFavoriteClubCard(club);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFavoriteClubCard(FavoriteClub club) {
+    Color statusColor;
+    // Match against AppStrings constants instead of literal strings
+    if (club.status == AppStrings.won) {
+      statusColor = AppColors.kGreen;
+    } else if (club.status == AppStrings.drew) {
+      statusColor = AppColors.kOrange;
+    } else if (club.status == AppStrings.lost) {
+      statusColor = AppColors.kRed;
+    } else {
+      statusColor = AppColors.kGrey;
+    }
+    
+    return Container(
+      width: 90,
+      margin: getMargin(right: 12),
+      padding: getPadding(all: 12),
+      decoration: BoxDecoration(
+        color: AppColors.kDarkCard,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: AppColors.kDarkSurface,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.sports_soccer,
+              color: AppColors.kYellowAccent,
+              size: 24,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            club.name,
+            style: TextStyle(
+              color: AppColors.kWhite,
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 4),
+          Text(
+            club.status,
+            style: TextStyle(
+              color: statusColor,
+              fontSize: 9,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildToolsSection() {
+    final tools = [
+      ToolItem(
+        label: AppStrings.matches,
+        icon: Icons.sports_soccer,
+        isPrimary: true,
+        onTap: () => Get.toNamed(AppRoutes.createMatchScreen),
+      ),
+      ToolItem(
+        label: AppStrings.training,
+        icon: Icons.fitness_center,
+        onTap: () {
+          Get.snackbar(
+            AppStrings.training,
+            'Próximamente',
+            backgroundColor: AppColors.kDarkCard,
+            colorText: AppColors.kWhite,
+          );
+        },
+      ),
+      ToolItem(
+        label: AppStrings.teams,
+        icon: Icons.groups,
+        onTap: () {
+          Get.snackbar(
+            AppStrings.teams,
+            'Próximamente',
+            backgroundColor: AppColors.kDarkCard,
+            colorText: AppColors.kWhite,
+          );
+        },
+      ),
+      ToolItem(
+        label: AppStrings.tournaments,
+        icon: Icons.emoji_events,
+        onTap: () {
+          Get.snackbar(
+            AppStrings.tournaments,
+            'Próximamente',
+            backgroundColor: AppColors.kDarkCard,
+            colorText: AppColors.kWhite,
+          );
+        },
+      ),
+      ToolItem(
+        label: AppStrings.polls,
+        icon: Icons.poll,
+        onTap: () {
+          Get.snackbar(
+            AppStrings.polls,
+            'Próximamente',
+            backgroundColor: AppColors.kDarkCard,
+            colorText: AppColors.kWhite,
+          );
+        },
+      ),
+    ];
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: getPadding(left: 20, right: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                AppStrings.tools,
+                style: TextStyle(
+                  color: AppColors.kWhite,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: getVerticalSize(16)),
+        SizedBox(
+          height: 100,
+          child: ListView.builder(
+            padding: getPadding(left: 20, right: 20),
+            scrollDirection: Axis.horizontal,
+            itemCount: tools.length,
+            itemBuilder: (context, index) {
+              final tool = tools[index];
+              return _buildToolButton(tool);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildToolButton(ToolItem tool) {
+    return GestureDetector(
+      onTap: tool.onTap,
+      child: Container(
+        width: 90,
+        margin: getMargin(right: 12),
+        padding: getPadding(all: 12),
+        decoration: BoxDecoration(
+          color: tool.isPrimary ? AppColors.kYellowAccent : AppColors.kDarkCard,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              tool.icon,
+              color: tool.isPrimary ? AppColors.kBlack : AppColors.kYellowAccent,
+              size: 32,
+            ),
+            SizedBox(height: 8),
+            Text(
+              tool.label,
+              style: TextStyle(
+                color: tool.isPrimary ? AppColors.kBlack : AppColors.kWhite,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGameDaysSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: getPadding(left: 20, right: 20),
+          child: Text(
+            AppStrings.gameDays,
+            style: TextStyle(
+              color: AppColors.kWhite,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        SizedBox(height: getVerticalSize(16)),
+        Padding(
+          padding: getPadding(left: 20, right: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(_gameDays.length, (index) {
+              // All chips have same style - decorative UI element for now
+              return Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  color: AppColors.kDarkCard,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Center(
+                  child: Text(
+                    _gameDays[index],
+                    style: TextStyle(
+                      color: AppColors.kWhite,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
+      ],
+    );
+  }
+
+  IconData _getWeatherIconData(FieldCondition condition) {
+    switch (condition) {
+      case FieldCondition.excellent:
+        return Icons.wb_sunny;
+      case FieldCondition.good:
+        return Icons.wb_cloudy;
+      case FieldCondition.fair:
+        return Icons.cloud;
+      case FieldCondition.poor:
+        return Icons.grain;
+      case FieldCondition.unplayable:
+        return Icons.thunderstorm;
+    }
+  }
+
+  Color _getWeatherIconColor(FieldCondition condition) {
+    switch (condition) {
+      case FieldCondition.excellent:
+        return AppColors.kYellowAccent;
+      case FieldCondition.good:
+        return AppColors.kYellowAccent;
+      case FieldCondition.fair:
+        return AppColors.kOrange;
+      case FieldCondition.poor:
+        return AppColors.kOrange;
+      case FieldCondition.unplayable:
+        return AppColors.kRed;
+    }
+  }
+
+  Widget _getWeatherIcon(FieldCondition condition) {
+    return Icon(
+      _getWeatherIconData(condition),
+      color: _getWeatherIconColor(condition),
+      size: 40,
+    );
   }
 
   Widget _buildMatchesSection() {
@@ -481,169 +856,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFieldConditionsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: getPadding(left: 20, right: 20),
-          child: Text(
-            'CONDICIONES POR CANCHA',
-            style: TextStyle(
-              color: AppColors.kWhite,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.2,
-            ),
-          ),
-        ),
-        SizedBox(height: getVerticalSize(16)),
-        Container(
-          margin: getPadding(left: 20, right: 20),
-          padding: getPadding(all: 16),
-          decoration: BoxDecoration(
-            color: AppColors.kDarkCard,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Column(
-            children: [
-              _buildFieldConditionItem('Cancha Municipal', FieldCondition.excellent),
-              Divider(color: AppColors.kDarkSurface, height: 24),
-              _buildFieldConditionItem('Estadio Central', FieldCondition.good),
-              Divider(color: AppColors.kDarkSurface, height: 24),
-              _buildFieldConditionItem('Campo Deportivo Norte', FieldCondition.fair),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildFieldConditionItem(String venueName, FieldCondition condition) {
-    String conditionText;
-    Color conditionColor;
-
-    switch (condition) {
-      case FieldCondition.excellent:
-        conditionText = 'Excelente';
-        conditionColor = AppColors.kGreen;
-        break;
-      case FieldCondition.good:
-        conditionText = 'Buena';
-        conditionColor = AppColors.kYellowAccent;
-        break;
-      case FieldCondition.fair:
-        conditionText = 'Regular';
-        conditionColor = AppColors.kOrange;
-        break;
-      case FieldCondition.poor:
-        conditionText = 'Mala';
-        conditionColor = AppColors.kRed;
-        break;
-      case FieldCondition.unplayable:
-        conditionText = 'No jugable';
-        conditionColor = AppColors.kRed;
-        break;
-    }
-
-    return Row(
-      children: [
-        _getWeatherIcon(condition),
-        SizedBox(width: getHorizontalSize(12)),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                venueName,
-                style: TextStyle(
-                  color: AppColors.kWhite,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: 4),
-              Text(
-                conditionText,
-                style: TextStyle(
-                  color: conditionColor,
-                  fontSize: 12,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTournamentCTA() {
-    return GestureDetector(
-      onTap: () {
-        // Navigate to tournament creation
-        Get.snackbar(
-          'Próximamente',
-          'Función de creación de torneos en desarrollo',
-          backgroundColor: AppColors.kDarkCard,
-          colorText: AppColors.kWhite,
-        );
-      },
-      child: Container(
-        margin: getPadding(left: 20, right: 20),
-        padding: getPadding(all: 24),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppColors.kYellowAccent.withOpacity(0.2),
-              AppColors.kYellowAccent.withOpacity(0.05),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.kYellowAccent, width: 2),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: getPadding(all: 12),
-              decoration: BoxDecoration(
-                color: AppColors.kYellowAccent,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(Icons.emoji_events, color: AppColors.kBlack, size: 32),
-            ),
-            SizedBox(width: getHorizontalSize(16)),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Crear Torneo',
-                    style: TextStyle(
-                      color: AppColors.kWhite,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Organiza tu propio torneo',
-                    style: TextStyle(
-                      color: AppColors.kGreyLight,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(Icons.arrow_forward_ios, color: AppColors.kYellowAccent, size: 20),
           ],
         ),
       ),
