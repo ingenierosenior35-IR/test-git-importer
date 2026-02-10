@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
   final RxBool isLoadingWeather = false.obs;
   final RxMap<String, dynamic> userData = RxMap<String, dynamic>({});
   
-  // Dummy data for favorites
+  // Dummy data for favorites - TODO: Replace with actual user favorites from data source
   final List<FavoriteClub> _favoriteClubs = [
     FavoriteClub(name: 'Real Madrid', status: AppStrings.won, logoUrl: ''),
     FavoriteClub(name: 'Barcelona', status: AppStrings.won, logoUrl: ''),
@@ -68,7 +68,6 @@ class _HomePageState extends State<HomePage> {
   ];
   
   final List<String> _gameDays = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
-  final int _selectedDayIndex = 2; // Wednesday selected
 
   @override
   void initState() {
@@ -304,7 +303,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   SizedBox(height: 16),
-                  // Big stat
+                  // Big stat - TODO: Replace with actual player performance data
                   RichText(
                     text: TextSpan(
                       children: [
@@ -437,18 +436,15 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildFavoriteClubCard(FavoriteClub club) {
     Color statusColor;
-    switch (club.status) {
-      case 'Ganó':
-        statusColor = AppColors.kGreen;
-        break;
-      case 'Empató':
-        statusColor = AppColors.kOrange;
-        break;
-      case 'Perdió':
-        statusColor = AppColors.kRed;
-        break;
-      default:
-        statusColor = AppColors.kGrey;
+    // Match against AppStrings constants instead of literal strings
+    if (club.status == AppStrings.won) {
+      statusColor = AppColors.kGreen;
+    } else if (club.status == AppStrings.drew) {
+      statusColor = AppColors.kOrange;
+    } else if (club.status == AppStrings.lost) {
+      statusColor = AppColors.kRed;
+    } else {
+      statusColor = AppColors.kGrey;
     }
     
     return Container(
@@ -653,19 +649,19 @@ class _HomePageState extends State<HomePage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(_gameDays.length, (index) {
-              final isSelected = index == _selectedDayIndex;
+              // All chips have same style - decorative UI element for now
               return Container(
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: isSelected ? AppColors.kYellowAccent : AppColors.kDarkCard,
+                  color: AppColors.kDarkCard,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
                   child: Text(
                     _gameDays[index],
                     style: TextStyle(
-                      color: isSelected ? AppColors.kBlack : AppColors.kWhite,
+                      color: AppColors.kWhite,
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                     ),
