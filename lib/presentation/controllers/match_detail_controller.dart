@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:Rival/data/models/match.dart';
@@ -51,9 +52,9 @@ class MatchDetailController extends GetxController {
       match.value = matchData;
 
       // Load weather condition if location is available
-      if (matchData.venueLatitude != null && matchData.venueLongitude != null) {
+      if (matchData?.venueLatitude != null && matchData?.venueLongitude != null) {
         await loadWeatherCondition(
-          matchData.venueLatitude!,
+          matchData!.venueLatitude!,
           matchData.venueLongitude!,
         );
       }

@@ -8,6 +8,17 @@ class MatchRepository {
 
   CollectionReference get _matchesCollection => _firestore.collection('matches');
 
+  Future<void> updateMatchStatus(String matchId, MatchStatus status) async {
+  try {
+    await _matchesCollection.doc(matchId).update({
+      'status': status.name,
+    });
+  } catch (e) {
+    debugPrint('Error updating match status: $e');
+    rethrow;
+  }
+}
+
   Future<String> createMatch({
     required String name,
     required DateTime dateTime,

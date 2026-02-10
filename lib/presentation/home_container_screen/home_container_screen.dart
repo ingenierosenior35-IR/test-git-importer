@@ -173,7 +173,7 @@ class _HomeContainerScreenState extends State<HomeContainerScreen> {
       case AppRoutes.challengesPage:
         return ChallengesPage();
       case AppRoutes.profilePage:
-        return ProfilePage();
+        return ProfileScreen();
       default:
         return DefaultWidget();
     }

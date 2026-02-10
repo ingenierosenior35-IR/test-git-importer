@@ -1,13 +1,11 @@
+import 'package:Rival/presentation/controllers/match_detail_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:Rival/core/constants/colors.dart';
 import 'package:Rival/data/models/match.dart';
 import 'package:Rival/features/weather/domain/entities/weather_condition.dart';
 import 'package:Rival/core/utils/map_launcher.dart';
-import 'package:share_plus/share_plus.dart';
-import '../../../controllers/match_detail_controller.dart';
 
 class MatchDetailScreen extends StatelessWidget {
   const MatchDetailScreen({Key? key}) : super(key: key);

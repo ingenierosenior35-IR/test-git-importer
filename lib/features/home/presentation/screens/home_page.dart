@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:Rival/core/app_export.dart';
 import 'package:Rival/core/constants/colors.dart';
@@ -8,7 +6,6 @@ import 'package:Rival/shared/widgets/app_bar/appbar_edittext.dart';
 import 'package:Rival/presentation/controllers/matches_controller.dart';
 import 'package:Rival/data/models/match.dart';
 import 'package:Rival/features/weather/domain/entities/weather_condition.dart';
-import 'package:Rival/features/weather/domain/repositories/weather_repository.dart';
 import 'package:Rival/features/weather/data/repositories/weather_repository_impl.dart';
 import 'package:Rival/features/weather/data/datasources/sab_remote_data_source.dart';
 import 'package:Rival/services/location_service.dart';
@@ -247,7 +244,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildPlayerCard() {
     return Obx(() {
-      final user = authService.currentUser;
+      // ignore: invalid_use_of_protected_member
       final userDataMap = userData.value;
 
       return Container(
@@ -426,7 +423,7 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: getPadding(horizontal: 12, vertical: 6),
+                  padding: getPadding(left: 12, right: 12, top: 6, bottom: 6),
                   decoration: BoxDecoration(
                     color: AppColors.kYellowAccent.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(12),

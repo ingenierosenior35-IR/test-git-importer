@@ -1,3 +1,4 @@
+import 'package:Rival/presentation/screens/profile/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:Rival/presentation/splash_screen/splash_screen.dart';
 import 'package:Rival/presentation/onboarding_one_screen/onboarding_one_screen.dart';
@@ -73,7 +74,6 @@ import 'package:Rival/presentation/detail_gym_page/detail_gym_page.dart';
 import 'package:Rival/presentation/detail_home_page/detail_home_page.dart';
 import 'package:Rival/presentation/health_tips_details_screen/health_tips_details_screen.dart';
 import 'package:Rival/features/home/presentation/screens/home_page.dart';
-import 'package:Rival/features/profile/presentation/screens/profile_page.dart';
 import 'package:Rival/presentation/recommended_detail/recommended_workout_detail_screen.dart';
 import 'package:Rival/presentation/select_muscle_tab/selectmuscletabScreen.dart';
 import 'package:Rival/presentation/trending_detail/trending_detail_screen.dart';
@@ -390,7 +390,7 @@ class AppRoutes {
       case AppRoutes.week1DayOneScreen:
         return getPage(Week1DayOneScreen(), settings);
       case AppRoutes.profilePage:
-        return getPage(ProfilePage(), settings);
+        return getPage(const ProfileScreen(), settings);
       case AppRoutes.matchDetailScreen:
         return getPage(MatchDetailScreen(), settings);
       case AppRoutes.wishlistScreen:

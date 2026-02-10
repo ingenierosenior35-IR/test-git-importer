@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:Rival/core/constants/colors.dart';
 import 'package:Rival/data/models/player_stats.dart';
 
