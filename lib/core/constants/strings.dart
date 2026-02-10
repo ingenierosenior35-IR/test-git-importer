@@ -53,6 +53,24 @@ class AppStrings {
   static const String fatigueIndex = 'Índice de Fatiga';
   static const String impactScore = 'Puntuación de Impacto';
   
+  // Home Screen Redesign
+  static const String nextLeagueMatch = 'Próximo encuentro de liga';
+  static const String performance = 'Rendimiento';
+  static const String lastMatch = 'Último encuentro';
+  static const String playedMinutes = 'Jugados 90 mins';
+  static const String totalPasses = 'PASES EN';
+  static const String yourFavorites = 'Tus favoritos';
+  static const String viewAll = 'Ver todo';
+  static const String tools = 'Herramientas';
+  static const String gameDays = 'Días de juego';
+  static const String tournaments = 'Torneos';
+  static const String training = 'Entrenos';
+  static const String teams = 'Equipos';
+  static const String polls = 'Pollas';
+  static const String won = 'Ganó';
+  static const String drew = 'Empató';
+  static const String lost = 'Perdió';
+  
   static const String loading = 'Cargando...';
   static const String error = 'Error';
   static const String retry = 'Reintentar';
