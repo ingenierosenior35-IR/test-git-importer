@@ -17,11 +17,15 @@ class FixturesScreen extends StatefulWidget {
 class _FixturesScreenState extends State<FixturesScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final List<Fixture> _allFixtures = FixturesMockData.getMockFixtures();
+  late final DateFormat _dateFormat;
+  late final DateFormat _timeFormat;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _dateFormat = DateFormat('dd MMM', 'es');
+    _timeFormat = DateFormat('HH:mm');
   }
 
   @override
@@ -123,9 +127,6 @@ class _FixturesScreenState extends State<FixturesScreen> with SingleTickerProvid
   }
 
   Widget _buildFixtureCard(Fixture fixture, {required bool isUpcoming}) {
-    final dateFormat = DateFormat('dd MMM', 'es');
-    final timeFormat = DateFormat('HH:mm');
-
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -156,7 +157,7 @@ class _FixturesScreenState extends State<FixturesScreen> with SingleTickerProvid
                 ),
               ),
               Text(
-                dateFormat.format(fixture.dateTime),
+                _dateFormat.format(fixture.dateTime),
                 style: TextStyle(
                   color: AppColors.kGreyLight,
                   fontSize: 12,
@@ -209,7 +210,7 @@ class _FixturesScreenState extends State<FixturesScreen> with SingleTickerProvid
                     ? Column(
                         children: [
                           Text(
-                            timeFormat.format(fixture.dateTime),
+                            _timeFormat.format(fixture.dateTime),
                             style: TextStyle(
                               color: AppColors.kYellowAccent,
                               fontSize: 20,

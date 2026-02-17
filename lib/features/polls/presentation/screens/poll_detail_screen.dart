@@ -16,7 +16,7 @@ class PollDetailScreen extends StatefulWidget {
 
 class _PollDetailScreenState extends State<PollDetailScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  late Poll? _poll;
+  Poll? _poll;
   late List<PollStanding> _standings;
   late List<PollPrediction> _predictions;
 

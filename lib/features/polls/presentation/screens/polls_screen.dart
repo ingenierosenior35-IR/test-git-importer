@@ -19,11 +19,13 @@ class PollsScreen extends StatefulWidget {
 class _PollsScreenState extends State<PollsScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final List<Poll> _allPolls = PollsMockData.getMockPolls();
+  late final DateFormat _dateFormat;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _dateFormat = DateFormat('dd MMM yyyy', 'es');
   }
 
   @override
@@ -147,8 +149,6 @@ class _PollsScreenState extends State<PollsScreen> with SingleTickerProviderStat
   }
 
   Widget _buildPollCard(Poll poll) {
-    final dateFormat = DateFormat('dd MMM yyyy', 'es');
-
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -265,7 +265,7 @@ class _PollsScreenState extends State<PollsScreen> with SingleTickerProviderStat
                 Icon(Icons.calendar_today, color: AppColors.kGrey, size: 14),
                 const SizedBox(width: 4),
                 Text(
-                  'Creada: ${dateFormat.format(poll.createdAt)}',
+                  'Creada: ${_dateFormat.format(poll.createdAt)}',
                   style: TextStyle(
                     color: AppColors.kGrey,
                     fontSize: 11,
