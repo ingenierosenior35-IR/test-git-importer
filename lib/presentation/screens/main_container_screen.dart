@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/colors.dart';
-import 'home/home_screen.dart';
+import '../../features/home/presentation/screens/home_page.dart';
 import 'matches/matches_list_screen.dart';
 import 'video/video_upload_screen.dart';
 import 'analysis/match_history_screen.dart';
@@ -17,7 +17,7 @@ class _MainContainerScreenState extends State<MainContainerScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
-    const HomeScreen(),
+    HomePage(),
     const MatchesListScreen(),
     const VideoUploadScreen(),
     const MatchHistoryScreen(),

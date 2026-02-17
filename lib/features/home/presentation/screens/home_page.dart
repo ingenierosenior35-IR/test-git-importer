@@ -451,6 +451,7 @@ class _HomePageState extends State<HomePage> {
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
@@ -466,7 +467,7 @@ class _HomePageState extends State<HomePage> {
               size: 24,
             ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: 6),
           Text(
             club.name,
             style: TextStyle(
@@ -478,7 +479,7 @@ class _HomePageState extends State<HomePage> {
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 4),
+          SizedBox(height: 2),
           Text(
             club.status,
             style: TextStyle(
@@ -493,12 +494,28 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildToolsSection() {
+    // Tools with quick access functionalities from old HomeScreen integrated
     final tools = [
       ToolItem(
         label: AppStrings.matches,
         icon: Icons.sports_soccer,
         isPrimary: true,
         onTap: () => Get.toNamed(AppRoutes.createMatchScreen),
+      ),
+      ToolItem(
+        label: AppStrings.polls,
+        icon: Icons.poll,
+        onTap: () => Get.toNamed(AppRoutes.pollsScreen),
+      ),
+      ToolItem(
+        label: 'Fixtures',
+        icon: Icons.sports_soccer,
+        onTap: () => Get.toNamed(AppRoutes.fixturesScreen),
+      ),
+      ToolItem(
+        label: 'Clima',
+        icon: Icons.wb_sunny,
+        onTap: () => Get.toNamed(AppRoutes.weatherScreen),
       ),
       ToolItem(
         label: AppStrings.training,
@@ -535,11 +552,6 @@ class _HomePageState extends State<HomePage> {
             colorText: AppColors.kWhite,
           );
         },
-      ),
-      ToolItem(
-        label: AppStrings.polls,
-        icon: Icons.poll,
-        onTap: () => Get.toNamed(AppRoutes.pollsScreen),
       ),
     ];
     
@@ -591,6 +603,7 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
@@ -598,7 +611,7 @@ class _HomePageState extends State<HomePage> {
               color: tool.isPrimary ? AppColors.kBlack : AppColors.kYellowAccent,
               size: 32,
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 6),
             Text(
               tool.label,
               style: TextStyle(
