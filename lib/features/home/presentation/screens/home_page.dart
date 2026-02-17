@@ -509,7 +509,7 @@ class _HomePageState extends State<HomePage> {
       ),
       ToolItem(
         label: AppStrings.fixtures,
-        icon: Icons.sports_soccer,
+        icon: Icons.calendar_today,
         onTap: () => Get.toNamed(AppRoutes.fixturesScreen),
       ),
       ToolItem(
