@@ -398,12 +398,7 @@ class _HomePageState extends State<HomePage> {
               ),
               GestureDetector(
                 onTap: () {
-                  Get.snackbar(
-                    AppStrings.yourFavorites,
-                    'Ver todos los favoritos',
-                    backgroundColor: AppColors.kDarkCard,
-                    colorText: AppColors.kWhite,
-                  );
+                  Get.toNamed(AppRoutes.fixturesScreen);
                 },
                 child: Text(
                   AppStrings.viewAll,
@@ -544,14 +539,7 @@ class _HomePageState extends State<HomePage> {
       ToolItem(
         label: AppStrings.polls,
         icon: Icons.poll,
-        onTap: () {
-          Get.snackbar(
-            AppStrings.polls,
-            'Próximamente',
-            backgroundColor: AppColors.kDarkCard,
-            colorText: AppColors.kWhite,
-          );
-        },
+        onTap: () => Get.toNamed(AppRoutes.pollsScreen),
       ),
     ];
     
