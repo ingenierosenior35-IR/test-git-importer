@@ -121,29 +121,31 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
-    return Column(
-      children: [
-        _buildTopMatchStrip(),
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: getVerticalSize(16)),
-                _buildPerformanceHeroCard(),
-                SizedBox(height: getVerticalSize(24)),
-                _buildFavoritesSection(),
-                SizedBox(height: getVerticalSize(24)),
-                _buildToolsSection(),
-                SizedBox(height: getVerticalSize(24)),
-                _buildGameDaysSection(),
-                SizedBox(height: getVerticalSize(24)),
-                _buildMatchesSection(),
-                SizedBox(height: getVerticalSize(32)),
-              ],
+    return SafeArea(
+      child: Column(
+        children: [
+          _buildTopMatchStrip(),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: getVerticalSize(16)),
+                  _buildPerformanceHeroCard(),
+                  SizedBox(height: getVerticalSize(24)),
+                  _buildFavoritesSection(),
+                  SizedBox(height: getVerticalSize(24)),
+                  _buildToolsSection(),
+                  SizedBox(height: getVerticalSize(24)),
+                  _buildGameDaysSection(),
+                  SizedBox(height: getVerticalSize(24)),
+                  _buildMatchesSection(),
+                  SizedBox(height: getVerticalSize(32)),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

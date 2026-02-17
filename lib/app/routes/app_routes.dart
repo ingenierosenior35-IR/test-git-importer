@@ -87,6 +87,8 @@ import 'package:Rival/features/weather/presentation/screens/weather_screen.dart'
 
 class AppRoutes {
   static const String mainContainerScreen = '/main_container_screen';
+  // Alias for backward compatibility - both point to the same MainContainerScreen with HomePage
+  static const String homeContainerScreen = '/main_container_screen';
   static const String createMatchScreen = '/create_match_screen';
   static const String editProfileScreenNew = '/edit_profile_screen_new';
   static const String splashScreen = '/splash_screen';
@@ -300,6 +302,8 @@ class AppRoutes {
       case AppRoutes.homePage:
         return getPage(HomePage(), settings);
       case AppRoutes.mainContainerScreen:
+        return getPage(MainContainerScreen(), settings);
+      case AppRoutes.homeContainerScreen:
         return getPage(MainContainerScreen(), settings);
       case AppRoutes.createMatchScreen:
         return getPage(CreateMatchScreen(), settings);
