@@ -67,6 +67,8 @@ class AppStrings {
   static const String training = 'Entrenos';
   static const String teams = 'Equipos';
   static const String polls = 'Pollas';
+  static const String fixtures = 'Fixtures';
+  static const String weather = 'Clima';
   static const String won = 'Ganó';
   static const String drew = 'Empató';
   static const String lost = 'Perdió';
