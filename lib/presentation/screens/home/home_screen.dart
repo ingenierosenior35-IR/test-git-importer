@@ -65,6 +65,8 @@ class HomeScreen extends StatelessWidget {
                           : null,
                     ),
                     const SizedBox(height: 24),
+                    _buildQuickAccessSection(),
+                    const SizedBox(height: 24),
                     ScoreboardsSection(),
                     const SizedBox(height: 24),
                     MatchesAgenda(
@@ -79,6 +81,99 @@ class HomeScreen extends StatelessWidget {
             ),
           );
         }),
+      ),
+    );
+  }
+
+  Widget _buildQuickAccessSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Acceso Rápido',
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: AppColors.kWhite,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: _buildQuickAccessCard(
+                icon: Icons.poll,
+                title: 'Pollas',
+                onTap: () => Get.toNamed('/polls_screen'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildQuickAccessCard(
+                icon: Icons.sports_soccer,
+                title: 'Fixtures',
+                onTap: () => Get.toNamed('/fixtures_screen'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildQuickAccessCard(
+                icon: Icons.wb_sunny,
+                title: 'Clima',
+                onTap: () => Get.toNamed('/weather_screen'),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuickAccessCard({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.kDarkCard,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: AppColors.kYellowAccent.withOpacity(0.3),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.kYellowAccent.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                icon,
+                color: AppColors.kYellowAccent,
+                size: 28,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              style: TextStyle(
+                color: AppColors.kWhite,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }

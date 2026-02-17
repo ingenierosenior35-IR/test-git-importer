@@ -86,6 +86,7 @@ import 'package:Rival/presentation/screens/profile/edit_profile_screen.dart';
 // Fixtures and Polls Screens
 import 'package:Rival/features/fixtures/presentation/screens/fixtures_screen.dart';
 import 'package:Rival/features/polls/presentation/screens/polls_screen.dart';
+import 'package:Rival/features/weather/presentation/screens/weather_screen.dart';
 
 class AppRoutes {
   static const String mainContainerScreen = '/main_container_screen';
@@ -261,6 +262,8 @@ class AppRoutes {
   static const String fixturesScreen = '/fixtures_screen';
 
   static const String pollsScreen = '/polls_screen';
+  
+  static const String weatherScreen = '/weather_screen';
 
 
   static const String initialRoute = '/initialRoute';
@@ -443,6 +446,8 @@ class AppRoutes {
         return getPage(const FixturesScreen(), settings);
       case AppRoutes.pollsScreen:
         return getPage(const PollsScreen(), settings);
+      case AppRoutes.weatherScreen:
+        return getPage(const WeatherScreen(), settings);
       case AppRoutes.initialRoute:
         return getPage(SplashScreen(), settings);
       default:
