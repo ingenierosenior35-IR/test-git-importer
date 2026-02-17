@@ -83,6 +83,10 @@ import 'package:Rival/presentation/screens/matches/create_match_screen.dart';
 import 'package:Rival/presentation/screens/matches/match_detail_screen.dart';
 import 'package:Rival/presentation/screens/profile/edit_profile_screen.dart';
 
+// Fixtures and Polls Screens
+import 'package:Rival/features/fixtures/presentation/screens/fixtures_screen.dart';
+import 'package:Rival/features/polls/presentation/screens/polls_screen.dart';
+
 class AppRoutes {
   static const String mainContainerScreen = '/main_container_screen';
   static const String createMatchScreen = '/create_match_screen';
@@ -253,6 +257,10 @@ class AppRoutes {
   static const String confirmPaymentScreen = '/confirm_payment_screen';
 
   static const String appNavigationScreen = '/app_navigation_screen';
+
+  static const String fixturesScreen = '/fixtures_screen';
+
+  static const String pollsScreen = '/polls_screen';
 
 
   static const String initialRoute = '/initialRoute';
@@ -431,6 +439,10 @@ class AppRoutes {
         return getPage(PhotoUploadScreen(selectedSports: [], selectedGender: '', height: {}, weight: {}), settings);
       case AppRoutes.congratulationsScreen:
         return getPage(CongratulationsScreen(), settings);
+      case AppRoutes.fixturesScreen:
+        return getPage(const FixturesScreen(), settings);
+      case AppRoutes.pollsScreen:
+        return getPage(const PollsScreen(), settings);
       case AppRoutes.initialRoute:
         return getPage(SplashScreen(), settings);
       default:
