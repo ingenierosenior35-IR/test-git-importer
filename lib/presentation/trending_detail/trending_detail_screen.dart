@@ -1,7 +1,3 @@
-// ignore_for_file: deprecated_member_use, duplicate_ignore, duplicate_ignore
-
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:Rival/widgets/app_bar/custom_app_bar.dart';
@@ -16,7 +12,6 @@ import '../../widgets/custom_icon_button.dart';
 import '../../widgets/custom_image_view.dart';
 import '../detail_gym_page/detail_gym_page.dart';
 import '../detail_gym_tab_container_screen/controller/detail_gym_tab_container_controller.dart';
-import '../detail_home_page/detail_home_page.dart';
 import 'controller/trending_detail_screen_controller.dart';
 
 class TrendingDetailScreen extends StatefulWidget {
@@ -29,7 +24,7 @@ class TrendingDetailScreen extends StatefulWidget {
 class _TrendingDetailScreenState extends State<TrendingDetailScreen> {
   DetailGymTabContainerController controller = Get.put(DetailGymTabContainerController());
   TrendingDetailScreenController trendingDetailScreenController = Get.put(TrendingDetailScreenController());
-  List tabs = [DetailGymPage(), DetailHomePage()];
+  List tabs = [DetailGymPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -241,8 +236,7 @@ class _TrendingDetailScreenState extends State<TrendingDetailScreen> {
                                   curve: Curves.ease);
                             },
                             tabs: [
-                              Tab(child: Text("lbl_gym".tr)),
-                              Tab(child: Text("lbl_home".tr))
+                              Tab(child: Text("lbl_gym".tr))
                             ],
                           ),
                         ),

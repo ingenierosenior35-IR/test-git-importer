@@ -6,7 +6,6 @@ import 'package:Rival/presentation/login_filled_tab_container_screen/login_fille
 import 'package:Rival/presentation/forgot_password_screen/forgot_password_screen.dart';
 import 'package:Rival/presentation/verification_screen/verification_screen.dart';
 import 'package:Rival/presentation/password_changed_popup_screen/password_changed_popup_screen.dart';
-import 'package:Rival/presentation/home_container_screen/home_container_screen.dart';
 import 'package:Rival/presentation/search_fill_screen/search_fill_screen.dart';
 import 'package:Rival/presentation/categories_screen/categories_screen.dart';
 import 'package:Rival/presentation/health_tips_screen/health_tips_screen.dart';
@@ -68,10 +67,8 @@ import 'package:Rival/features/auth/presentation/screens/onboarding/congratulati
 
 import 'package:Rival/presentation/challenges_page/challenges_page.dart';
 import 'package:Rival/presentation/chest_gym_exercise_page/chest_gym_exercise_page.dart';
-import 'package:Rival/presentation/chest_home_exercise_page/chest_home_exercise_page.dart';
 import 'package:Rival/presentation/chest_stretches_page/chest_stretches_page.dart';
 import 'package:Rival/presentation/detail_gym_page/detail_gym_page.dart';
-import 'package:Rival/presentation/detail_home_page/detail_home_page.dart';
 import 'package:Rival/presentation/health_tips_details_screen/health_tips_details_screen.dart';
 import 'package:Rival/features/home/presentation/screens/home_page.dart';
 import 'package:Rival/presentation/recommended_detail/recommended_workout_detail_screen.dart';
@@ -139,8 +136,6 @@ class AppRoutes {
 
   static const String homePage = '/home_page';
 
-  static const String homeContainerScreen = '/home_container_screen';
-
   static const String searchScreen = '/search_screen';
 
   static const String searchFillScreen = '/search_fill_screen';
@@ -155,8 +150,6 @@ class AppRoutes {
 
   static const String chestGymExercisePage = '/chest_gym_exercise_page';
 
-  static const String chestHomeExercisePage = '/chest_home_exercise_page';
-
   static const String chestStretchesPage = '/chest_stretches_page';
 
   static const String popularWorkOutScreen = '/popular_work_out_screen';
@@ -166,8 +159,6 @@ class AppRoutes {
   static const String detailGymTabContainerScreen = '/detail_gym_tab_container_screen';
   static const String trendingDetailScreen = '/dtrending_detail_screen';
   static const String recommendedDetailScreen = '/recommended_detail_screen';
-
-  static const String detailHomePage = '/detail_home_page';
 
   static const String fullWorkoutPlanScreen = '/full_workout_plan_screen';
 
@@ -312,8 +303,6 @@ class AppRoutes {
         return getPage(MainContainerScreen(), settings);
       case AppRoutes.createMatchScreen:
         return getPage(CreateMatchScreen(), settings);
-      case AppRoutes.homeContainerScreen:
-        return getPage(HomeContainerScreen(), settings);
       case AppRoutes.searchFillScreen:
         return getPage(SearchFillScreen(), settings);
       case AppRoutes.categoriesScreen:
@@ -326,8 +315,6 @@ class AppRoutes {
         return getPage(ExerciseScreen(), settings);
       case AppRoutes.chestGymExercisePage:
         return getPage(ChestGymExercisePage(), settings);
-      case AppRoutes.chestHomeExercisePage:
-        return getPage(ChestHomeExercisePage(), settings);
       case AppRoutes.chestStretchesPage:
         return getPage(ChestStretchesPage(), settings);
       case AppRoutes.popularWorkOutScreen:
@@ -340,8 +327,6 @@ class AppRoutes {
         return getPage(TrendingDetailScreen(), settings);
       case AppRoutes.recommendedDetailScreen:
         return getPage(RecommendedDetailScreen(), settings);
-      case AppRoutes.detailHomePage:
-        return getPage(DetailHomePage(), settings);
       case AppRoutes.fullWorkoutPlanScreen:
         return getPage(FullWorkoutPlanScreen(), settings);
       case AppRoutes.selectPlanScreen:

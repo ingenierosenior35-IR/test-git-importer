@@ -1,9 +1,6 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:Rival/core/app_export.dart';
 import 'package:Rival/presentation/detail_gym_page/detail_gym_page.dart';
-import 'package:Rival/presentation/detail_home_page/detail_home_page.dart';
 import 'package:Rival/widgets/app_bar/appbar_image.dart';
 import 'package:Rival/widgets/app_bar/appbar_title.dart';
 import 'package:Rival/widgets/app_bar/custom_app_bar.dart';
@@ -28,7 +25,7 @@ class _DetailGymTabContainerScreenState
       Get.put(DetailGymTabContainerController());
   PopularWorkOutController popularWorkOutController =
       Get.put(PopularWorkOutController());
-  List tabs = [DetailGymPage(), DetailHomePage()];
+  List tabs = [DetailGymPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -244,8 +241,7 @@ class _DetailGymTabContainerScreenState
                           Tab(child: Padding(
                             padding:getPadding(bottom: 8),
                             child: Text("lbl_gym".tr),
-                          )),
-                          Tab(child: Text("lbl_home".tr))
+                          ))
                         ],
                       ),
                     ),

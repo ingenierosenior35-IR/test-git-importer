@@ -1,9 +1,6 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:Rival/core/app_export.dart';
 import 'package:Rival/presentation/chest_gym_exercise_page/chest_gym_exercise_page.dart';
-import 'package:Rival/presentation/chest_home_exercise_page/chest_home_exercise_page.dart';
 import 'package:Rival/presentation/chest_stretches_page/chest_stretches_page.dart';
 import 'package:Rival/widgets/app_bar/appbar_image.dart';
 import 'package:Rival/widgets/app_bar/appbar_title.dart';
@@ -25,7 +22,6 @@ class _RecommendedWorkoutTabContainerScreenState extends State<RecommendedWorkou
 
   List tabs = [
     ChestGymExercisePage(),
-    ChestHomeExercisePage(),
     ChestStretchesPage()
   ];
   @override
@@ -93,10 +89,6 @@ class _RecommendedWorkoutTabContainerScreenState extends State<RecommendedWorkou
                                   Tab(child: Padding(
                                     padding:getPadding(bottom: 8),
                                     child: Text("lbl_gym_exercise2".tr),
-                                  )),
-                                  Tab(child: Padding(
-                                    padding:  getPadding(bottom: 8),
-                                    child: Text("lbl_home_exercise2".tr),
                                   )),
                                   Tab(child: Padding(
                                     padding:getPadding(bottom: 8),

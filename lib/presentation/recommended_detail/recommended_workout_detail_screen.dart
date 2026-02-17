@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +12,6 @@ import '../../widgets/custom_icon_button.dart';
 import '../../widgets/custom_image_view.dart';
 import '../detail_gym_page/detail_gym_page.dart';
 import '../detail_gym_tab_container_screen/controller/detail_gym_tab_container_controller.dart';
-import '../detail_home_page/detail_home_page.dart';
 import 'controller/recommended_workout_detail_controller.dart';
 
 class RecommendedDetailScreen extends StatefulWidget {
@@ -27,7 +24,7 @@ class RecommendedDetailScreen extends StatefulWidget {
 class _RecommendedDetailScreenState extends State<RecommendedDetailScreen> {
   DetailGymTabContainerController controller = Get.put(DetailGymTabContainerController());
   RecommendedWorkoutDetailController recommendedWorkoutController = Get.put(RecommendedWorkoutDetailController());
-  List tabs = [DetailGymPage(), DetailHomePage()];
+  List tabs = [DetailGymPage()];
 
   @override
   Widget build(BuildContext context) {
@@ -239,8 +236,7 @@ class _RecommendedDetailScreenState extends State<RecommendedDetailScreen> {
                                   curve: Curves.ease);
                             },
                             tabs: [
-                              Tab(child: Text("lbl_gym".tr)),
-                              Tab(child: Text("lbl_home".tr))
+                              Tab(child: Text("lbl_gym".tr))
                             ],
                           ),
                         ),
