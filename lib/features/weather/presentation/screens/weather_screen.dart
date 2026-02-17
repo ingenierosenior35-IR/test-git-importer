@@ -11,8 +11,6 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
-  final DateFormat _dateFormat = DateFormat('EEEE, dd MMM', 'es');
-  
   // Mock weather data - in a real app, this would come from the weather repository
   final List<Map<String, dynamic>> _forecast = [
     {
@@ -70,7 +68,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
         ),
         title: Text(
           'CLIMA PARA ENTRENAR',
-          style: TextStyle(
+          style: const TextStyle(
             color: AppColors.kWhite,
             fontSize: 16,
             fontWeight: FontWeight.bold,

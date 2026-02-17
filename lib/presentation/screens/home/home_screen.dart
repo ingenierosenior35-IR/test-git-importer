@@ -165,7 +165,7 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               title,
-              style: TextStyle(
+              style: const TextStyle(
                 color: AppColors.kWhite,
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
@@ -225,9 +225,9 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     'Organiza tu propio torneo',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
-                      color: AppColors.kBlack.withOpacity(0.7),
+                      color: AppColors.kBlack,
                     ),
                   ),
                 ],
