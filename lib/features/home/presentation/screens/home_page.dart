@@ -508,12 +508,12 @@ class _HomePageState extends State<HomePage> {
         onTap: () => Get.toNamed(AppRoutes.pollsScreen),
       ),
       ToolItem(
-        label: 'Fixtures',
+        label: AppStrings.fixtures,
         icon: Icons.sports_soccer,
         onTap: () => Get.toNamed(AppRoutes.fixturesScreen),
       ),
       ToolItem(
-        label: 'Clima',
+        label: AppStrings.weather,
         icon: Icons.wb_sunny,
         onTap: () => Get.toNamed(AppRoutes.weatherScreen),
       ),
