@@ -311,6 +311,12 @@ class ProfileScreen extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         _buildMenuItem(
+          Icons.account_balance_wallet_rounded,
+          'Billetera',
+          () => Get.toNamed('/wallet_screen'),
+        ),
+        const SizedBox(height: 12),
+        _buildMenuItem(
           Icons.settings_rounded,
           'Configuración',
           () {},

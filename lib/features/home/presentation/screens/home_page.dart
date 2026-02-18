@@ -502,7 +502,7 @@ class _HomePageState extends State<HomePage> {
         label: AppStrings.matches,
         icon: Icons.sports_soccer,
         isPrimary: true,
-        onTap: () => Get.toNamed(AppRoutes.createMatchScreen),
+        onTap: () => Get.toNamed(AppRoutes.matchesListScreen),
       ),
       ToolItem(
         label: AppStrings.polls,
@@ -534,14 +534,7 @@ class _HomePageState extends State<HomePage> {
       ToolItem(
         label: AppStrings.teams,
         icon: Icons.groups,
-        onTap: () {
-          Get.snackbar(
-            AppStrings.teams,
-            'Próximamente',
-            backgroundColor: AppColors.kDarkCard,
-            colorText: AppColors.kWhite,
-          );
-        },
+        onTap: () => Get.toNamed(AppRoutes.teamsListScreen),
       ),
       ToolItem(
         label: AppStrings.tournaments,
