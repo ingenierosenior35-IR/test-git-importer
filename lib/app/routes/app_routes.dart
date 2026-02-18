@@ -91,6 +91,16 @@ import 'package:Rival/features/teams/presentation/screens/team_detail_screen.dar
 import 'package:Rival/features/teams/presentation/screens/create_team_screen.dart';
 
 // Matches Screens
+import 'package:Rival/features/matches/presentation/screens/matches_list_screen.dart';
+import 'package:Rival/features/matches/presentation/screens/create_match_flow_screen.dart';
+import 'package:Rival/features/matches/presentation/screens/match_result_screen.dart';
+
+// Wallet Screens
+import 'package:Rival/features/wallet/presentation/screens/wallet_screen.dart';
+import 'package:Rival/features/wallet/presentation/screens/add_card_screen.dart';
+import 'package:Rival/features/teams/presentation/screens/create_team_screen.dart';
+
+// Matches Screens
 import 'package:Rival/features/matches/presentation/screens/create_match_flow_screen.dart';
 import 'package:Rival/features/matches/presentation/screens/match_result_screen.dart';
 
@@ -273,8 +283,14 @@ class AppRoutes {
   static const String createTeamScreen = '/create_team_screen';
 
   // Matches Routes
+  static const String matchesListScreen = '/matches_list_screen';
   static const String createMatchFlowScreen = '/create_match_flow_screen';
   static const String matchResultScreen = '/match_result_screen';
+  static const String matchDetailInfoScreen = '/match_detail_info_screen';
+
+  // Wallet Routes
+  static const String walletScreen = '/wallet_screen';
+  static const String addCardScreen = '/add_card_screen';
 
   static const String initialRoute = '/initialRoute';
 
@@ -460,10 +476,16 @@ class AppRoutes {
         return getPage(const TeamDetailScreen(), settings);
       case AppRoutes.createTeamScreen:
         return getPage(const CreateTeamScreen(), settings);
+      case AppRoutes.matchesListScreen:
+        return getPage(const MatchesListScreen(), settings);
       case AppRoutes.createMatchFlowScreen:
         return getPage(const CreateMatchFlowScreen(), settings);
       case AppRoutes.matchResultScreen:
         return getPage(const MatchResultScreen(), settings);
+      case AppRoutes.walletScreen:
+        return getPage(const WalletScreen(), settings);
+      case AppRoutes.addCardScreen:
+        return getPage(const AddCardScreen(), settings);
       case AppRoutes.initialRoute:
         return getPage(SplashScreen(), settings);
       default:
