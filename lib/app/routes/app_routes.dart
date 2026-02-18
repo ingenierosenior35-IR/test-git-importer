@@ -96,6 +96,7 @@ import 'package:Rival/features/teams/presentation/screens/player_detail_screen.d
 import 'package:Rival/features/matches/presentation/screens/matches_list_screen.dart';
 import 'package:Rival/features/matches/presentation/screens/create_match_flow_screen.dart';
 import 'package:Rival/features/matches/presentation/screens/match_result_screen.dart';
+import 'package:Rival/features/matches/presentation/screens/match_detail_info_screen.dart';
 
 // Wallet Screens
 import 'package:Rival/features/wallet/presentation/screens/wallet_screen.dart';
@@ -486,6 +487,8 @@ class AppRoutes {
         return getPage(const CreateMatchFlowScreen(), settings);
       case AppRoutes.matchResultScreen:
         return getPage(const MatchResultScreen(), settings);
+      case AppRoutes.matchDetailInfoScreen:
+        return getPage(const MatchDetailInfoScreen(), settings);
       case AppRoutes.walletScreen:
         return getPage(const WalletScreen(), settings);
       case AppRoutes.addCardScreen:

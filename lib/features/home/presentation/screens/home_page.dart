@@ -66,8 +66,6 @@ class _HomePageState extends State<HomePage> {
     FavoriteClub(name: 'Valencia', status: AppStrings.lost, logoUrl: ''),
     FavoriteClub(name: 'Sevilla', status: AppStrings.won, logoUrl: ''),
   ];
-  
-  final List<String> _gameDays = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 
   @override
   void initState() {
@@ -135,8 +133,6 @@ class _HomePageState extends State<HomePage> {
                   _buildFavoritesSection(),
                   SizedBox(height: getVerticalSize(24)),
                   _buildToolsSection(),
-                  SizedBox(height: getVerticalSize(24)),
-                  _buildGameDaysSection(),
                   SizedBox(height: getVerticalSize(24)),
                   _buildMatchesSection(),
                   SizedBox(height: getVerticalSize(32)),
@@ -627,53 +623,6 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildGameDaysSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: getPadding(left: 20, right: 20),
-          child: Text(
-            AppStrings.gameDays,
-            style: TextStyle(
-              color: AppColors.kWhite,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        SizedBox(height: getVerticalSize(16)),
-        Padding(
-          padding: getPadding(left: 20, right: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: List.generate(_gameDays.length, (index) {
-              // All chips have same style - decorative UI element for now
-              return Container(
-                width: 42,
-                height: 42,
-                decoration: BoxDecoration(
-                  color: AppColors.kDarkCard,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                  child: Text(
-                    _gameDays[index],
-                    style: TextStyle(
-                      color: AppColors.kWhite,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              );
-            }),
-          ),
-        ),
-      ],
     );
   }
 

@@ -448,6 +448,7 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.all(12),
+        onTap: () => Get.toNamed('/player_detail_screen', arguments: player),
         leading: CircleAvatar(
           radius: 28,
           backgroundColor: AppColors.kYellowAccent.withOpacity(0.2),

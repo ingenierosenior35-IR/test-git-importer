@@ -108,6 +108,13 @@ class _CreateMatchFlowScreenState extends State<CreateMatchFlowScreen> {
         return _selectedCourt != null;
       case 4:
         return true;
+      case 5:
+        // Confirmation step - validate all required fields are complete
+        bool hasMatchName = _matchNameController.text.trim().isNotEmpty;
+        bool hasCourt = _selectedCourt != null;
+        bool hasTeams = _selectedMatchType == MatchType.local ||
+            (_selectedHomeTeam != null && _selectedAwayTeam != null);
+        return hasMatchName && hasCourt && hasTeams;
       default:
         return false;
     }
