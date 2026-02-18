@@ -148,8 +148,9 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
     });
 
     try {
+      final now = DateTime.now();
       final tournamentId = _editingTournament?.id ?? 
-          'tournament_${DateTime.now().microsecondsSinceEpoch}_${DateTime.now().millisecondsSinceEpoch % 1000}';
+          'tournament_${now.microsecondsSinceEpoch}_${now.millisecondsSinceEpoch % 1000}';
       
       final tournament = Tournament(
         id: tournamentId,
