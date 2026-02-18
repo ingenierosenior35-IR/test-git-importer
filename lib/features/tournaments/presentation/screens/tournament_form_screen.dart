@@ -14,6 +14,8 @@ class TournamentFormScreen extends StatefulWidget {
 }
 
 class _TournamentFormScreenState extends State<TournamentFormScreen> {
+  static const int _minTeams = 2;
+  
   final _formKey = GlobalKey<FormState>();
   
   late final TextEditingController _nameController;
@@ -146,8 +148,11 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
     });
 
     try {
+      final tournamentId = _editingTournament?.id ?? 
+          'tournament_${DateTime.now().microsecondsSinceEpoch}_${DateTime.now().millisecondsSinceEpoch % 1000}';
+      
       final tournament = Tournament(
-        id: _editingTournament?.id ?? 'tournament_${DateTime.now().millisecondsSinceEpoch}',
+        id: tournamentId,
         name: _nameController.text.trim(),
         description: _descriptionController.text.trim().isEmpty 
             ? null 
@@ -162,7 +167,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
         location: _locationController.text.trim().isEmpty 
             ? null 
             : _locationController.text.trim(),
-        createdBy: _editingTournament?.createdBy ?? 'user1',
+        createdBy: _editingTournament?.createdBy ?? 'user1', // TODO: Replace with actual authenticated user ID
         createdAt: _editingTournament?.createdAt ?? DateTime.now(),
         pointsForWin: int.parse(_pointsWinController.text),
         pointsForDraw: int.parse(_pointsDrawController.text),
@@ -343,8 +348,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                       return 'Ingrese el número máximo de equipos';
                     }
                     final number = int.tryParse(value);
-                    if (number == null || number < 2) {
-                      return 'Mínimo 2 equipos';
+                    if (number == null || number < _minTeams) {
+                      return 'Mínimo $_minTeams equipos';
                     }
                     return null;
                   },
