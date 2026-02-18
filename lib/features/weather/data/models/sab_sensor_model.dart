@@ -13,6 +13,8 @@ class SabSensorModel extends SabSensor {
     required super.dailyAccumulated,
     required super.readingDate,
     super.atmosphericPressure,
+    super.visible,
+    super.estado,
   });
 
   /// Creates a SabSensorModel from JSON
@@ -27,6 +29,8 @@ class SabSensorModel extends SabSensor {
       dailyAccumulated: _parseDouble(json['ACUMULADODIA']),
       readingDate: json['FECHALECTURA']?.toString() ?? '',
       atmosphericPressure: _parseDouble(json['PRESIONATMOSFERICA']),
+      visible: _parseInt(json['VISIBLE']),
+      estado: _parseInt(json['ESTADO']),
     );
   }
 
@@ -42,6 +46,8 @@ class SabSensorModel extends SabSensor {
       'ACUMULADODIA': dailyAccumulated,
       'FECHALECTURA': readingDate,
       'PRESIONATMOSFERICA': atmosphericPressure,
+      'VISIBLE': visible,
+      'ESTADO': estado,
     };
   }
 
@@ -51,5 +57,12 @@ class SabSensorModel extends SabSensor {
     if (value is int) return value.toDouble();
     if (value is String) return double.tryParse(value) ?? 0.0;
     return 0.0;
+  }
+
+  static int? _parseInt(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is String) return int.tryParse(value);
+    return null;
   }
 }

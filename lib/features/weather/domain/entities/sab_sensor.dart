@@ -11,6 +11,8 @@ class SabSensor extends Equatable {
   final double dailyAccumulated; // mm accumulated today
   final String readingDate;
   final double? atmosphericPressure;
+  final int? visible; // 1 = visible, 0 = hidden
+  final int? estado; // 1 = active, 0 = inactive
 
   const SabSensor({
     required this.id,
@@ -22,6 +24,8 @@ class SabSensor extends Equatable {
     required this.dailyAccumulated,
     required this.readingDate,
     this.atmosphericPressure,
+    this.visible,
+    this.estado,
   });
 
   @override
@@ -35,5 +39,7 @@ class SabSensor extends Equatable {
         dailyAccumulated,
         readingDate,
         atmosphericPressure,
+        visible,
+        estado,
       ];
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:Rival/core/constants/colors.dart';
+import 'package:Rival/core/constants/strings.dart';
 import 'package:Rival/features/weather/data/datasources/sab_remote_data_source.dart';
 import 'package:Rival/features/weather/domain/entities/sab_sensor.dart';
 
@@ -36,10 +37,13 @@ class _WeatherDetailScreenState extends State<WeatherDetailScreen> {
     try {
       final sensors = await _dataSource.getRainfallSensors();
       setState(() {
-        // Filter for visible and active stations only
+        // Filter for visible (VISIBLE == 1) and active (ESTADO == 1) stations
+        // Also ensure station has valid data
         _sensors = sensors.where((s) {
-          // Basic filtering - in real app would check VISIBLE and ESTADO fields
-          return s.station.isNotEmpty && s.locality.isNotEmpty;
+          return s.station.isNotEmpty && 
+                 s.locality.isNotEmpty &&
+                 (s.visible == null || s.visible == 1) &&
+                 (s.estado == null || s.estado == 1);
         }).toList();
         _isLoading = false;
       });
@@ -255,10 +259,13 @@ class _WeatherDetailScreenState extends State<WeatherDetailScreen> {
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.info_outline,
-            color: AppColors.kYellowAccent,
-            size: 20,
+          Semantics(
+            label: AppStrings.weatherDataSourceInfo,
+            child: Icon(
+              Icons.info_outline,
+              color: AppColors.kYellowAccent,
+              size: 20,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -387,10 +394,12 @@ class _WeatherDetailScreenState extends State<WeatherDetailScreen> {
                     const SizedBox(height: 2),
                     Row(
                       children: [
-                        Icon(
-                          Icons.location_on,
-                          size: 12,
-                          color: AppColors.kGreyLight,
+                        ExcludeSemantics(
+                          child: Icon(
+                            Icons.location_on,
+                            size: 12,
+                            color: AppColors.kGreyLight,
+                          ),
                         ),
                         const SizedBox(width: 4),
                         Expanded(
@@ -442,10 +451,12 @@ class _WeatherDetailScreenState extends State<WeatherDetailScreen> {
             const SizedBox(height: 10),
             Row(
               children: [
-                Icon(
-                  Icons.access_time,
-                  size: 12,
-                  color: AppColors.kGreyLight,
+                ExcludeSemantics(
+                  child: Icon(
+                    Icons.access_time,
+                    size: 12,
+                    color: AppColors.kGreyLight,
+                  ),
                 ),
                 const SizedBox(width: 4),
                 Text(
