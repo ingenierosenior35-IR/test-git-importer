@@ -85,6 +85,15 @@ import 'package:Rival/features/fixtures/presentation/screens/fixtures_screen.dar
 import 'package:Rival/features/polls/presentation/screens/polls_screen.dart';
 import 'package:Rival/features/weather/presentation/screens/weather_screen.dart';
 
+// Teams Screens
+import 'package:Rival/features/teams/presentation/screens/teams_list_screen.dart';
+import 'package:Rival/features/teams/presentation/screens/team_detail_screen.dart';
+import 'package:Rival/features/teams/presentation/screens/create_team_screen.dart';
+
+// Matches Screens
+import 'package:Rival/features/matches/presentation/screens/create_match_flow_screen.dart';
+import 'package:Rival/features/matches/presentation/screens/match_result_screen.dart';
+
 class AppRoutes {
   static const String mainContainerScreen = '/main_container_screen';
   // Alias for backward compatibility - both point to the same MainContainerScreen with HomePage
@@ -258,6 +267,14 @@ class AppRoutes {
   
   static const String weatherScreen = '/weather_screen';
 
+  // Teams Routes
+  static const String teamsListScreen = '/teams_list_screen';
+  static const String teamDetailScreen = '/team_detail_screen';
+  static const String createTeamScreen = '/create_team_screen';
+
+  // Matches Routes
+  static const String createMatchFlowScreen = '/create_match_flow_screen';
+  static const String matchResultScreen = '/match_result_screen';
 
   static const String initialRoute = '/initialRoute';
 
@@ -437,6 +454,16 @@ class AppRoutes {
         return getPage(const PollsScreen(), settings);
       case AppRoutes.weatherScreen:
         return getPage(const WeatherScreen(), settings);
+      case AppRoutes.teamsListScreen:
+        return getPage(const TeamsListScreen(), settings);
+      case AppRoutes.teamDetailScreen:
+        return getPage(const TeamDetailScreen(), settings);
+      case AppRoutes.createTeamScreen:
+        return getPage(const CreateTeamScreen(), settings);
+      case AppRoutes.createMatchFlowScreen:
+        return getPage(const CreateMatchFlowScreen(), settings);
+      case AppRoutes.matchResultScreen:
+        return getPage(const MatchResultScreen(), settings);
       case AppRoutes.initialRoute:
         return getPage(SplashScreen(), settings);
       default:
