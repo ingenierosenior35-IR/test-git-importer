@@ -384,6 +384,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildFavoritesSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
           padding: getPadding(left: 20, right: 20),
@@ -416,10 +417,12 @@ class _HomePageState extends State<HomePage> {
         ),
         SizedBox(height: getVerticalSize(16)),
         SizedBox(
-          height: 100,
+          height: 110,
           child: ListView.builder(
             padding: getPadding(left: 20, right: 20),
             scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            shrinkWrap: true,
             itemCount: _favoriteClubs.length,
             itemBuilder: (context, index) {
               final club = _favoriteClubs[index];
@@ -447,18 +450,17 @@ class _HomePageState extends State<HomePage> {
     return Container(
       width: 90,
       margin: getMargin(right: 12),
-      padding: getPadding(all: 12),
+      padding: getPadding(all: 10),
       decoration: BoxDecoration(
         color: AppColors.kDarkCard,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 44,
-            height: 44,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
               color: AppColors.kDarkSurface,
               shape: BoxShape.circle,
@@ -466,22 +468,24 @@ class _HomePageState extends State<HomePage> {
             child: Icon(
               Icons.sports_soccer,
               color: AppColors.kYellowAccent,
-              size: 24,
+              size: 22,
             ),
           ),
-          SizedBox(height: 6),
-          Text(
-            club.name,
-            style: TextStyle(
-              color: AppColors.kWhite,
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
+          SizedBox(height: 8),
+          Flexible(
+            child: Text(
+              club.name,
+              style: TextStyle(
+                color: AppColors.kWhite,
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
           ),
-          SizedBox(height: 2),
+          SizedBox(height: 3),
           Text(
             club.status,
             style: TextStyle(
@@ -489,6 +493,8 @@ class _HomePageState extends State<HomePage> {
               fontSize: 9,
               fontWeight: FontWeight.w500,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
