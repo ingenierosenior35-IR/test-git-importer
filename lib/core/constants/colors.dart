@@ -9,9 +9,9 @@ class AppColors {
   
   // Background Colors
   static const Color kBlack = Color(0xFF000000);
-  static const Color kDarkBackground = Color(0xFF192126);
-  static const Color kDarkCard = Color(0xFF252D32);
-  static const Color kDarkSurface = Color(0xFF30373B);
+  static const Color kDarkBackground = Color(0xFF000000); // Pure black for minimalist design
+  static const Color kDarkCard = Color(0xFF1A1A1A); // Subtle dark card background
+  static const Color kDarkSurface = Color(0xFF242424); // Subtle surface background
   
   // Text Colors
   static const Color kWhite = Color(0xFFFFFFFF);

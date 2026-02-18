@@ -82,4 +82,7 @@ class AppStrings {
   static const String edit = 'Editar';
   static const String share = 'Compartir';
   static const String confirm = 'Confirmar';
+  
+  // Weather
+  static const String weatherDataSourceInfo = 'Información sobre la fuente de datos';
 }

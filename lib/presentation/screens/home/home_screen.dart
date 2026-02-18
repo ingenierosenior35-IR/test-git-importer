@@ -120,7 +120,7 @@ class HomeScreen extends StatelessWidget {
               child: _buildQuickAccessCard(
                 icon: Icons.wb_sunny,
                 title: 'Clima',
-                onTap: () => Get.toNamed('/weather_screen'),
+                onTap: () => Get.toNamed('/weather_detail_screen'),
               ),
             ),
           ],
@@ -136,14 +136,14 @@ class HomeScreen extends StatelessWidget {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: AppColors.kDarkCard,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: AppColors.kYellowAccent.withOpacity(0.3),
+            color: AppColors.kYellowAccent.withOpacity(0.2),
             width: 1,
           ),
         ),
@@ -151,23 +151,23 @@ class HomeScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppColors.kYellowAccent.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(12),
+                color: AppColors.kYellowAccent.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
                 icon,
                 color: AppColors.kYellowAccent,
-                size: 28,
+                size: 24,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             Text(
               title,
               style: const TextStyle(
                 color: AppColors.kWhite,
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: FontWeight.w600,
               ),
               textAlign: TextAlign.center,

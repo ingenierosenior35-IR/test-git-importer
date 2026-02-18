@@ -523,6 +523,9 @@ class _CreateMatchFlowScreenState extends State<CreateMatchFlowScreen> {
         TextFormField(
           controller: _matchNameController,
           style: const TextStyle(color: AppColors.kWhite),
+          onChanged: (value) {
+            setState(() {}); // Trigger rebuild to update button state
+          },
           decoration: InputDecoration(
             labelText: 'Nombre del Partido',
             labelStyle: const TextStyle(color: AppColors.kGrey),
@@ -938,14 +941,14 @@ class _CreateMatchFlowScreenState extends State<CreateMatchFlowScreen> {
 
   Widget _buildNavigationButtons() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
         color: AppColors.kDarkCard,
         boxShadow: [
           BoxShadow(
-            color: AppColors.kBlack.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
+            color: AppColors.kBlack.withOpacity(0.2),
+            blurRadius: 4,
+            offset: const Offset(0, -1),
           ),
         ],
       ),
@@ -953,27 +956,26 @@ class _CreateMatchFlowScreenState extends State<CreateMatchFlowScreen> {
         children: [
           if (_currentStep > 0)
             Expanded(
-              child: OutlinedButton(
+              child: TextButton(
                 onPressed: _previousStep,
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: AppColors.kYellowAccent),
-                  padding: const EdgeInsets.all(16),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.kYellowAccent,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 child: const Text(
                   'Anterior',
                   style: TextStyle(
-                    color: AppColors.kYellowAccent,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
             ),
           if (_currentStep > 0)
-            const SizedBox(width: 16),
+            const SizedBox(width: 12),
           Expanded(
             flex: _currentStep == 0 ? 1 : 1,
             child: ElevatedButton(
@@ -981,17 +983,18 @@ class _CreateMatchFlowScreenState extends State<CreateMatchFlowScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.kYellowAccent,
                 foregroundColor: AppColors.kBlack,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                elevation: 0,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                disabledBackgroundColor: AppColors.kGrey.withOpacity(0.3),
+                disabledBackgroundColor: AppColors.kGrey.withOpacity(0.2),
               ),
               child: Text(
                 _currentStep == 5 ? 'Crear Partido' : 'Siguiente',
                 style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
