@@ -96,10 +96,16 @@ import 'package:Rival/features/teams/presentation/screens/player_detail_screen.d
 import 'package:Rival/features/matches/presentation/screens/matches_list_screen.dart';
 import 'package:Rival/features/matches/presentation/screens/create_match_flow_screen.dart';
 import 'package:Rival/features/matches/presentation/screens/match_result_screen.dart';
+import 'package:Rival/features/matches/presentation/screens/match_detail_info_screen.dart';
 
 // Wallet Screens
 import 'package:Rival/features/wallet/presentation/screens/wallet_screen.dart';
 import 'package:Rival/features/wallet/presentation/screens/add_card_screen.dart';
+
+// Tournaments Screens
+import 'package:Rival/features/tournaments/presentation/screens/tournaments_list_screen.dart';
+import 'package:Rival/features/tournaments/presentation/screens/tournament_detail_screen.dart';
+import 'package:Rival/features/tournaments/presentation/screens/tournament_form_screen.dart';
 
 class AppRoutes {
   static const String mainContainerScreen = '/main_container_screen';
@@ -291,6 +297,11 @@ class AppRoutes {
   // Wallet Routes
   static const String walletScreen = '/wallet_screen';
   static const String addCardScreen = '/add_card_screen';
+
+  // Tournaments Routes
+  static const String tournamentsListScreen = '/tournaments_list_screen';
+  static const String tournamentDetailScreen = '/tournament_detail_screen';
+  static const String tournamentFormScreen = '/tournament_form_screen';
 
   static const String initialRoute = '/initialRoute';
 
@@ -486,10 +497,18 @@ class AppRoutes {
         return getPage(const CreateMatchFlowScreen(), settings);
       case AppRoutes.matchResultScreen:
         return getPage(const MatchResultScreen(), settings);
+      case AppRoutes.matchDetailInfoScreen:
+        return getPage(const MatchDetailInfoScreen(), settings);
       case AppRoutes.walletScreen:
         return getPage(const WalletScreen(), settings);
       case AppRoutes.addCardScreen:
         return getPage(const AddCardScreen(), settings);
+      case AppRoutes.tournamentsListScreen:
+        return getPage(const TournamentsListScreen(), settings);
+      case AppRoutes.tournamentDetailScreen:
+        return getPage(const TournamentDetailScreen(), settings);
+      case AppRoutes.tournamentFormScreen:
+        return getPage(const TournamentFormScreen(), settings);
       case AppRoutes.initialRoute:
         return getPage(SplashScreen(), settings);
       default:

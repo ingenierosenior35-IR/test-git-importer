@@ -28,6 +28,7 @@ class Match {
   final String? mvpPlayerId;
   final String? videoUrl;
   final String? videoThumbnail;
+  final String? tournamentId; // Link to tournament if part of one
 
   Match({
     required this.id,
@@ -47,6 +48,7 @@ class Match {
     this.mvpPlayerId,
     this.videoUrl,
     this.videoThumbnail,
+    this.tournamentId,
   });
 
   bool get hasScore => homeScore != null && awayScore != null;
@@ -71,6 +73,7 @@ class Match {
     String? mvpPlayerId,
     String? videoUrl,
     String? videoThumbnail,
+    String? tournamentId,
   }) {
     return Match(
       id: id ?? this.id,
@@ -90,6 +93,7 @@ class Match {
       mvpPlayerId: mvpPlayerId ?? this.mvpPlayerId,
       videoUrl: videoUrl ?? this.videoUrl,
       videoThumbnail: videoThumbnail ?? this.videoThumbnail,
+      tournamentId: tournamentId ?? this.tournamentId,
     );
   }
 }

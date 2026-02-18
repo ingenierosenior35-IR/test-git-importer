@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/colors.dart';
 import '../../features/home/presentation/screens/home_page.dart';
-import 'matches/matches_list_screen.dart';
+import '../../features/matches/presentation/screens/matches_list_screen.dart';
 import 'video/video_upload_screen.dart';
 import 'analysis/match_history_screen.dart';
 import 'profile/profile_screen.dart';

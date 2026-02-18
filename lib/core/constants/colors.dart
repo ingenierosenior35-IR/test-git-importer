@@ -22,6 +22,7 @@ class AppColors {
   // Status Colors
   static const Color kRed = Color(0xFFD65656);
   static const Color kGreen = Color(0xFF34C759);
+  static const Color kBlue = Color(0xFF5890FF);
   static const Color kOrange = Color(0xFFEFA83C);
   
   // Semantic Colors
