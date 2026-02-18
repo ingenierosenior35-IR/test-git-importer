@@ -89,6 +89,7 @@ import 'package:Rival/features/weather/presentation/screens/weather_screen.dart'
 import 'package:Rival/features/teams/presentation/screens/teams_list_screen.dart';
 import 'package:Rival/features/teams/presentation/screens/team_detail_screen.dart';
 import 'package:Rival/features/teams/presentation/screens/create_team_screen.dart';
+import 'package:Rival/features/teams/presentation/screens/player_detail_screen.dart';
 
 // Matches Screens
 import 'package:Rival/features/matches/presentation/screens/matches_list_screen.dart';
@@ -281,6 +282,7 @@ class AppRoutes {
   static const String teamsListScreen = '/teams_list_screen';
   static const String teamDetailScreen = '/team_detail_screen';
   static const String createTeamScreen = '/create_team_screen';
+  static const String playerDetailScreen = '/player_detail_screen';
 
   // Matches Routes
   static const String matchesListScreen = '/matches_list_screen';
@@ -476,6 +478,8 @@ class AppRoutes {
         return getPage(const TeamDetailScreen(), settings);
       case AppRoutes.createTeamScreen:
         return getPage(const CreateTeamScreen(), settings);
+      case AppRoutes.playerDetailScreen:
+        return getPage(const PlayerDetailScreen(), settings);
       case AppRoutes.matchesListScreen:
         return getPage(const MatchesListScreen(), settings);
       case AppRoutes.createMatchFlowScreen:
