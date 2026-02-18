@@ -542,12 +542,7 @@ class _HomePageState extends State<HomePage> {
         label: AppStrings.tournaments,
         icon: Icons.emoji_events,
         onTap: () {
-          Get.snackbar(
-            AppStrings.tournaments,
-            'Próximamente',
-            backgroundColor: AppColors.kDarkCard,
-            colorText: AppColors.kWhite,
-          );
+          Get.toNamed('/tournaments_list_screen');
         },
       ),
     ];
