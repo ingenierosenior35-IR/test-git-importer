@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 /// Black + Neon Yellow theme with subtle greys
 class AppColors {
   // Primary Colors
-  static const Color kPrimary = Color(0xFFCDFF4D); // Neon Yellow
-  static const Color kYellowAccent = Color(0xFFCDFF4D); // Alias for compatibility
+  static const Color kPrimary = Color(0xFFDDEE5E); // Neon Yellow-Green #DDEE5E
+  static const Color kYellowAccent = Color(0xFFDDEE5E); // Alias for compatibility
   
   // Background Colors
   static const Color kBlack = Color(0xFF000000);
