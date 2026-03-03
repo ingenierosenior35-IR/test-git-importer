@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:Rival/core/app_export.dart';
 import 'package:Rival/core/constants/colors.dart';
+import '../../data/repositories/polls_firebase_repository.dart';
 
 class JoinPollScreen extends StatefulWidget {
   const JoinPollScreen({Key? key}) : super(key: key);
@@ -13,6 +15,8 @@ class JoinPollScreen extends StatefulWidget {
 class _JoinPollScreenState extends State<JoinPollScreen> {
   final _formKey = GlobalKey<FormState>();
   final _codeController = TextEditingController();
+  final _repository = PollsFirebaseRepository();
+  bool _joining = false;
 
   @override
   void dispose() {
@@ -20,19 +24,62 @@ class _JoinPollScreenState extends State<JoinPollScreen> {
     super.dispose();
   }
 
-  void _joinPoll() {
-    if (_formKey.currentState!.validate()) {
-      // TODO: Implement actual poll joining logic with API
+  Future<void> _joinPoll() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
       Get.snackbar(
-        '¡Éxito!',
-        'Te has unido a la polla correctamente',
-        backgroundColor: AppColors.kYellowAccent.withOpacity(0.9),
+        'Inicia sesión',
+        'Debes estar autenticado para unirte a una polla.',
+        backgroundColor: AppColors.kDarkCard,
+        colorText: AppColors.kWhite,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(16),
+      );
+      return;
+    }
+
+    setState(() => _joining = true);
+    try {
+      final poll = await _repository.getPollByJoinCode(_codeController.text.trim());
+      if (poll == null) {
+        if (!mounted) return;
+        Get.snackbar(
+          'Código inválido',
+          'No se encontró ninguna polla con ese código.',
+          backgroundColor: AppColors.kError,
+          colorText: AppColors.kWhite,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: const EdgeInsets.all(16),
+        );
+        return;
+      }
+
+      await _repository.joinPoll(pollId: poll.id, userId: user.uid);
+
+      if (!mounted) return;
+      Get.snackbar(
+        '¡Te uniste!',
+        'Ahora eres parte de "${poll.name}"',
+        backgroundColor: AppColors.kYellowAccent.withOpacity(0.95),
         colorText: AppColors.kBlack,
         snackPosition: SnackPosition.BOTTOM,
         margin: const EdgeInsets.all(16),
       );
-      
-      Navigator.pop(context);
+      Navigator.pop(context, true);
+    } catch (e) {
+      if (!mounted) return;
+      Get.snackbar(
+        'Error',
+        'No se pudo unir a la polla. Inténtalo de nuevo.',
+        backgroundColor: AppColors.kError,
+        colorText: AppColors.kWhite,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(16),
+      );
+    } finally {
+      if (mounted) setState(() => _joining = false);
     }
   }
 
@@ -153,23 +200,33 @@ class _JoinPollScreenState extends State<JoinPollScreen> {
               
               // Join button
               ElevatedButton(
-                onPressed: _joinPoll,
+                onPressed: _joining ? null : _joinPoll,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.kYellowAccent,
+                  disabledBackgroundColor: AppColors.kDarkSurface,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: Text(
-                  'UNIRSE',
-                  style: TextStyle(
-                    color: AppColors.kBlack,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
-                  ),
-                ),
+                child: _joining
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.kBlack,
+                        ),
+                      )
+                    : Text(
+                        'UNIRSE',
+                        style: TextStyle(
+                          color: AppColors.kBlack,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
               ),
               const SizedBox(height: 16),
               
