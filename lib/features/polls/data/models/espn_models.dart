@@ -160,3 +160,114 @@ class EspnEvent {
   bool get isLive => status == 'in';
   bool get isScheduled => status == 'pre';
 }
+
+/// A single timeline play/event from a match
+class EspnPlay {
+  final String id;
+  final int clock; // minute
+  final String text; // description
+  final String? teamId;
+  final String type; // 'goal', 'yellow-card', 'red-card', 'substitution', etc.
+
+  const EspnPlay({
+    required this.id,
+    required this.clock,
+    required this.text,
+    this.teamId,
+    required this.type,
+  });
+
+  factory EspnPlay.fromJson(Map<String, dynamic> json) {
+    final clockMap = json['clock'] as Map<String, dynamic>?;
+    final teamMap = json['team'] as Map<String, dynamic>?;
+    final typeMap = json['type'] as Map<String, dynamic>?;
+    return EspnPlay(
+      id: json['id']?.toString() ?? '',
+      clock: (clockMap?['value'] as num?)?.toInt() ?? 0,
+      text: json['text']?.toString() ?? '',
+      teamId: teamMap?['id']?.toString(),
+      type: typeMap?['id']?.toString() ?? 'event',
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'clock': clock,
+        'text': text,
+        'teamId': teamId,
+        'type': type,
+      };
+}
+
+/// Full match detail including timeline
+class EspnMatchDetail {
+  final EspnEvent event;
+  final List<EspnPlay> timeline;
+  final String? homeTeamStats;
+  final String? awayTeamStats;
+
+  const EspnMatchDetail({
+    required this.event,
+    required this.timeline,
+    this.homeTeamStats,
+    this.awayTeamStats,
+  });
+
+  factory EspnMatchDetail.fromJson(Map<String, dynamic> json) {
+    final header = json['header'] as Map<String, dynamic>?;
+    final competitions = (header?['competitions'] as List<dynamic>?) ?? [];
+    final competition = competitions.isNotEmpty
+        ? competitions.first as Map<String, dynamic>
+        : <String, dynamic>{};
+
+    final competitors = competition['competitors'] as List<dynamic>? ?? [];
+    EspnTeam homeTeam = const EspnTeam(id: '', name: 'TBD', abbreviation: 'TBD', displayName: 'TBD');
+    EspnTeam awayTeam = const EspnTeam(id: '', name: 'TBD', abbreviation: 'TBD', displayName: 'TBD');
+    String? homeScore;
+    String? awayScore;
+    String? homeStats;
+    String? awayStats;
+
+    for (final comp in competitors) {
+      final compMap = comp as Map<String, dynamic>;
+      final teamMap = compMap['team'] as Map<String, dynamic>? ?? {};
+      final team = EspnTeam.fromJson(teamMap);
+      final score = compMap['score']?.toString();
+      if (compMap['homeAway'] == 'home') {
+        homeTeam = team;
+        homeScore = score;
+        homeStats = score != null ? '${team.displayName}: $score' : null;
+      } else {
+        awayTeam = team;
+        awayScore = score;
+        awayStats = score != null ? '${team.displayName}: $score' : null;
+      }
+    }
+
+    final statusMap = competition['status'] as Map<String, dynamic>?;
+    final statusType = statusMap?['type'] as Map<String, dynamic>?;
+    final statusStr = statusType?['state']?.toString() ?? 'pre';
+
+    final event = EspnEvent(
+      id: header?['id']?.toString() ?? '',
+      name: header?['name']?.toString() ?? '',
+      shortName: header?['shortName']?.toString() ?? header?['name']?.toString() ?? '',
+      date: DateTime.tryParse(header?['gameDate']?.toString() ?? '') ?? DateTime.now(),
+      status: statusStr,
+      homeTeam: homeTeam,
+      awayTeam: awayTeam,
+      homeScore: homeScore,
+      awayScore: awayScore,
+    );
+
+    final keyEvents = json['keyEvents'] as List<dynamic>? ?? [];
+    return EspnMatchDetail(
+      event: event,
+      timeline: keyEvents
+          .map((e) => EspnPlay.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      homeTeamStats: homeStats,
+      awayTeamStats: awayStats,
+    );
+  }
+}

@@ -59,4 +59,27 @@ class EspnApiService {
       return [];
     }
   }
+
+  /// Fetches full match detail including timeline for a given [eventId] in [league].
+  Future<EspnMatchDetail?> getMatchDetail(String league, String eventId) async {
+    final uri = Uri.parse('$_siteBaseUrl/$league/summary?event=$eventId');
+    try {
+      final response = await _client.get(uri).timeout(const Duration(seconds: 15));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        return EspnMatchDetail.fromJson(data);
+      }
+      debugPrint('ESPN getMatchDetail error ${response.statusCode} for $league/$eventId');
+      return null;
+    } catch (e) {
+      debugPrint('ESPN getMatchDetail exception: $e');
+      return null;
+    }
+  }
+
+  /// Fetches play-by-play timeline events for a given [eventId] in [league].
+  Future<List<EspnPlay>> getTimeline(String league, String eventId) async {
+    final detail = await getMatchDetail(league, eventId);
+    return detail?.timeline ?? [];
+  }
 }

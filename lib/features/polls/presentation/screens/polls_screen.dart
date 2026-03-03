@@ -39,7 +39,7 @@ class _PollsScreenState extends State<PollsScreen> with SingleTickerProviderStat
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         final polls = await _repository.getPollsForUser(user.uid);
-        if (mounted) {
+        if (polls.isNotEmpty && mounted) {
           setState(() {
             _allPolls = polls;
             _loading = false;
