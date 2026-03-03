@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:Rival/core/app_export.dart';
 import 'package:Rival/core/constants/colors.dart';
 import '../../data/models/poll_model.dart';
 import '../../data/datasources/polls_mock_data.dart';
+import '../../data/repositories/polls_firebase_repository.dart';
 import 'poll_detail_screen.dart';
 import 'create_poll_screen.dart';
 import 'join_poll_screen.dart';
@@ -18,7 +20,9 @@ class PollsScreen extends StatefulWidget {
 
 class _PollsScreenState extends State<PollsScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final List<Poll> _allPolls = PollsMockData.getMockPolls();
+  final _repository = PollsFirebaseRepository();
+  List<Poll> _allPolls = [];
+  bool _loading = true;
   late final DateFormat _dateFormat;
 
   @override
@@ -26,6 +30,33 @@ class _PollsScreenState extends State<PollsScreen> with SingleTickerProviderStat
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _dateFormat = DateFormat('dd MMM yyyy', 'es');
+    _loadPolls();
+  }
+
+  Future<void> _loadPolls() async {
+    setState(() => _loading = true);
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final polls = await _repository.getPollsForUser(user.uid);
+        if (mounted) {
+          setState(() {
+            _allPolls = polls;
+            _loading = false;
+          });
+          return;
+        }
+      }
+    } catch (e) {
+      debugPrint('PollsScreen._loadPolls error: $e');
+    }
+    // Fallback to mock data if Firebase fails or user is not logged in
+    if (mounted) {
+      setState(() {
+        _allPolls = PollsMockData.getMockPolls();
+        _loading = false;
+      });
+    }
   }
 
   @override
@@ -88,7 +119,9 @@ class _PollsScreenState extends State<PollsScreen> with SingleTickerProviderStat
           ],
         ),
       ),
-      body: TabBarView(
+      body: _loading
+          ? const Center(child: CircularProgressIndicator(color: AppColors.kYellowAccent))
+          : TabBarView(
         controller: _tabController,
         children: [
           _buildPollsList(_activePolls),
@@ -96,11 +129,12 @@ class _PollsScreenState extends State<PollsScreen> with SingleTickerProviderStat
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final result = await Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const CreatePollScreen()),
           );
+          if (result == true) _loadPolls();
         },
         backgroundColor: AppColors.kYellowAccent,
         icon: const Icon(Icons.add, color: AppColors.kBlack),
@@ -271,6 +305,18 @@ class _PollsScreenState extends State<PollsScreen> with SingleTickerProviderStat
                     fontSize: 11,
                   ),
                 ),
+                if (poll.leagueName != null) ...[
+                  const SizedBox(width: 10),
+                  const Icon(Icons.sports_soccer, color: AppColors.kGrey, size: 13),
+                  const SizedBox(width: 3),
+                  Flexible(
+                    child: Text(
+                      poll.leagueName!,
+                      style: TextStyle(color: AppColors.kGrey, fontSize: 11),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ],
             ),
           ],

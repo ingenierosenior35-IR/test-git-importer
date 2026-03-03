@@ -1,3 +1,5 @@
+import 'espn_models.dart';
+
 class Poll {
   final String id;
   final String name;
@@ -8,6 +10,11 @@ class Poll {
   final List<String> participantIds;
   final String status; // 'active', 'finished'
   final String? imageUrl;
+  // ESPN league integration
+  final String? leagueSlug;
+  final String? leagueName;
+  final List<EspnEvent> fixtures;
+  final String? joinCode;
 
   Poll({
     required this.id,
@@ -19,9 +26,14 @@ class Poll {
     required this.participantIds,
     required this.status,
     this.imageUrl,
+    this.leagueSlug,
+    this.leagueName,
+    this.fixtures = const [],
+    this.joinCode,
   });
 
   factory Poll.fromJson(Map<String, dynamic> json) {
+    final fixturesRaw = json['fixtures'] as List<dynamic>?;
     return Poll(
       id: json['id'] as String,
       name: json['name'] as String,
@@ -32,6 +44,14 @@ class Poll {
       participantIds: List<String>.from(json['participantIds'] as List),
       status: json['status'] as String,
       imageUrl: json['imageUrl'] as String?,
+      leagueSlug: json['leagueSlug'] as String?,
+      leagueName: json['leagueName'] as String?,
+      fixtures: fixturesRaw != null
+          ? fixturesRaw
+              .map((e) => EspnEvent.fromJson(e as Map<String, dynamic>))
+              .toList()
+          : [],
+      joinCode: json['joinCode'] as String?,
     );
   }
 
@@ -46,6 +66,10 @@ class Poll {
       'participantIds': participantIds,
       'status': status,
       'imageUrl': imageUrl,
+      'leagueSlug': leagueSlug,
+      'leagueName': leagueName,
+      'fixtures': fixtures.map((f) => f.toJson()).toList(),
+      'joinCode': joinCode,
     };
   }
 
