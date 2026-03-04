@@ -2,70 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:Rival/core/constants/colors.dart';
 import 'package:Rival/features/polls/data/models/espn_models.dart';
-import 'package:Rival/features/polls/data/datasources/espn_api_service.dart';
-import '../../services/favorites_service.dart';
+import '../../data/models/favorite_team_model.dart';
+import '../../services/firestore_favorites_service.dart';
+import 'football_fixtures_screen.dart';
 
-class FootballFavoritesScreen extends StatefulWidget {
+class FootballFavoritesScreen extends StatelessWidget {
   const FootballFavoritesScreen({Key? key}) : super(key: key);
 
-  @override
-  State<FootballFavoritesScreen> createState() => _FootballFavoritesScreenState();
-}
-
-class _FootballFavoritesScreenState extends State<FootballFavoritesScreen> {
-  final _service = EspnApiService();
-  List<EspnTeam> _favoriteTeams = [];
-  bool _loading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadFavorites();
-  }
-
-  Future<void> _loadFavorites() async {
-    setState(() => _loading = true);
-    try {
-      final favoriteIds = await FavoritesService.getFavorites();
-      if (favoriteIds.isEmpty) {
-        if (mounted) setState(() => _loading = false);
-        return;
-      }
-      final found = await _fetchTeamsForIds(favoriteIds);
-      if (mounted) {
-        setState(() {
-          _favoriteTeams = found;
-          _loading = false;
-        });
-      }
-    } catch (e) {
-      debugPrint('FootballFavoritesScreen error: $e');
-      if (mounted) setState(() => _loading = false);
-    }
-  }
-
-  /// Searches popular leagues to find teams matching [ids].
-  Future<List<EspnTeam>> _fetchTeamsForIds(Set<String> ids) async {
-    const slugs = ['esp.1', 'eng.1', 'ger.1', 'ita.1', 'fra.1', 'usa.1'];
-    final found = <EspnTeam>[];
-    final remaining = Set<String>.from(ids);
-    for (final slug in slugs) {
-      if (remaining.isEmpty) break;
-      final teams = await _service.getTeams(slug);
-      for (final team in teams) {
-        if (remaining.remove(team.id)) {
-          found.add(team);
-        }
-      }
-    }
-    return found;
-  }
-
-  Future<void> _unfavorite(String teamId) async {
-    await FavoritesService.toggleFavorite(teamId);
-    if (mounted) {
-      setState(() => _favoriteTeams.removeWhere((t) => t.id == teamId));
-    }
+  /// Returns an [EspnLeague] with the human-readable name for the given [slug],
+  /// falling back to the slug itself when not found in the popular list.
+  EspnLeague _leagueForSlug(String slug) {
+    return EspnLeague.popularLeagues.firstWhere(
+      (l) => l.slug == slug,
+      orElse: () => EspnLeague(slug: slug, name: slug),
+    );
   }
 
   @override
@@ -80,64 +30,103 @@ class _FootballFavoritesScreenState extends State<FootballFavoritesScreen> {
         ),
         iconTheme: const IconThemeData(color: AppColors.kWhite),
       ),
-      body: _buildBody(),
-    );
-  }
-
-  Widget _buildBody() {
-    if (_loading) {
-      return const Center(
-          child: CircularProgressIndicator(color: AppColors.kYellowAccent));
-    }
-    if (_favoriteTeams.isEmpty) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.star_border, color: AppColors.kGreyLight, size: 64),
-              SizedBox(height: 16),
-              Text(
-                'No tienes equipos favoritos',
-                style: TextStyle(
-                    color: AppColors.kWhite,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Añade favoritos desde la pantalla de ligas, entrando en un equipo y pulsando la estrella.',
+      body: StreamBuilder<List<FavoriteTeam>>(
+        stream: FirestoreFavoritesService.watchFavorites(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+                child:
+                    CircularProgressIndicator(color: AppColors.kYellowAccent));
+          }
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                'Error al cargar favoritos: ${snapshot.error}',
+                style: const TextStyle(color: AppColors.kWhite),
                 textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.kGreyLight, fontSize: 14),
               ),
-            ],
-          ),
-        ),
-      );
-    }
-    return GridView.builder(
-      padding: const EdgeInsets.all(16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        childAspectRatio: 0.85,
+            );
+          }
+          final favorites = snapshot.data ?? [];
+          if (favorites.isEmpty) {
+            return const _EmptyFavorites();
+          }
+          return GridView.builder(
+            padding: const EdgeInsets.all(16),
+            gridDelegate:
+                const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+              childAspectRatio: 0.85,
+            ),
+            itemCount: favorites.length,
+            itemBuilder: (context, index) {
+              final fav = favorites[index];
+              return _FavoriteTeamCard(
+                favorite: fav,
+                onUnfavorite: () => FirestoreFavoritesService.removeFavorite(
+                    fav.league, fav.teamId),
+                onViewFixtures: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => FootballFixturesScreen(
+                      league: _leagueForSlug(fav.league),
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
-      itemCount: _favoriteTeams.length,
-      itemBuilder: (context, index) {
-        final team = _favoriteTeams[index];
-        return _TeamCard(team: team, onUnfavorite: () => _unfavorite(team.id));
-      },
     );
   }
 }
 
-class _TeamCard extends StatelessWidget {
-  final EspnTeam team;
-  final VoidCallback onUnfavorite;
+class _EmptyFavorites extends StatelessWidget {
+  const _EmptyFavorites();
 
-  const _TeamCard({required this.team, required this.onUnfavorite});
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Padding(
+        padding: EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.star_border, color: AppColors.kGreyLight, size: 64),
+            SizedBox(height: 16),
+            Text(
+              'No tienes equipos favoritos',
+              style: TextStyle(
+                  color: AppColors.kWhite,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Añade favoritos desde la pantalla de ligas, entrando en un equipo y pulsando la estrella.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: AppColors.kGreyLight, fontSize: 14),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FavoriteTeamCard extends StatelessWidget {
+  final FavoriteTeam favorite;
+  final VoidCallback onUnfavorite;
+  final VoidCallback onViewFixtures;
+
+  const _FavoriteTeamCard({
+    required this.favorite,
+    required this.onUnfavorite,
+    required this.onViewFixtures,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -149,35 +138,52 @@ class _TeamCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (team.logoUrl != null && team.logoUrl!.isNotEmpty)
+            if (favorite.logoUrl != null && favorite.logoUrl!.isNotEmpty)
               CachedNetworkImage(
-                imageUrl: team.logoUrl!,
-                height: 60,
-                width: 60,
+                imageUrl: favorite.logoUrl!,
+                height: 52,
+                width: 52,
                 errorWidget: (_, __, ___) => const Icon(
                   Icons.sports_soccer,
                   color: AppColors.kYellowAccent,
-                  size: 48,
+                  size: 44,
                 ),
               )
             else
-              const Icon(Icons.sports_soccer, color: AppColors.kYellowAccent, size: 48),
-            const SizedBox(height: 8),
+              const Icon(Icons.sports_soccer,
+                  color: AppColors.kYellowAccent, size: 44),
+            const SizedBox(height: 6),
             Text(
-              team.displayName,
+              favorite.name,
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                   color: AppColors.kWhite,
                   fontWeight: FontWeight.w600,
-                  fontSize: 13),
+                  fontSize: 12),
             ),
-            const SizedBox(height: 8),
-            IconButton(
-              icon: const Icon(Icons.star, color: AppColors.kYellowAccent),
-              tooltip: 'Quitar de favoritos',
-              onPressed: onUnfavorite,
+            const SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  constraints: const BoxConstraints(),
+                  padding: const EdgeInsets.all(4),
+                  icon: const Icon(Icons.calendar_month_outlined,
+                      color: AppColors.kGreyLight, size: 18),
+                  tooltip: 'Ver próximos partidos',
+                  onPressed: onViewFixtures,
+                ),
+                IconButton(
+                  constraints: const BoxConstraints(),
+                  padding: const EdgeInsets.all(4),
+                  icon: const Icon(Icons.star,
+                      color: AppColors.kYellowAccent, size: 20),
+                  tooltip: 'Quitar de favoritos',
+                  onPressed: onUnfavorite,
+                ),
+              ],
             ),
           ],
         ),
@@ -185,3 +191,4 @@ class _TeamCard extends StatelessWidget {
     );
   }
 }
+

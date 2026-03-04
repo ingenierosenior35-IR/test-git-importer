@@ -3,7 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:Rival/core/constants/colors.dart';
 import 'package:Rival/features/polls/data/models/espn_models.dart';
 import 'package:Rival/features/polls/data/datasources/espn_api_service.dart';
-import '../../services/favorites_service.dart';
+import '../../services/firestore_favorites_service.dart';
 
 /// Screen that lists teams for a given league and allows marking them as favorites.
 class FootballTeamsScreen extends StatefulWidget {
@@ -36,7 +36,8 @@ class _FootballTeamsScreenState extends State<FootballTeamsScreen> {
     try {
       final results = await Future.wait([
         _service.getTeams(widget.league.slug),
-        FavoritesService.getFavorites(),
+        FirestoreFavoritesService.getFavoriteTeamIds(
+            league: widget.league.slug),
       ]);
       if (mounted) {
         setState(() {
@@ -56,14 +57,19 @@ class _FootballTeamsScreenState extends State<FootballTeamsScreen> {
     }
   }
 
-  Future<void> _toggleFavorite(String teamId) async {
-    final added = await FavoritesService.toggleFavorite(teamId);
+  Future<void> _toggleFavorite(EspnTeam team) async {
+    final added = await FirestoreFavoritesService.toggleFavorite(
+      league: widget.league.slug,
+      teamId: team.id,
+      name: team.displayName,
+      logoUrl: team.logoUrl,
+    );
     if (mounted) {
       setState(() {
         if (added) {
-          _favorites.add(teamId);
+          _favorites.add(team.id);
         } else {
-          _favorites.remove(teamId);
+          _favorites.remove(team.id);
         }
       });
     }
@@ -126,7 +132,7 @@ class _FootballTeamsScreenState extends State<FootballTeamsScreen> {
         return _TeamListTile(
           team: team,
           isFavorite: isFav,
-          onToggle: () => _toggleFavorite(team.id),
+          onToggle: () => _toggleFavorite(team),
         );
       },
     );
@@ -183,3 +189,4 @@ class _TeamListTile extends StatelessWidget {
     );
   }
 }
+

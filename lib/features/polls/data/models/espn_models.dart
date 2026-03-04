@@ -10,7 +10,7 @@ class EspnLeague {
     this.logoUrl,
   });
 
-  /// Curated list of popular leagues available via ESPN API
+  /// Curated list of popular leagues available via ESPN API (used as fallback).
   static const List<EspnLeague> popularLeagues = [
     EspnLeague(slug: 'esp.1', name: 'LALIGA (España)'),
     EspnLeague(slug: 'eng.1', name: 'Premier League (Inglaterra)'),
@@ -19,7 +19,9 @@ class EspnLeague {
     EspnLeague(slug: 'fra.1', name: 'Ligue 1 (Francia)'),
     EspnLeague(slug: 'usa.1', name: 'MLS (Estados Unidos)'),
     EspnLeague(slug: 'uefa.champions', name: 'UEFA Champions League'),
+    EspnLeague(slug: 'uefa.europa', name: 'UEFA Europa League'),
     EspnLeague(slug: 'conmebol.libertadores', name: 'Copa Libertadores'),
+    EspnLeague(slug: 'conmebol.sudamericana', name: 'Copa Sudamericana'),
     EspnLeague(slug: 'conmebol.america', name: 'Copa América'),
     EspnLeague(slug: 'fifa.world', name: 'FIFA World Cup'),
     EspnLeague(slug: 'mex.1', name: 'Liga MX (México)'),
@@ -28,7 +30,43 @@ class EspnLeague {
     EspnLeague(slug: 'bra.1', name: 'Brasileirão'),
     EspnLeague(slug: 'ned.1', name: 'Eredivisie (Países Bajos)'),
     EspnLeague(slug: 'por.1', name: 'Primeira Liga (Portugal)'),
+    EspnLeague(slug: 'sco.1', name: 'Scottish Premiership'),
+    EspnLeague(slug: 'tur.1', name: 'Süper Lig (Turquía)'),
+    EspnLeague(slug: 'rus.1', name: 'Premier League (Rusia)'),
+    EspnLeague(slug: 'gre.1', name: 'Super League (Grecia)'),
+    EspnLeague(slug: 'chl.1', name: 'Primera División (Chile)'),
+    EspnLeague(slug: 'per.1', name: 'Liga 1 (Perú)'),
+    EspnLeague(slug: 'uru.1', name: 'Primera División (Uruguay)'),
+    EspnLeague(slug: 'ecu.1', name: 'LigaPro (Ecuador)'),
+    EspnLeague(slug: 'ven.1', name: 'Liga FUTVE (Venezuela)'),
+    EspnLeague(slug: 'bol.1', name: 'División Profesional (Bolivia)'),
+    EspnLeague(slug: 'par.1', name: 'División Profesional (Paraguay)'),
   ];
+
+  /// Creates an [EspnLeague] from a Core API item that may include 'slug' and 'name' fields.
+  factory EspnLeague.fromCoreApi(Map<String, dynamic> json) {
+    final slug = json['slug']?.toString() ?? json['id']?.toString() ?? '';
+    final name = json['name']?.toString() ??
+        json['shortName']?.toString() ??
+        json['abbreviation']?.toString() ??
+        slug;
+    final logos = json['logos'] as List<dynamic>?;
+    final logoUrl = logos != null && logos.isNotEmpty
+        ? logos.first['href']?.toString()
+        : null;
+    return EspnLeague(slug: slug, name: name, logoUrl: logoUrl);
+  }
+
+  /// Extracts a league slug from a Core API \$ref URL such as
+  /// `https://sports.core.api.espn.com/v2/sports/soccer/leagues/esp.1`.
+  static String? slugFromRef(String ref) {
+    final uri = Uri.tryParse(ref);
+    if (uri == null) return null;
+    final segments = uri.pathSegments;
+    if (segments.isEmpty) return null;
+    final slug = segments.last.split('?').first;
+    return slug.isEmpty ? null : slug;
+  }
 }
 
 class EspnTeam {
