@@ -263,35 +263,45 @@ class _FootballMatchDetailScreenState extends State<FootballMatchDetailScreen>
       );
     }
 
-    // Group plays by minute (integer division by 60 seconds → minutes)
-    final byMinute = <int, List<EspnPlay>>{};
-    for (final play in timeline) {
-      // ESPN keyEvents use minutes directly (0-90+), while some play APIs
-      // return clock in seconds (0-5400+). Values above 130 are treated as
-      // seconds since no match has over 130 regular minutes.
-      final minute = play.clock > 130 ? play.clock ~/ 60 : play.clock;
-      byMinute.putIfAbsent(minute, () => []).add(play);
-    }
-    final sortedMinutes = byMinute.keys.toList()..sort();
     final event = _detail?.event ?? widget.event;
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(12),
-      itemCount: sortedMinutes.length,
-      itemBuilder: (context, index) {
-        final minute = sortedMinutes[index];
+    // Group plays by period then by minute within each period.
+    final byPeriod = <int, Map<int, List<EspnPlay>>>{};
+    for (final play in timeline) {
+      final p = play.period > 0 ? play.period : (play.clock <= 45 ? 1 : 2);
+      byPeriod.putIfAbsent(p, () => {});
+      byPeriod[p]!.putIfAbsent(play.clock, () => []).add(play);
+    }
+
+    final periods = byPeriod.keys.toList()..sort();
+    final items = <Widget>[];
+
+    for (final period in periods) {
+      final periodLabel = period == 1
+          ? 'PRIMER TIEMPO'
+          : period == 2
+              ? 'SEGUNDO TIEMPO'
+              : 'TIEMPO $period';
+      items.add(_PeriodHeader(label: periodLabel));
+
+      final byMinute = byPeriod[period]!;
+      final sortedMinutes = byMinute.keys.toList()..sort();
+      for (final minute in sortedMinutes) {
         final plays = byMinute[minute]!;
-        return Column(
-          children: plays
-              .map((play) => _PlayTile(
-                    play: play,
-                    minute: minute,
-                    homeTeamId: event.homeTeam.id,
-                    awayTeamId: event.awayTeam.id,
-                  ))
-              .toList(),
-        );
-      },
+        for (final play in plays) {
+          items.add(_PlayTile(
+            play: play,
+            minute: minute,
+            homeTeamId: event.homeTeam.id,
+            awayTeamId: event.awayTeam.id,
+          ));
+        }
+      }
+    }
+
+    return ListView(
+      padding: const EdgeInsets.all(12),
+      children: items,
     );
   }
 
@@ -370,6 +380,43 @@ class _FootballMatchDetailScreenState extends State<FootballMatchDetailScreen>
           ),
         ),
       ],
+    );
+  }
+}
+
+class _PeriodHeader extends StatelessWidget {
+  final String label;
+  const _PeriodHeader({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 16, 0, 8),
+      child: Row(
+        children: [
+          Expanded(child: Divider(color: AppColors.kDarkSurface, thickness: 1)),
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.kYellowAccent.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColors.kYellowAccent.withOpacity(0.5)),
+            ),
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: AppColors.kYellowAccent,
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.8,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(child: Divider(color: AppColors.kDarkSurface, thickness: 1)),
+        ],
+      ),
     );
   }
 }

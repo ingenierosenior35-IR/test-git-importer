@@ -112,6 +112,7 @@ void main() {
         'text': 'Goal - Benzema',
         'team': {'id': '86'},
         'type': {'id': 'goal', 'text': 'Goal'},
+        'period': {'number': 1},
       };
       final play = EspnPlay.fromJson(json);
       expect(play.id, 'play-1');
@@ -119,19 +120,42 @@ void main() {
       expect(play.text, 'Goal - Benzema');
       expect(play.teamId, '86');
       expect(play.type, 'goal');
+      expect(play.period, 1);
     });
 
-    test('parses yellow-card event', () {
+    test('parses yellow-card event in second half', () {
       final json = {
         'id': 'play-2',
-        'clock': {'value': 45},
+        'clock': {'value': 65},
         'text': 'Yellow Card - Alaba',
         'team': {'id': '86'},
         'type': {'id': 'yellow-card'},
+        'period': {'number': 2},
       };
       final play = EspnPlay.fromJson(json);
       expect(play.type, 'yellow-card');
-      expect(play.clock, 45);
+      expect(play.clock, 65);
+      expect(play.period, 2);
+    });
+
+    test('derives period from clock when period field absent', () {
+      // clock=30 → first half
+      final play1 = EspnPlay.fromJson({
+        'id': 'p1',
+        'clock': {'value': 30},
+        'text': 'event',
+        'type': {'id': 'goal'},
+      });
+      expect(play1.period, 1);
+
+      // clock=60 → second half
+      final play2 = EspnPlay.fromJson({
+        'id': 'p2',
+        'clock': {'value': 60},
+        'text': 'event',
+        'type': {'id': 'goal'},
+      });
+      expect(play2.period, 2);
     });
 
     test('handles missing clock value gracefully', () {
@@ -141,19 +165,21 @@ void main() {
       expect(play.teamId, isNull);
     });
 
-    test('toJson round-trips correctly', () {
-      final play = const EspnPlay(
+    test('toJson round-trips correctly including period', () {
+      const play = EspnPlay(
         id: '1',
         clock: 30,
         text: 'Test',
         teamId: '86',
         type: 'goal',
+        period: 1,
       );
       final json = play.toJson();
       expect(json['id'], '1');
       expect(json['clock'], 30);
       expect(json['type'], 'goal');
       expect(json['teamId'], '86');
+      expect(json['period'], 1);
     });
   });
 
@@ -219,6 +245,68 @@ void main() {
       };
       final detail = EspnMatchDetail.fromJson(json);
       expect(detail.timeline, isEmpty);
+    });
+
+    test('parses top-level rosters for lineups', () {
+      final json = {
+        'header': {
+          'id': 'match-3',
+          'name': 'A vs B',
+          'competitions': [
+            {
+              'status': {'type': {'state': 'post'}},
+              'competitors': [
+                {
+                  'homeAway': 'home',
+                  'score': '1',
+                  'team': {'id': '1', 'name': 'Team A', 'abbreviation': 'TA', 'displayName': 'Team A'},
+                },
+                {
+                  'homeAway': 'away',
+                  'score': '0',
+                  'team': {'id': '2', 'name': 'Team B', 'abbreviation': 'TB', 'displayName': 'Team B'},
+                },
+              ],
+            }
+          ],
+        },
+        'keyEvents': [],
+        'rosters': [
+          {
+            'homeAway': 'home',
+            'roster': [
+              {
+                'athlete': {
+                  'id': '10',
+                  'displayName': 'Player One',
+                  'jersey': '10',
+                  'position': {'abbreviation': 'FW'},
+                },
+              },
+            ],
+          },
+          {
+            'homeAway': 'away',
+            'roster': [
+              {
+                'athlete': {
+                  'id': '20',
+                  'displayName': 'Player Two',
+                  'jersey': '5',
+                  'position': {'abbreviation': 'MF'},
+                },
+              },
+            ],
+          },
+        ],
+      };
+      final detail = EspnMatchDetail.fromJson(json);
+      expect(detail.homeLineup.length, 1);
+      expect(detail.homeLineup.first.name, 'Player One');
+      expect(detail.homeLineup.first.number, '10');
+      expect(detail.awayLineup.length, 1);
+      expect(detail.awayLineup.first.name, 'Player Two');
+      expect(detail.awayLineup.first.number, '5');
     });
   });
 

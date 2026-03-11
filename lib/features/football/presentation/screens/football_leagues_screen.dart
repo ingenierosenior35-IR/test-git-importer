@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:Rival/core/constants/colors.dart';
 import 'package:Rival/features/polls/data/models/espn_models.dart';
 import 'package:Rival/features/polls/data/datasources/espn_api_service.dart';
-import 'football_results_screen.dart';
-import 'football_fixtures_screen.dart';
-import 'football_teams_screen.dart';
+import 'football_league_detail_screen.dart';
 import 'football_favorites_screen.dart';
 
 class FootballLeaguesScreen extends StatefulWidget {
@@ -96,152 +94,33 @@ class _LeagueCard extends StatelessWidget {
       color: AppColors.kDarkCard,
       margin: const EdgeInsets.symmetric(vertical: 6),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.sports_soccer, color: AppColors.kYellowAccent),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    league.name,
-                    style: const TextStyle(
-                      color: AppColors.kWhite,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => FootballTeamsScreen(league: league),
-                    ),
-                  ),
-                  child: const Text(
-                    'Equipos',
-                    style: TextStyle(color: AppColors.kGreyLight),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => FootballResultsScreen(league: league),
-                    ),
-                  ),
-                  child: const Text(
-                    'Resultados',
-                    style: TextStyle(color: AppColors.kYellowAccent),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => FootballFixturesScreen(league: league),
-                    ),
-                  ),
-                  child: const Text(
-                    'Próximos',
-                    style: TextStyle(color: AppColors.kGreyLight),
-                  ),
-                ),
-              ],
-            ),
-          ],
+      child: InkWell(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => FootballLeagueDetailScreen(league: league),
+          ),
         ),
-      ),
-    );
-  }
-}
-
-
-class _LeagueCard extends StatelessWidget {
-  final EspnLeague league;
-
-  const _LeagueCard({required this.league});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: AppColors.kDarkCard,
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.sports_soccer, color: AppColors.kYellowAccent),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    league.name,
-                    style: const TextStyle(
-                      color: AppColors.kWhite,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15,
-                    ),
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: [
+              const Icon(Icons.sports_soccer, color: AppColors.kYellowAccent),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  league.name,
+                  style: const TextStyle(
+                    color: AppColors.kWhite,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => FootballTeamsScreen(league: league),
-                    ),
-                  ),
-                  child: const Text(
-                    'Equipos',
-                    style: TextStyle(color: AppColors.kGreyLight),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => FootballResultsScreen(league: league),
-                    ),
-                  ),
-                  child: const Text(
-                    'Resultados',
-                    style: TextStyle(color: AppColors.kYellowAccent),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => FootballFixturesScreen(league: league),
-                    ),
-                  ),
-                  child: const Text(
-                    'Próximos',
-                    style: TextStyle(color: AppColors.kGreyLight),
-                  ),
-                ),
-              ],
-            ),
-          ],
+              ),
+              const Icon(Icons.chevron_right, color: AppColors.kGrey),
+            ],
+          ),
         ),
       ),
     );
