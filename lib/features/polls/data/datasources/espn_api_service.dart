@@ -213,28 +213,56 @@ class EspnApiService {
     return detail?.timeline ?? [];
   }
 
+  /// Month (1-based) from which a new soccer season is considered to have
+  /// started. Seasons beginning in August are labelled by their start year.
+  static const int _kSeasonStartMonth = 8;
+
+  /// Minimum number of events from the current season before the previous
+  /// season is also fetched to fill in data.
+  static const int _kMinEventsThreshold = 5;
+
   /// Fetches the schedule (past + upcoming) for [teamId] in [league].
+  ///
+  /// Queries the current season first; if fewer than [_kMinEventsThreshold]
+  /// events are returned, also fetches the previous season and merges results.
   Future<List<EspnEvent>> getTeamSchedule(
       String league, String teamId) async {
-    final uri =
-        Uri.parse('$_siteBaseUrl/$league/teams/$teamId/schedule');
-    try {
-      final response =
-          await _client.get(uri).timeout(const Duration(seconds: 15));
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body) as Map<String, dynamic>;
-        final events = data['events'] as List<dynamic>? ?? [];
-        return events
-            .map((e) => EspnEvent.fromJson(e as Map<String, dynamic>))
-            .toList();
+    final now = DateTime.now();
+    // Soccer seasons span two calendar years; pick the season start year.
+    final seasonYear =
+        now.month >= _kSeasonStartMonth ? now.year : now.year - 1;
+    final events = <EspnEvent>[];
+    final seen = <String>{};
+
+    Future<void> _fetchSeason(int year) async {
+      final uri = Uri.parse(
+          '$_siteBaseUrl/$league/teams/$teamId/schedule?season=$year');
+      try {
+        final response =
+            await _client.get(uri).timeout(const Duration(seconds: 20));
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body) as Map<String, dynamic>;
+          final raw = data['events'] as List<dynamic>? ?? [];
+          for (final e in raw) {
+            final ev = EspnEvent.fromJson(e as Map<String, dynamic>);
+            if (seen.add(ev.id)) events.add(ev);
+          }
+        } else {
+          debugPrint(
+              'ESPN getTeamSchedule($year) error ${response.statusCode} for $league/$teamId');
+        }
+      } catch (e) {
+        debugPrint('ESPN getTeamSchedule($year) exception: $e');
       }
-      debugPrint(
-          'ESPN getTeamSchedule error ${response.statusCode} for $league/$teamId');
-      return [];
-    } catch (e) {
-      debugPrint('ESPN getTeamSchedule exception: $e');
-      return [];
     }
+
+    // Current season
+    await _fetchSeason(seasonYear);
+    // If the current season returned very few results, also fetch previous.
+    if (events.length < _kMinEventsThreshold) {
+      await _fetchSeason(seasonYear - 1);
+    }
+    return events;
   }
 
   /// Fetches league standings for [league].

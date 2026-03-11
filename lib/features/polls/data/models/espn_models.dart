@@ -86,6 +86,8 @@ class EspnTeam {
 
   factory EspnTeam.fromJson(Map<String, dynamic> json) {
     final logos = json['logos'] as List<dynamic>?;
+    // Fall back to singular 'logo' field used in some ESPN endpoints.
+    final logoFallback = json['logo']?.toString();
     return EspnTeam(
       id: json['id']?.toString() ?? '',
       name: json['name']?.toString() ?? '',
@@ -93,7 +95,7 @@ class EspnTeam {
       displayName: json['displayName']?.toString() ?? json['name']?.toString() ?? '',
       logoUrl: logos != null && logos.isNotEmpty
           ? logos.first['href']?.toString()
-          : null,
+          : logoFallback,
     );
   }
 
@@ -206,6 +208,8 @@ class EspnPlay {
   final String text; // description
   final String? teamId;
   final String type; // 'goal', 'yellow-card', 'red-card', 'substitution', etc.
+  /// Match period: 1 = first half, 2 = second half, 0 = unknown.
+  final int period;
 
   const EspnPlay({
     required this.id,
@@ -213,18 +217,27 @@ class EspnPlay {
     required this.text,
     this.teamId,
     required this.type,
+    this.period = 0,
   });
 
   factory EspnPlay.fromJson(Map<String, dynamic> json) {
     final clockMap = json['clock'] as Map<String, dynamic>?;
     final teamMap = json['team'] as Map<String, dynamic>?;
     final typeMap = json['type'] as Map<String, dynamic>?;
+    final periodMap = json['period'] as Map<String, dynamic>?;
+    final clockVal = (clockMap?['value'] as num?)?.toInt() ?? 0;
+    // ESPN clock values above 130 in keyEvents are seconds; convert to minutes.
+    final minute = clockVal > 130 ? clockVal ~/ 60 : clockVal;
+    // Derive period: ESPN provides period.number; fall back by minute.
+    final periodNum = (periodMap?['number'] as num?)?.toInt() ??
+        (minute <= 45 ? 1 : 2);
     return EspnPlay(
       id: json['id']?.toString() ?? '',
-      clock: (clockMap?['value'] as num?)?.toInt() ?? 0,
+      clock: minute,
       text: json['text']?.toString() ?? '',
       teamId: teamMap?['id']?.toString(),
       type: typeMap?['id']?.toString() ?? 'event',
+      period: periodNum,
     );
   }
 
@@ -234,6 +247,7 @@ class EspnPlay {
         'text': text,
         'teamId': teamId,
         'type': type,
+        'period': period,
       };
 }
 
@@ -337,18 +351,39 @@ class EspnMatchDetail {
         awayScore = score;
         awayStats = score != null ? '${team.displayName}: $score' : null;
       }
+    }
 
-      // Parse lineup from rosters node (present in summary response)
-      final roster = compMap['roster'] as List<dynamic>?;
-      if (roster != null) {
-        final players = roster
-            .map((p) =>
-                EspnLineupPlayer.fromJson(p as Map<String, dynamic>))
-            .toList();
-        if (isHome) {
-          homeLineup.addAll(players);
-        } else {
-          awayLineup.addAll(players);
+    // Parse lineups from top-level 'rosters' (ESPN summary response structure).
+    final rostersRaw = json['rosters'] as List<dynamic>? ?? [];
+    for (final r in rostersRaw) {
+      final rMap = r as Map<String, dynamic>;
+      final isHome = rMap['homeAway'] == 'home';
+      final rosterItems = rMap['roster'] as List<dynamic>? ?? [];
+      final players = rosterItems
+          .map((p) => EspnLineupPlayer.fromJson(p as Map<String, dynamic>))
+          .toList();
+      if (isHome) {
+        homeLineup.addAll(players);
+      } else {
+        awayLineup.addAll(players);
+      }
+    }
+
+    // Fallback: look for roster inside each competitor (alternative ESPN format).
+    if (homeLineup.isEmpty && awayLineup.isEmpty) {
+      for (final comp in competitors) {
+        final compMap = comp as Map<String, dynamic>;
+        final isHome = compMap['homeAway'] == 'home';
+        final roster = compMap['roster'] as List<dynamic>?;
+        if (roster != null) {
+          final players = roster
+              .map((p) => EspnLineupPlayer.fromJson(p as Map<String, dynamic>))
+              .toList();
+          if (isHome) {
+            homeLineup.addAll(players);
+          } else {
+            awayLineup.addAll(players);
+          }
         }
       }
     }
