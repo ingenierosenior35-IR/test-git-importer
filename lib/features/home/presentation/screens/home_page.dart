@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'package:Rival/core/app_export.dart';
 import 'package:Rival/core/constants/colors.dart';
@@ -12,19 +14,15 @@ import 'package:Rival/features/weather/data/datasources/sab_remote_data_source.d
 import 'package:Rival/services/location_service.dart';
 import 'package:Rival/services/auth_service.dart';
 import 'package:Rival/services/firestore_service.dart';
+import 'package:Rival/features/football/data/models/favorite_team_model.dart';
+import 'package:Rival/features/football/services/firestore_favorites_service.dart';
+import 'package:Rival/features/polls/data/models/espn_models.dart';
+import 'package:Rival/features/football/presentation/screens/football_team_detail_screen.dart';
+import 'package:Rival/features/football/presentation/screens/football_favorites_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../controllers/home_controller.dart';
 import '../../data/models/home_model.dart';
-
-// Models for new sections
-class FavoriteClub {
-  final String name;
-  final String status;
-  final String logoUrl;
-  
-  FavoriteClub({required this.name, required this.status, required this.logoUrl});
-}
 
 class ToolItem {
   final String label;
@@ -57,20 +55,26 @@ class _HomePageState extends State<HomePage> {
   final Rx<WeatherCondition?> weatherCondition = Rx<WeatherCondition?>(null);
   final RxBool isLoadingWeather = false.obs;
   final RxMap<String, dynamic> userData = RxMap<String, dynamic>({});
-  
-  // Dummy data for favorites - TODO: Replace with actual user favorites from data source
-  final List<FavoriteClub> _favoriteClubs = [
-    FavoriteClub(name: 'Real Madrid', status: AppStrings.won, logoUrl: ''),
-    FavoriteClub(name: 'Barcelona', status: AppStrings.won, logoUrl: ''),
-    FavoriteClub(name: 'Atlético', status: AppStrings.drew, logoUrl: ''),
-    FavoriteClub(name: 'Valencia', status: AppStrings.lost, logoUrl: ''),
-    FavoriteClub(name: 'Sevilla', status: AppStrings.won, logoUrl: ''),
-  ];
+
+  // Real favorites from Firestore (stream-based)
+  List<FavoriteTeam> _favoriteTeams = [];
+  StreamSubscription<List<FavoriteTeam>>? _favoritesSubscription;
 
   @override
   void initState() {
     super.initState();
     _loadData();
+    // Listen to real-time favorites stream
+    _favoritesSubscription =
+        FirestoreFavoritesService.watchFavorites().listen((teams) {
+      if (mounted) setState(() => _favoriteTeams = teams);
+    });
+  }
+
+  @override
+  void dispose() {
+    _favoritesSubscription?.cancel();
+    super.dispose();
   }
 
   Future<void> _loadData() async {
@@ -397,7 +401,12 @@ class _HomePageState extends State<HomePage> {
               ),
               GestureDetector(
                 onTap: () {
-                  Get.toNamed(AppRoutes.fixturesScreen);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const FootballFavoritesScreen(),
+                    ),
+                  );
                 },
                 child: Text(
                   AppStrings.viewAll,
@@ -412,87 +421,138 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         SizedBox(height: getVerticalSize(16)),
-        SizedBox(
-          height: 110,
-          child: ListView.builder(
+        if (_favoriteTeams.isEmpty)
+          Padding(
             padding: getPadding(left: 20, right: 20),
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: _favoriteClubs.length,
-            itemBuilder: (context, index) {
-              final club = _favoriteClubs[index];
-              return _buildFavoriteClubCard(club);
-            },
+            child: GestureDetector(
+              onTap: () => Get.toNamed(AppRoutes.footballLeaguesScreen),
+              child: Container(
+                padding: getPadding(all: 14),
+                decoration: BoxDecoration(
+                  color: AppColors.kDarkCard,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                      color: AppColors.kYellowAccent.withOpacity(0.3)),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.star_border,
+                        color: AppColors.kYellowAccent, size: 18),
+                    SizedBox(width: 8),
+                    Text(
+                      'Agrega equipos favoritos',
+                      style: TextStyle(
+                          color: AppColors.kYellowAccent,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
+        else
+          SizedBox(
+            height: 110,
+            child: ListView.builder(
+              padding: getPadding(left: 20, right: 20),
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: _favoriteTeams.length,
+              itemBuilder: (context, index) {
+                return _buildFavoriteTeamCard(_favoriteTeams[index]);
+              },
+            ),
           ),
-        ),
       ],
     );
   }
 
-  Widget _buildFavoriteClubCard(FavoriteClub club) {
-    Color statusColor;
-    // Match against AppStrings constants instead of literal strings
-    if (club.status == AppStrings.won) {
-      statusColor = AppColors.kGreen;
-    } else if (club.status == AppStrings.drew) {
-      statusColor = AppColors.kOrange;
-    } else if (club.status == AppStrings.lost) {
-      statusColor = AppColors.kRed;
-    } else {
-      statusColor = AppColors.kGrey;
-    }
-    
-    return Container(
-      width: 90,
-      margin: getMargin(right: 12),
-      padding: getPadding(all: 10),
-      decoration: BoxDecoration(
-        color: AppColors.kDarkCard,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: AppColors.kDarkSurface,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.sports_soccer,
-              color: AppColors.kYellowAccent,
-              size: 22,
-            ),
-          ),
-          SizedBox(height: 8),
-          Flexible(
-            child: Text(
-              club.name,
-              style: TextStyle(
-                color: AppColors.kWhite,
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
+  Widget _buildFavoriteTeamCard(FavoriteTeam team) {
+    return GestureDetector(
+      onTap: () {
+        final league = EspnLeague.popularLeagues.firstWhere(
+          (l) => l.slug == team.league,
+          orElse: () => EspnLeague(slug: team.league, name: team.league),
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => FootballTeamDetailScreen(
+              team: EspnTeam(
+                id: team.teamId,
+                name: team.name,
+                abbreviation: team.name.length > 3
+                    ? team.name.substring(0, 3).toUpperCase()
+                    : team.name.toUpperCase(),
+                displayName: team.name,
+                logoUrl: team.logoUrl,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
+              leagueSlug: team.league,
             ),
           ),
-          SizedBox(height: 3),
-          Text(
-            club.status,
-            style: TextStyle(
-              color: statusColor,
-              fontSize: 9,
-              fontWeight: FontWeight.w500,
+        );
+      },
+      child: Container(
+        width: 90,
+        margin: getMargin(right: 12),
+        padding: getPadding(all: 10),
+        decoration: BoxDecoration(
+          color: AppColors.kDarkCard,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 40,
+              height: 40,
+              child: team.logoUrl != null && team.logoUrl!.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: team.logoUrl!,
+                      fit: BoxFit.contain,
+                      errorWidget: (_, __, ___) => Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.kDarkSurface,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.sports_soccer,
+                          color: AppColors.kYellowAccent,
+                          size: 22,
+                        ),
+                      ),
+                    )
+                  : Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.kDarkSurface,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.sports_soccer,
+                        color: AppColors.kYellowAccent,
+                        size: 22,
+                      ),
+                    ),
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+            SizedBox(height: 8),
+            Flexible(
+              child: Text(
+                team.name,
+                style: TextStyle(
+                  color: AppColors.kWhite,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

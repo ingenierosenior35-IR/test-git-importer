@@ -213,6 +213,69 @@ class EspnApiService {
     return detail?.timeline ?? [];
   }
 
+  /// Fetches the schedule (past + upcoming) for [teamId] in [league].
+  Future<List<EspnEvent>> getTeamSchedule(
+      String league, String teamId) async {
+    final uri =
+        Uri.parse('$_siteBaseUrl/$league/teams/$teamId/schedule');
+    try {
+      final response =
+          await _client.get(uri).timeout(const Duration(seconds: 15));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        final events = data['events'] as List<dynamic>? ?? [];
+        return events
+            .map((e) => EspnEvent.fromJson(e as Map<String, dynamic>))
+            .toList();
+      }
+      debugPrint(
+          'ESPN getTeamSchedule error ${response.statusCode} for $league/$teamId');
+      return [];
+    } catch (e) {
+      debugPrint('ESPN getTeamSchedule exception: $e');
+      return [];
+    }
+  }
+
+  /// Fetches league standings for [league].
+  Future<EspnStandings?> getStandings(String league) async {
+    final uri = Uri.parse('$_siteBaseUrl/$league/standings');
+    try {
+      final response =
+          await _client.get(uri).timeout(const Duration(seconds: 15));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        return EspnStandings.fromJson(data);
+      }
+      debugPrint(
+          'ESPN getStandings error ${response.statusCode} for $league');
+      return null;
+    } catch (e) {
+      debugPrint('ESPN getStandings exception: $e');
+      return null;
+    }
+  }
+
+  /// Fetches the roster for [teamId] in [league].
+  Future<EspnRoster?> getTeamRoster(String league, String teamId) async {
+    final uri =
+        Uri.parse('$_siteBaseUrl/$league/teams/$teamId/roster');
+    try {
+      final response =
+          await _client.get(uri).timeout(const Duration(seconds: 15));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        return EspnRoster.fromJson(data);
+      }
+      debugPrint(
+          'ESPN getTeamRoster error ${response.statusCode} for $league/$teamId');
+      return null;
+    } catch (e) {
+      debugPrint('ESPN getTeamRoster exception: $e');
+      return null;
+    }
+  }
+
   /// Formats a [DateTime] as `YYYYMMDD` for the ESPN scoreboard date parameter.
   static String _formatDate(DateTime date) {
     final y = date.year.toString().padLeft(4, '0');

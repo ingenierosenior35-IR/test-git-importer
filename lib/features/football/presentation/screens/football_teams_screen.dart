@@ -4,6 +4,7 @@ import 'package:Rival/core/constants/colors.dart';
 import 'package:Rival/features/polls/data/models/espn_models.dart';
 import 'package:Rival/features/polls/data/datasources/espn_api_service.dart';
 import '../../services/firestore_favorites_service.dart';
+import 'football_team_detail_screen.dart';
 
 /// Screen that lists teams for a given league and allows marking them as favorites.
 class FootballTeamsScreen extends StatefulWidget {
@@ -132,6 +133,7 @@ class _FootballTeamsScreenState extends State<FootballTeamsScreen> {
         return _TeamListTile(
           team: team,
           isFavorite: isFav,
+          leagueSlug: widget.league.slug,
           onToggle: () => _toggleFavorite(team),
         );
       },
@@ -142,10 +144,11 @@ class _FootballTeamsScreenState extends State<FootballTeamsScreen> {
 class _TeamListTile extends StatelessWidget {
   final EspnTeam team;
   final bool isFavorite;
+  final String leagueSlug;
   final VoidCallback onToggle;
 
   const _TeamListTile(
-      {required this.team, required this.isFavorite, required this.onToggle});
+      {required this.team, required this.isFavorite, required this.leagueSlug, required this.onToggle});
 
   @override
   Widget build(BuildContext context) {
@@ -175,6 +178,15 @@ class _TeamListTile extends StatelessWidget {
         subtitle: Text(
           team.abbreviation,
           style: const TextStyle(color: AppColors.kGreyLight, fontSize: 12),
+        ),
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => FootballTeamDetailScreen(
+              team: team,
+              leagueSlug: leagueSlug,
+            ),
+          ),
         ),
         trailing: IconButton(
           icon: Icon(
