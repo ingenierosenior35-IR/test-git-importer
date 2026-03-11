@@ -266,8 +266,9 @@ class _FootballMatchDetailScreenState extends State<FootballMatchDetailScreen>
     // Group plays by minute (integer division by 60 seconds → minutes)
     final byMinute = <int, List<EspnPlay>>{};
     for (final play in timeline) {
-      // clock value from ESPN is in seconds for some events; treat <= 130 as
-      // already in minutes (older format) and > 130 as seconds.
+      // ESPN keyEvents use minutes directly (0-90+), while some play APIs
+      // return clock in seconds (0-5400+). Values above 130 are treated as
+      // seconds since no match has over 130 regular minutes.
       final minute = play.clock > 130 ? play.clock ~/ 60 : play.clock;
       byMinute.putIfAbsent(minute, () => []).add(play);
     }
@@ -453,12 +454,13 @@ class _StatRow extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  flex: (homeFrac * 100).round(),
+                  // Ensure flex is at least 1 to avoid a zero-flex Expanded error.
+                  flex: ((homeFrac * 100).round()).clamp(1, 99),
                   child: Container(
                       height: 4, color: AppColors.kYellowAccent),
                 ),
                 Expanded(
-                  flex: ((1 - homeFrac) * 100).round(),
+                  flex: (((1 - homeFrac) * 100).round()).clamp(1, 99),
                   child: Container(height: 4, color: AppColors.kGrey),
                 ),
               ],

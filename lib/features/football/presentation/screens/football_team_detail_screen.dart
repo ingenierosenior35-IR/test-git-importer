@@ -8,6 +8,16 @@ import 'package:Rival/features/football/data/models/favorite_team_model.dart';
 import 'package:Rival/features/football/services/firestore_favorites_service.dart';
 import 'football_match_detail_screen.dart';
 
+// Standings column widths — must be kept in sync between header and data rows.
+const double _kRankColW = 28.0;
+const double _kLogoColW = 32.0;
+const double _kPlayedColW = 28.0;
+const double _kWinColW = 24.0;
+const double _kDrawColW = 24.0;
+const double _kLossColW = 24.0;
+const double _kDiffColW = 32.0;
+const double _kPtsColW = 32.0;
+
 class FootballTeamDetailScreen extends StatefulWidget {
   final EspnTeam team;
   final String leagueSlug;
@@ -315,15 +325,15 @@ class _FootballTeamDetailScreenState extends State<FootballTeamDetailScreen>
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
       child: Row(
         children: const [
-          SizedBox(width: 28, child: Text('#', style: style, textAlign: TextAlign.center)),
-          SizedBox(width: 32),
+          SizedBox(width: _kRankColW, child: Text('#', style: style, textAlign: TextAlign.center)),
+          SizedBox(width: _kLogoColW),
           Expanded(child: Text('EQUIPO', style: style)),
-          SizedBox(width: 28, child: Text('PJ', style: style, textAlign: TextAlign.center)),
-          SizedBox(width: 24, child: Text('G', style: style, textAlign: TextAlign.center)),
-          SizedBox(width: 24, child: Text('E', style: style, textAlign: TextAlign.center)),
-          SizedBox(width: 24, child: Text('P', style: style, textAlign: TextAlign.center)),
-          SizedBox(width: 32, child: Text('DG', style: style, textAlign: TextAlign.center)),
-          SizedBox(width: 32, child: Text('PTS', style: style, textAlign: TextAlign.center)),
+          SizedBox(width: _kPlayedColW, child: Text('PJ', style: style, textAlign: TextAlign.center)),
+          SizedBox(width: _kWinColW, child: Text('G', style: style, textAlign: TextAlign.center)),
+          SizedBox(width: _kDrawColW, child: Text('E', style: style, textAlign: TextAlign.center)),
+          SizedBox(width: _kLossColW, child: Text('P', style: style, textAlign: TextAlign.center)),
+          SizedBox(width: _kDiffColW, child: Text('DG', style: style, textAlign: TextAlign.center)),
+          SizedBox(width: _kPtsColW, child: Text('PTS', style: style, textAlign: TextAlign.center)),
         ],
       ),
     );
@@ -479,7 +489,7 @@ class _StandingRow extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            width: 28,
+            width: _kRankColW,
             child: Text(
               '$position',
               textAlign: TextAlign.center,
@@ -493,7 +503,7 @@ class _StandingRow extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: 32,
+            width: _kLogoColW,
             height: 24,
             child: entry.teamLogo != null && entry.teamLogo!.isNotEmpty
                 ? CachedNetworkImage(
@@ -515,23 +525,23 @@ class _StandingRow extends StatelessWidget {
             ),
           ),
           SizedBox(
-              width: 28,
+              width: _kPlayedColW,
               child: Text('${entry.played}',
                   textAlign: TextAlign.center, style: centerStyle)),
           SizedBox(
-              width: 24,
+              width: _kWinColW,
               child: Text('${entry.won}',
                   textAlign: TextAlign.center, style: centerStyle)),
           SizedBox(
-              width: 24,
+              width: _kDrawColW,
               child: Text('${entry.drawn}',
                   textAlign: TextAlign.center, style: centerStyle)),
           SizedBox(
-              width: 24,
+              width: _kLossColW,
               child: Text('${entry.lost}',
                   textAlign: TextAlign.center, style: centerStyle)),
           SizedBox(
-            width: 32,
+            width: _kDiffColW,
             child: Text(
               '${entry.goalDifference >= 0 ? '+' : ''}${entry.goalDifference}',
               textAlign: TextAlign.center,
@@ -546,7 +556,7 @@ class _StandingRow extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: 32,
+            width: _kPtsColW,
             child: Text(
               '${entry.points}',
               textAlign: TextAlign.center,

@@ -263,9 +263,10 @@ class EspnLineupPlayer {
   });
 
   factory EspnLineupPlayer.fromJson(Map<String, dynamic> json) {
+    // The ESPN summary roster entries nest the player under 'athlete'; fall
+    // back to the raw map when there is no wrapper.
     final athleteMap = json['athlete'] as Map<String, dynamic>? ?? json;
-    final posMap = athleteMap['position'] as Map<String, dynamic>? ??
-        json['position'] as Map<String, dynamic>?;
+    final posMap = athleteMap['position'] as Map<String, dynamic>?;
     return EspnLineupPlayer(
       name: athleteMap['displayName']?.toString() ??
           athleteMap['fullName']?.toString() ??
@@ -273,8 +274,7 @@ class EspnLineupPlayer {
           '',
       position: posMap?['abbreviation']?.toString() ??
           posMap?['name']?.toString(),
-      number: athleteMap['jersey']?.toString() ??
-          json['subbedIn']?.toString(),
+      number: athleteMap['jersey']?.toString(),
     );
   }
 }
@@ -565,10 +565,12 @@ class EspnPlayer {
   });
 
   factory EspnPlayer.fromJson(Map<String, dynamic> json) {
+    // ESPN roster entries nest the player under 'athlete'; fall back to the
+    // raw map when there is no wrapper.
     final athleteMap = json['athlete'] as Map<String, dynamic>? ?? json;
-    final posMap = athleteMap['position'] as Map<String, dynamic>? ??
-        json['position'] as Map<String, dynamic>?;
+    final posMap = athleteMap['position'] as Map<String, dynamic>?;
     final flagMap = athleteMap['flag'] as Map<String, dynamic>?;
+    final headshotRaw = athleteMap['headshot'];
     return EspnPlayer(
       id: athleteMap['id']?.toString() ?? '',
       name: athleteMap['displayName']?.toString() ??
@@ -580,9 +582,9 @@ class EspnPlayer {
           posMap?['name']?.toString(),
       nationality: flagMap?['alt']?.toString() ??
           athleteMap['citizenship']?.toString(),
-      photoUrl: athleteMap['headshot']?.toString() ??
-          (athleteMap['headshot'] as Map<String, dynamic>?)?['href']
-              ?.toString(),
+      photoUrl: headshotRaw is String
+          ? headshotRaw
+          : (headshotRaw as Map<String, dynamic>?)?['href']?.toString(),
     );
   }
 }
