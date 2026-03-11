@@ -55,7 +55,7 @@ class MatchesController extends GetxController {
   }
 
   void navigateToMatchDetail(String matchId) {
-    Get.toNamed('/match_detail', arguments: {'matchId': matchId});
+    Get.toNamed('/match_detail_screen', arguments: {'matchId': matchId});
   }
 
   Future<void> deleteMatch(String matchId) async {

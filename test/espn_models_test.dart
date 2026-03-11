@@ -157,8 +157,7 @@ void main() {
     });
   });
 
-  group('EspnMatchDetail.fromJson', () {
-    test('parses summary endpoint response', () {
+  group('EspnMatchDetail.fromJson', () {    test('parses summary endpoint response', () {
       final json = {
         'header': {
           'id': 'match-1',
@@ -220,6 +219,158 @@ void main() {
       };
       final detail = EspnMatchDetail.fromJson(json);
       expect(detail.timeline, isEmpty);
+    });
+  });
+
+  group('EspnStandings.fromJson', () {
+    test('parses flat standings structure', () {
+      final json = {
+        'name': 'La Liga Table',
+        'standings': {
+          'entries': [
+            {
+              'rank': 1,
+              'team': {
+                'id': '86',
+                'displayName': 'Real Madrid',
+                'logos': [
+                  {'href': 'https://example.com/rm.png'}
+                ],
+              },
+              'stats': [
+                {'name': 'gamesPlayed', 'value': 30},
+                {'name': 'wins', 'value': 22},
+                {'name': 'ties', 'value': 4},
+                {'name': 'losses', 'value': 4},
+                {'name': 'pointsFor', 'value': 70},
+                {'name': 'pointsAgainst', 'value': 25},
+                {'name': 'points', 'value': 70},
+              ],
+            },
+            {
+              'rank': 2,
+              'team': {'id': '83', 'displayName': 'Barcelona'},
+              'stats': [
+                {'name': 'gamesPlayed', 'value': 30},
+                {'name': 'wins', 'value': 20},
+                {'name': 'ties', 'value': 5},
+                {'name': 'losses', 'value': 5},
+                {'name': 'pointsFor', 'value': 65},
+                {'name': 'pointsAgainst', 'value': 30},
+                {'name': 'points', 'value': 65},
+              ],
+            },
+          ],
+        },
+      };
+      final standings = EspnStandings.fromJson(json);
+      expect(standings.name, 'La Liga Table');
+      expect(standings.entries.length, 2);
+      // Sorted by points desc
+      expect(standings.entries.first.teamId, '86');
+      expect(standings.entries.first.points, 70);
+      expect(standings.entries.first.played, 30);
+      expect(standings.entries.first.won, 22);
+      expect(standings.entries.first.drawn, 4);
+      expect(standings.entries.first.lost, 4);
+      expect(standings.entries.first.goalDifference, 45);
+      expect(standings.entries.first.teamLogo, 'https://example.com/rm.png');
+    });
+
+    test('parses nested children standings structure', () {
+      final json = {
+        'name': 'Premier League',
+        'children': [
+          {
+            'standings': {
+              'entries': [
+                {
+                  'rank': 1,
+                  'team': {'id': '364', 'displayName': 'Man City'},
+                  'stats': [
+                    {'name': 'gamesPlayed', 'value': 28},
+                    {'name': 'wins', 'value': 18},
+                    {'name': 'ties', 'value': 6},
+                    {'name': 'losses', 'value': 4},
+                    {'name': 'pointsFor', 'value': 60},
+                    {'name': 'pointsAgainst', 'value': 28},
+                    {'name': 'points', 'value': 60},
+                  ],
+                },
+              ],
+            },
+          },
+        ],
+      };
+      final standings = EspnStandings.fromJson(json);
+      expect(standings.entries.length, 1);
+      expect(standings.entries.first.teamName, 'Man City');
+      expect(standings.entries.first.points, 60);
+    });
+
+    test('returns empty entries for empty response', () {
+      final standings = EspnStandings.fromJson({'name': 'Test'});
+      expect(standings.entries, isEmpty);
+    });
+  });
+
+  group('EspnRoster.fromJson', () {
+    test('parses grouped roster structure', () {
+      final json = {
+        'athletes': [
+          {
+            'position': 'Goalkeepers',
+            'items': [
+              {
+                'athlete': {
+                  'id': '3932892',
+                  'displayName': 'Thibaut Courtois',
+                  'jersey': '1',
+                  'position': {'abbreviation': 'GK'},
+                  'flag': {'alt': 'Belgium'},
+                },
+              },
+            ],
+          },
+          {
+            'position': 'Forwards',
+            'items': [
+              {
+                'athlete': {
+                  'id': '3629344',
+                  'displayName': 'Vinicius Junior',
+                  'jersey': '7',
+                  'position': {'abbreviation': 'FW'},
+                  'flag': {'alt': 'Brazil'},
+                  'headshot': {'href': 'https://example.com/vini.png'},
+                },
+              },
+            ],
+          },
+        ],
+      };
+      final roster = EspnRoster.fromJson(json);
+      expect(roster.players.length, 2);
+
+      final gk = roster.players.first;
+      expect(gk.id, '3932892');
+      expect(gk.name, 'Thibaut Courtois');
+      expect(gk.number, '1');
+      expect(gk.position, 'GK');
+      expect(gk.nationality, 'Belgium');
+      expect(gk.photoUrl, isNull);
+
+      final fw = roster.players.last;
+      expect(fw.id, '3629344');
+      expect(fw.name, 'Vinicius Junior');
+      expect(fw.number, '7');
+      expect(fw.nationality, 'Brazil');
+      expect(fw.photoUrl, 'https://example.com/vini.png');
+    });
+
+    test('returns empty players for missing athletes key', () {
+      final roster = EspnRoster.fromJson({});
+      expect(roster.players, isEmpty);
     });
   });
 }

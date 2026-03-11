@@ -96,7 +96,7 @@ import 'package:Rival/features/teams/presentation/screens/create_team_screen.dar
 import 'package:Rival/features/teams/presentation/screens/player_detail_screen.dart';
 
 // Matches Screens
-import 'package:Rival/features/matches/presentation/screens/matches_list_screen.dart';
+import 'package:Rival/presentation/screens/matches/matches_list_screen.dart';
 import 'package:Rival/features/matches/presentation/screens/create_match_flow_screen.dart';
 import 'package:Rival/features/matches/presentation/screens/match_result_screen.dart';
 import 'package:Rival/features/matches/presentation/screens/match_detail_info_screen.dart';

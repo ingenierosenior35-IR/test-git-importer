@@ -38,19 +38,20 @@ class _PollsScreenState extends State<PollsScreen> with SingleTickerProviderStat
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
+        // Always use real Firestore data when authenticated, even if empty.
         final polls = await _repository.getPollsForUser(user.uid);
-        if (polls.isNotEmpty && mounted) {
+        if (mounted) {
           setState(() {
             _allPolls = polls;
             _loading = false;
           });
-          return;
         }
+        return;
       }
     } catch (e) {
       debugPrint('PollsScreen._loadPolls error: $e');
     }
-    // Fallback to mock data if Firebase fails or user is not logged in
+    // Only fall back to mock data when the user is not logged in (dev/preview).
     if (mounted) {
       setState(() {
         _allPolls = PollsMockData.getMockPolls();
