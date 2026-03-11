@@ -4,7 +4,7 @@ import 'package:Rival/core/constants/colors.dart';
 import 'package:Rival/features/polls/data/models/espn_models.dart';
 import '../../data/models/favorite_team_model.dart';
 import '../../services/firestore_favorites_service.dart';
-import 'football_fixtures_screen.dart';
+import 'football_team_detail_screen.dart';
 
 class FootballFavoritesScreen extends StatelessWidget {
   const FootballFavoritesScreen({Key? key}) : super(key: key);
@@ -70,8 +70,17 @@ class FootballFavoritesScreen extends StatelessWidget {
                 onViewFixtures: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => FootballFixturesScreen(
-                      league: _leagueForSlug(fav.league),
+                    builder: (_) => FootballTeamDetailScreen(
+                      team: EspnTeam(
+                        id: fav.teamId,
+                        name: fav.name,
+                        abbreviation: fav.name.length > 3
+                            ? fav.name.substring(0, 3).toUpperCase()
+                            : fav.name.toUpperCase(),
+                        displayName: fav.name,
+                        logoUrl: fav.logoUrl,
+                      ),
+                      leagueSlug: fav.league,
                     ),
                   ),
                 ),

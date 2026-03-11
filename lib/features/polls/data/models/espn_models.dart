@@ -34,7 +34,7 @@ class EspnLeague {
     EspnLeague(slug: 'tur.1', name: 'Süper Lig (Turquía)'),
     EspnLeague(slug: 'rus.1', name: 'Premier League (Rusia)'),
     EspnLeague(slug: 'gre.1', name: 'Super League (Grecia)'),
-    EspnLeague(slug: 'chl.1', name: 'Primera División (Chile)'),
+    EspnLeague(slug: 'chi.1', name: 'Primera División (Chile)'),
     EspnLeague(slug: 'per.1', name: 'Liga 1 (Perú)'),
     EspnLeague(slug: 'uru.1', name: 'Primera División (Uruguay)'),
     EspnLeague(slug: 'ecu.1', name: 'LigaPro (Ecuador)'),
@@ -237,18 +237,72 @@ class EspnPlay {
       };
 }
 
-/// Full match detail including timeline
+/// A statistic entry (e.g. Possession, Shots on Target)
+class EspnStatItem {
+  final String label;
+  final String homeValue;
+  final String awayValue;
+
+  const EspnStatItem({
+    required this.label,
+    required this.homeValue,
+    required this.awayValue,
+  });
+}
+
+/// A lineup player entry
+class EspnLineupPlayer {
+  final String name;
+  final String? position;
+  final String? number;
+
+  const EspnLineupPlayer({
+    required this.name,
+    this.position,
+    this.number,
+  });
+
+  factory EspnLineupPlayer.fromJson(Map<String, dynamic> json) {
+    // The ESPN summary roster entries nest the player under 'athlete'; fall
+    // back to the raw map when there is no wrapper.
+    final athleteMap = json['athlete'] as Map<String, dynamic>? ?? json;
+    final posMap = athleteMap['position'] as Map<String, dynamic>?;
+    return EspnLineupPlayer(
+      name: athleteMap['displayName']?.toString() ??
+          athleteMap['fullName']?.toString() ??
+          athleteMap['name']?.toString() ??
+          '',
+      position: posMap?['abbreviation']?.toString() ??
+          posMap?['name']?.toString(),
+      number: athleteMap['jersey']?.toString(),
+    );
+  }
+}
+
+/// Full match detail including timeline, stats and lineups
 class EspnMatchDetail {
   final EspnEvent event;
   final List<EspnPlay> timeline;
   final String? homeTeamStats;
   final String? awayTeamStats;
+  /// Parsed stat rows (e.g. possession, shots)
+  final List<EspnStatItem> stats;
+  /// Home-team starting lineup
+  final List<EspnLineupPlayer> homeLineup;
+  /// Away-team starting lineup
+  final List<EspnLineupPlayer> awayLineup;
+  /// Venue / stadium name
+  final String? venue;
 
   const EspnMatchDetail({
     required this.event,
     required this.timeline,
     this.homeTeamStats,
     this.awayTeamStats,
+    this.stats = const [],
+    this.homeLineup = const [],
+    this.awayLineup = const [],
+    this.venue,
   });
 
   factory EspnMatchDetail.fromJson(Map<String, dynamic> json) {
@@ -265,13 +319,16 @@ class EspnMatchDetail {
     String? awayScore;
     String? homeStats;
     String? awayStats;
+    final homeLineup = <EspnLineupPlayer>[];
+    final awayLineup = <EspnLineupPlayer>[];
 
     for (final comp in competitors) {
       final compMap = comp as Map<String, dynamic>;
       final teamMap = compMap['team'] as Map<String, dynamic>? ?? {};
       final team = EspnTeam.fromJson(teamMap);
       final score = compMap['score']?.toString();
-      if (compMap['homeAway'] == 'home') {
+      final isHome = compMap['homeAway'] == 'home';
+      if (isHome) {
         homeTeam = team;
         homeScore = score;
         homeStats = score != null ? '${team.displayName}: $score' : null;
@@ -280,11 +337,30 @@ class EspnMatchDetail {
         awayScore = score;
         awayStats = score != null ? '${team.displayName}: $score' : null;
       }
+
+      // Parse lineup from rosters node (present in summary response)
+      final roster = compMap['roster'] as List<dynamic>?;
+      if (roster != null) {
+        final players = roster
+            .map((p) =>
+                EspnLineupPlayer.fromJson(p as Map<String, dynamic>))
+            .toList();
+        if (isHome) {
+          homeLineup.addAll(players);
+        } else {
+          awayLineup.addAll(players);
+        }
+      }
     }
 
     final statusMap = competition['status'] as Map<String, dynamic>?;
     final statusType = statusMap?['type'] as Map<String, dynamic>?;
     final statusStr = statusType?['state']?.toString() ?? 'pre';
+
+    // Venue
+    final venueMap = competition['venue'] as Map<String, dynamic>?;
+    final venueName = venueMap?['fullName']?.toString() ??
+        venueMap?['name']?.toString();
 
     final event = EspnEvent(
       id: header?['id']?.toString() ?? '',
@@ -296,9 +372,52 @@ class EspnMatchDetail {
       awayTeam: awayTeam,
       homeScore: homeScore,
       awayScore: awayScore,
+      venue: venueName,
     );
 
+    // Parse keyEvents / plays for timeline
     final keyEvents = json['keyEvents'] as List<dynamic>? ?? [];
+
+    // Parse match statistics
+    final stats = <EspnStatItem>[];
+    final boxscoreMap = json['boxscore'] as Map<String, dynamic>?;
+    if (boxscoreMap != null) {
+      final teamStats =
+          boxscoreMap['teamStats'] as List<dynamic>? ?? [];
+      // teamStats is [ { stats: [{name, displayValue},...] }, ... ] for home/away
+      if (teamStats.length >= 2) {
+        final homeStatsList = (teamStats[0] as Map<String, dynamic>?)?['statistics']
+            as List<dynamic>?;
+        final awayStatsList = (teamStats[1] as Map<String, dynamic>?)?['statistics']
+            as List<dynamic>?;
+        if (homeStatsList != null && awayStatsList != null) {
+          final homeMap = {
+            for (final s in homeStatsList)
+              (s as Map<String, dynamic>)['name']?.toString() ?? '':
+                  s['displayValue']?.toString() ?? ''
+          };
+          final awayMap = {
+            for (final s in awayStatsList)
+              (s as Map<String, dynamic>)['name']?.toString() ?? '':
+                  s['displayValue']?.toString() ?? ''
+          };
+          for (final key in homeMap.keys) {
+            if (awayMap.containsKey(key) && key.isNotEmpty) {
+              stats.add(EspnStatItem(
+                label: (homeStatsList.firstWhere((s) =>
+                    (s as Map<String, dynamic>)['name'] == key,
+                    orElse: () => <String, dynamic>{}) as Map<String, dynamic>)['label']
+                        ?.toString() ??
+                    key,
+                homeValue: homeMap[key]!,
+                awayValue: awayMap[key]!,
+              ));
+            }
+          }
+        }
+      }
+    }
+
     return EspnMatchDetail(
       event: event,
       timeline: keyEvents
@@ -306,6 +425,184 @@ class EspnMatchDetail {
           .toList(),
       homeTeamStats: homeStats,
       awayTeamStats: awayStats,
+      stats: stats,
+      homeLineup: homeLineup,
+      awayLineup: awayLineup,
+      venue: venueName,
     );
+  }
+}
+
+// ─── Standings ───────────────────────────────────────────────────────────────
+
+class EspnStandingEntry {
+  final String teamId;
+  final String teamName;
+  final String? teamLogo;
+  final int rank;
+  final int played;
+  final int won;
+  final int drawn;
+  final int lost;
+  final int goalsFor;
+  final int goalsAgainst;
+  final int points;
+
+  const EspnStandingEntry({
+    required this.teamId,
+    required this.teamName,
+    this.teamLogo,
+    required this.rank,
+    required this.played,
+    required this.won,
+    required this.drawn,
+    required this.lost,
+    required this.goalsFor,
+    required this.goalsAgainst,
+    required this.points,
+  });
+
+  int get goalDifference => goalsFor - goalsAgainst;
+
+  factory EspnStandingEntry.fromJson(
+      Map<String, dynamic> json, int position) {
+    final teamMap = json['team'] as Map<String, dynamic>? ?? {};
+    final logos = teamMap['logos'] as List<dynamic>?;
+    final statsRaw = json['stats'] as List<dynamic>? ?? [];
+    final statsMap = {
+      for (final s in statsRaw)
+        (s as Map<String, dynamic>)['name']?.toString() ?? '':
+            s['value']
+    };
+
+    int _v(String key) =>
+        (statsMap[key] as num?)?.toInt() ?? 0;
+
+    return EspnStandingEntry(
+      teamId: teamMap['id']?.toString() ?? '',
+      teamName: teamMap['displayName']?.toString() ??
+          teamMap['name']?.toString() ?? '',
+      teamLogo: logos != null && logos.isNotEmpty
+          ? logos.first['href']?.toString()
+          : null,
+      rank: (json['rank'] as num?)?.toInt() ?? position,
+      played: _v('gamesPlayed'),
+      won: _v('wins'),
+      drawn: _v('ties'),
+      lost: _v('losses'),
+      goalsFor: _v('pointsFor'),
+      goalsAgainst: _v('pointsAgainst'),
+      points: _v('points'),
+    );
+  }
+}
+
+class EspnStandings {
+  final String name;
+  final List<EspnStandingEntry> entries;
+
+  const EspnStandings({required this.name, required this.entries});
+
+  factory EspnStandings.fromJson(Map<String, dynamic> json) {
+    final children = json['children'] as List<dynamic>? ?? [];
+    final allEntries = <EspnStandingEntry>[];
+
+    // Some leagues return standings nested under children groups
+    if (children.isNotEmpty) {
+      for (final child in children) {
+        final childMap = child as Map<String, dynamic>;
+        final standings =
+            childMap['standings'] as Map<String, dynamic>? ?? {};
+        final entries = standings['entries'] as List<dynamic>? ?? [];
+        int pos = 1;
+        for (final e in entries) {
+          allEntries.add(EspnStandingEntry.fromJson(
+              e as Map<String, dynamic>, pos++));
+        }
+      }
+    } else {
+      // Flat structure
+      final standings = json['standings'] as Map<String, dynamic>? ?? {};
+      final entries = standings['entries'] as List<dynamic>? ?? [];
+      int pos = 1;
+      for (final e in entries) {
+        allEntries
+            .add(EspnStandingEntry.fromJson(e as Map<String, dynamic>, pos++));
+      }
+    }
+
+    // Sort by points desc, then goal difference desc
+    allEntries.sort((a, b) {
+      final byPts = b.points.compareTo(a.points);
+      if (byPts != 0) return byPts;
+      return b.goalDifference.compareTo(a.goalDifference);
+    });
+
+    return EspnStandings(
+      name: json['name']?.toString() ?? '',
+      entries: allEntries,
+    );
+  }
+}
+
+// ─── Roster ──────────────────────────────────────────────────────────────────
+
+class EspnPlayer {
+  final String id;
+  final String name;
+  final String? number;
+  final String? position;
+  final String? nationality;
+  final String? photoUrl;
+
+  const EspnPlayer({
+    required this.id,
+    required this.name,
+    this.number,
+    this.position,
+    this.nationality,
+    this.photoUrl,
+  });
+
+  factory EspnPlayer.fromJson(Map<String, dynamic> json) {
+    // ESPN roster entries nest the player under 'athlete'; fall back to the
+    // raw map when there is no wrapper.
+    final athleteMap = json['athlete'] as Map<String, dynamic>? ?? json;
+    final posMap = athleteMap['position'] as Map<String, dynamic>?;
+    final flagMap = athleteMap['flag'] as Map<String, dynamic>?;
+    final headshotRaw = athleteMap['headshot'];
+    return EspnPlayer(
+      id: athleteMap['id']?.toString() ?? '',
+      name: athleteMap['displayName']?.toString() ??
+          athleteMap['fullName']?.toString() ??
+          athleteMap['name']?.toString() ??
+          '',
+      number: athleteMap['jersey']?.toString(),
+      position: posMap?['abbreviation']?.toString() ??
+          posMap?['name']?.toString(),
+      nationality: flagMap?['alt']?.toString() ??
+          athleteMap['citizenship']?.toString(),
+      photoUrl: headshotRaw is String
+          ? headshotRaw
+          : (headshotRaw as Map<String, dynamic>?)?['href']?.toString(),
+    );
+  }
+}
+
+class EspnRoster {
+  final List<EspnPlayer> players;
+
+  const EspnRoster({required this.players});
+
+  factory EspnRoster.fromJson(Map<String, dynamic> json) {
+    final athletes = json['athletes'] as List<dynamic>? ?? [];
+    final players = <EspnPlayer>[];
+    for (final group in athletes) {
+      final groupMap = group as Map<String, dynamic>;
+      final items = groupMap['items'] as List<dynamic>? ?? [];
+      players.addAll(
+          items.map((p) => EspnPlayer.fromJson(p as Map<String, dynamic>)));
+    }
+    return EspnRoster(players: players);
   }
 }
