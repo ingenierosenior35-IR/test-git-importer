@@ -45,6 +45,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
       if (userCredential != null) {
         bool onboardingCompleted = await _authController.checkOnboardingStatus();
+        await PrefUtils.setIsSignIn(true);
         
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

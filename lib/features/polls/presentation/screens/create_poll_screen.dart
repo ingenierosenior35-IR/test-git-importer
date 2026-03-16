@@ -60,9 +60,10 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
       _fixtures = [];
     });
 
+    // Load teams and full-season upcoming fixtures in parallel.
     final results = await Future.wait([
       _espnService.getTeams(league.slug),
-      _espnService.getScoreboard(league.slug),
+      _loadSeasonFixtures(league.slug),
     ]);
 
     if (!mounted) return;
@@ -82,6 +83,31 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
         _nameController.text = 'Polla ${league.name}';
       }
     });
+  }
+
+  /// Fetches upcoming fixtures for the full season by scanning multiple weeks ahead.
+  Future<List<EspnEvent>> _loadSeasonFixtures(String leagueSlug) async {
+    try {
+      // Fetch upcoming events for the next ~26 weeks (half season).
+      final upcoming = await _espnService.getScoreboardRange(
+        leagueSlug,
+        startDate: DateTime.now(),
+        weekCount: 26,
+        stepDays: 7,
+      );
+      // Filter to only future / scheduled events ('pre' status), sorted by date.
+      final now = DateTime.now();
+      final filtered = upcoming
+          .where((e) => e.isScheduled || e.date.isAfter(now))
+          .toList()
+        ..sort((a, b) => a.date.compareTo(b.date));
+      if (filtered.isNotEmpty) return filtered;
+      // Fallback: return current scoreboard if range returned nothing.
+      return _espnService.getScoreboard(leagueSlug);
+    } catch (e) {
+      debugPrint('CreatePollScreen._loadSeasonFixtures error: $e');
+      return _espnService.getScoreboard(leagueSlug);
+    }
   }
 
   void _goToStep1() {

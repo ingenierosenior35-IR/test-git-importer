@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../../app/routes/app_routes.dart';
+import '../../../../../core/utils/pref_utils.dart';
 import '../../../../../shared/widgets/custom_button.dart';
 
 class CongratulationsScreen extends StatefulWidget {
@@ -83,7 +84,8 @@ class _CongratulationsScreenState extends State<CongratulationsScreen>
     super.dispose();
   }
 
-  void _navigateToHome() {
+  void _navigateToHome() async {
+    await PrefUtils.setIsSignIn(true);
     Get.offAllNamed(AppRoutes.mainContainerScreen);
   }
 

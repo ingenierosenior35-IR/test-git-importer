@@ -6,7 +6,6 @@ import 'package:Rival/core/app_export.dart';
 import 'package:Rival/core/constants/colors.dart';
 import '../../data/models/poll_model.dart';
 import '../../data/models/espn_models.dart';
-import '../../data/datasources/polls_mock_data.dart';
 import '../../data/repositories/polls_firebase_repository.dart';
 
 class PollDetailScreen extends StatefulWidget {
@@ -39,12 +38,7 @@ class _PollDetailScreenState extends State<PollDetailScreen> with SingleTickerPr
   Future<void> _loadPollData() async {
     setState(() => _loading = true);
     try {
-      // Try Firebase first
-      Poll? poll = await _repository.getPollById(widget.pollId);
-      if (poll == null) {
-        // Fallback to mock
-        poll = PollsMockData.getPollById(widget.pollId);
-      }
+      final poll = await _repository.getPollById(widget.pollId);
       final rawPredictions = await _repository.getPredictions(widget.pollId);
 
       if (mounted) {
@@ -59,8 +53,6 @@ class _PollDetailScreenState extends State<PollDetailScreen> with SingleTickerPr
       debugPrint('PollDetailScreen._loadPollData error: $e');
       if (mounted) {
         setState(() {
-          _poll = PollsMockData.getPollById(widget.pollId);
-          _standings = PollsMockData.getMockStandings(widget.pollId);
           _loading = false;
         });
       }
