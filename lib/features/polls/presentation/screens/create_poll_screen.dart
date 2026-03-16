@@ -88,7 +88,7 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
   /// Fetches upcoming fixtures for the full season by scanning multiple weeks ahead.
   Future<List<EspnEvent>> _loadSeasonFixtures(String leagueSlug) async {
     try {
-      // Fetch upcoming events for the next ~26 weeks (half season).
+      // Fetch upcoming events for approximately the next 6 months.
       final upcoming = await _espnService.getScoreboardRange(
         leagueSlug,
         startDate: DateTime.now(),

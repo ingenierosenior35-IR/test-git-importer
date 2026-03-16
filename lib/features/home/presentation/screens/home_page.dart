@@ -573,7 +573,7 @@ class _HomePageState extends State<HomePage> {
       ),
       ToolItem(
         label: 'Fútbol',
-        icon: Icons.stadium,
+        icon: Icons.sports_soccer,
         onTap: () => Get.toNamed(AppRoutes.footballLeaguesScreen),
       ),
       ToolItem(

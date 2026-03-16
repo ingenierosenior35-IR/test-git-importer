@@ -12,10 +12,11 @@ class SplashController extends GetxController {
   }
 
   _getIsFirst() async {
-    // Allow Firebase to restore the persisted auth state before checking.
+    // Wait for the splash screen to display before navigating.
     await Future.delayed(const Duration(seconds: 3));
 
-    // Use Firebase Auth as the authoritative source of truth.
+    // Firebase Auth restores its persisted state synchronously on startup.
+    // Use currentUser as the authoritative source of truth.
     final firebaseUser = FirebaseAuth.instance.currentUser;
     final bool isSignIn = firebaseUser != null;
 

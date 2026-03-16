@@ -39,7 +39,7 @@ class _MainContainerScreenState extends State<MainContainerScreen> {
     }
     // On Home tab → exit the app
     SystemNavigator.pop();
-    return false;
+    return false; // unreachable, but satisfies the return type
   }
 
   @override
