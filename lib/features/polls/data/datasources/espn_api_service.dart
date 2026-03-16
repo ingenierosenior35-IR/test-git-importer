@@ -186,6 +186,34 @@ class EspnApiService {
     return all;
   }
 
+  /// Like [getScoreboardRange] but fetches weeks in parallel batches for speed.
+  ///
+  /// [concurrency] controls how many weeks are fetched simultaneously (default 8).
+  Future<List<EspnEvent>> getScoreboardRangeParallel(
+    String league, {
+    required DateTime startDate,
+    required int weekCount,
+    int stepDays = 7,
+    int concurrency = 8,
+  }) async {
+    final seen = <String>{};
+    final all = <EspnEvent>[];
+    for (int batch = 0; batch < weekCount; batch += concurrency) {
+      final batchCount = (weekCount - batch).clamp(1, concurrency);
+      final futures = List.generate(batchCount, (i) {
+        final d = startDate.add(Duration(days: stepDays * (batch + i)));
+        return getScoreboardForDate(league, _formatDate(d));
+      });
+      final results = await Future.wait(futures);
+      for (final events in results) {
+        for (final e in events) {
+          if (seen.add(e.id)) all.add(e);
+        }
+      }
+    }
+    return all;
+  }
+
   /// Fetches full match detail including timeline for a given [eventId] in [league].
   Future<EspnMatchDetail?> getMatchDetail(
       String league, String eventId) async {

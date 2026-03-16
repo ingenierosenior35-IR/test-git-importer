@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/constants/colors.dart';
 import '../../data/models/match_model.dart';
-import '../../data/datasources/matches_mock_data.dart';
 import '../../../teams/data/models/team_model.dart';
 import '../../../teams/data/models/player_model.dart';
-import '../../../teams/data/datasources/teams_mock_data.dart';
 
 class MatchResultScreen extends StatefulWidget {
   const MatchResultScreen({Key? key}) : super(key: key);
@@ -32,19 +30,10 @@ class _MatchResultScreenState extends State<MatchResultScreen> {
 
   void _loadMatchData() {
     setState(() {
-      events = MatchesMockData.getMatchEvents(match!.id);
-      
-      if (match!.homeTeamId != null) {
-        homeTeam = TeamsMockData.getTeamById(match!.homeTeamId!);
-      }
-      
-      if (match!.awayTeamId != null) {
-        awayTeam = TeamsMockData.getTeamById(match!.awayTeamId!);
-      }
-      
-      if (match!.mvpPlayerId != null) {
-        mvpPlayer = TeamsMockData.getPlayerById(match!.mvpPlayerId!);
-      }
+      events = [];
+      homeTeam = null;
+      awayTeam = null;
+      mvpPlayer = null;
     });
   }
 

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/constants/colors.dart';
 import '../../data/models/tournament_model.dart';
-import '../../data/datasources/tournaments_mock_data.dart';
+import '../../data/repositories/tournaments_firestore_repository.dart';
 
 class TournamentFormScreen extends StatefulWidget {
   const TournamentFormScreen({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
   static const int _minTeams = 2;
   
   final _formKey = GlobalKey<FormState>();
+  final _repository = TournamentsFirestoreRepository();
   
   late final TextEditingController _nameController;
   late final TextEditingController _descriptionController;
@@ -143,17 +145,21 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
       return;
     }
 
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      Get.snackbar('Error', 'Debes estar autenticado',
+          backgroundColor: AppColors.kRed.withOpacity(0.8),
+          colorText: AppColors.kWhite);
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
 
     try {
-      final now = DateTime.now();
-      final tournamentId = _editingTournament?.id ?? 
-          'tournament_${now.microsecondsSinceEpoch}_${now.millisecondsSinceEpoch % 1000}';
-      
       final tournament = Tournament(
-        id: tournamentId,
+        id: _editingTournament?.id ?? '',
         name: _nameController.text.trim(),
         description: _descriptionController.text.trim().isEmpty 
             ? null 
@@ -168,20 +174,16 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
         location: _locationController.text.trim().isEmpty 
             ? null 
             : _locationController.text.trim(),
-        createdBy: _editingTournament?.createdBy ?? 'user1', // TODO: Replace with actual authenticated user ID
+        createdBy: _editingTournament?.createdBy ?? user.uid,
         createdAt: _editingTournament?.createdAt ?? DateTime.now(),
         pointsForWin: int.parse(_pointsWinController.text),
         pointsForDraw: int.parse(_pointsDrawController.text),
         pointsForLoss: 0,
         isPublic: _isPublic,
-        joinCode: _editingTournament?.joinCode,
+        joinCode: _editingTournament?.joinCode ?? TournamentsFirestoreRepository.generateJoinCode(),
       );
 
-      if (_isEditMode) {
-        TournamentsMockData.updateTournament(tournament);
-      } else {
-        TournamentsMockData.addTournament(tournament);
-      }
+      await _repository.saveTournament(tournament);
 
       Get.back();
       Get.snackbar(

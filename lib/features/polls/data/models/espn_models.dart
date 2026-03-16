@@ -1,3 +1,14 @@
+String? _parseScore(dynamic raw) {
+  if (raw == null) return null;
+  if (raw is String) return raw;
+  if (raw is Map) {
+    final m = raw as Map<String, dynamic>;
+    return m['displayValue']?.toString() ?? m['value']?.toString();
+  }
+  if (raw is num) return raw.toString();
+  return raw.toString();
+}
+
 /// ESPN API data models for leagues, teams, and events
 class EspnLeague {
   final String slug;
@@ -149,7 +160,7 @@ class EspnEvent {
       final compMap = comp as Map<String, dynamic>;
       final teamMap = compMap['team'] as Map<String, dynamic>? ?? {};
       final team = EspnTeam.fromJson(teamMap);
-      final score = compMap['score']?.toString();
+      final score = _parseScore(compMap['score']);
       if (compMap['homeAway'] == 'home') {
         homeTeam = team;
         homeScore = score;
@@ -340,7 +351,7 @@ class EspnMatchDetail {
       final compMap = comp as Map<String, dynamic>;
       final teamMap = compMap['team'] as Map<String, dynamic>? ?? {};
       final team = EspnTeam.fromJson(teamMap);
-      final score = compMap['score']?.toString();
+      final score = _parseScore(compMap['score']);
       final isHome = compMap['homeAway'] == 'home';
       if (isHome) {
         homeTeam = team;

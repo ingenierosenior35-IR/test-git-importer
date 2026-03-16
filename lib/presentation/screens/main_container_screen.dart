@@ -31,15 +31,14 @@ class _MainContainerScreenState extends State<MainContainerScreen> {
     });
   }
 
-  Future<bool> _onWillPop() async {
+  Future<void> _onWillPop() async {
     if (_selectedIndex != 0) {
       // If not on Home tab, navigate to Home first
       setState(() => _selectedIndex = 0);
-      return false;
+      return;
     }
     // On Home tab → exit the app
     SystemNavigator.pop();
-    return false; // unreachable, but satisfies the return type
   }
 
   @override

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/constants/colors.dart';
 import '../../data/models/tournament_model.dart';
-import '../../data/datasources/tournaments_mock_data.dart';
+import '../../data/repositories/tournaments_firestore_repository.dart';
 
 class TournamentsListScreen extends StatefulWidget {
   const TournamentsListScreen({Key? key}) : super(key: key);
@@ -15,9 +16,11 @@ class TournamentsListScreen extends StatefulWidget {
 class _TournamentsListScreenState extends State<TournamentsListScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final _repository = TournamentsFirestoreRepository();
   List<Tournament> activeTournaments = [];
   List<Tournament> upcomingTournaments = [];
   List<Tournament> completedTournaments = [];
+  bool _loading = true;
 
   @override
   void initState() {
@@ -32,12 +35,32 @@ class _TournamentsListScreenState extends State<TournamentsListScreen>
     super.dispose();
   }
 
-  void _loadTournaments() {
-    setState(() {
-      activeTournaments = TournamentsMockData.getActiveTournaments();
-      upcomingTournaments = TournamentsMockData.getUpcomingTournaments();
-      completedTournaments = TournamentsMockData.getCompletedTournaments();
-    });
+  Future<void> _loadTournaments() async {
+    setState(() => _loading = true);
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      if (mounted) setState(() => _loading = false);
+      return;
+    }
+    try {
+      final mine = await _repository.getTournamentsForUser(user.uid);
+      if (mounted) {
+        setState(() {
+          activeTournaments = mine
+              .where((t) => t.status == TournamentStatus.ongoing)
+              .toList();
+          upcomingTournaments = mine
+              .where((t) => t.status == TournamentStatus.upcoming)
+              .toList();
+          completedTournaments = mine
+              .where((t) => t.status == TournamentStatus.completed)
+              .toList();
+          _loading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) setState(() => _loading = false);
+    }
   }
 
   void _createTournament() {
@@ -89,7 +112,10 @@ class _TournamentsListScreenState extends State<TournamentsListScreen>
           ],
         ),
       ),
-      body: TabBarView(
+      body: _loading
+          ? const Center(
+              child: CircularProgressIndicator(color: AppColors.kYellowAccent))
+          : TabBarView(
         controller: _tabController,
         children: [
           _buildTournamentsList(activeTournaments, isEmpty: activeTournaments.isEmpty),

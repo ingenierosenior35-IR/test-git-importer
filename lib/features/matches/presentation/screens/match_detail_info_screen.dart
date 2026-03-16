@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import '../../../../core/constants/colors.dart';
 import '../../data/models/match_model.dart';
 import '../../../teams/data/models/team_model.dart';
-import '../../../teams/data/datasources/teams_mock_data.dart';
 
 class MatchDetailInfoScreen extends StatefulWidget {
   const MatchDetailInfoScreen({Key? key}) : super(key: key);
@@ -28,12 +27,10 @@ class _MatchDetailInfoScreenState extends State<MatchDetailInfoScreen> {
   }
 
   void _loadTeams() {
-    if (match!.homeTeamId != null) {
-      homeTeam = TeamsMockData.getTeamById(match!.homeTeamId!);
-    }
-    if (match!.awayTeamId != null) {
-      awayTeam = TeamsMockData.getTeamById(match!.awayTeamId!);
-    }
+    // Teams are Firestore objects; we don't have a sync lookup.
+    // The match stores team IDs; team names can be shown from the match data.
+    homeTeam = null;
+    awayTeam = null;
   }
 
   @override

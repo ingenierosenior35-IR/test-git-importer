@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import '../../../../core/constants/colors.dart';
 import '../../data/models/team_model.dart';
-import '../../data/datasources/teams_mock_data.dart';
+import '../../data/repositories/teams_firestore_repository.dart';
 
 class CreateTeamScreen extends StatefulWidget {
   const CreateTeamScreen({Key? key}) : super(key: key);
@@ -15,6 +16,7 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _repository = TeamsFirestoreRepository();
   
   String _selectedSport = 'Fútbol';
   final List<String> _sports = ['Fútbol', 'Baloncesto', 'Voleibol', 'Tenis', 'Pádel'];
@@ -41,8 +43,15 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
     super.dispose();
   }
 
-  void _saveTeam() {
-    if (!_formKey.currentState!.validate()) {
+  Future<void> _saveTeam() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      Get.snackbar('Error', 'Debes estar autenticado',
+          backgroundColor: AppColors.kRed.withOpacity(0.8),
+          colorText: AppColors.kWhite,
+          snackPosition: SnackPosition.BOTTOM);
       return;
     }
 
@@ -51,55 +60,43 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
         final updatedTeam = _existingTeam!.copyWith(
           name: _nameController.text.trim(),
           sport: _selectedSport,
-          description: _descriptionController.text.trim().isEmpty 
-              ? null 
+          description: _descriptionController.text.trim().isEmpty
+              ? null
               : _descriptionController.text.trim(),
         );
-        TeamsMockData.updateTeam(updatedTeam);
-        
+        await _repository.saveTeam(updatedTeam);
         Get.back();
-        Get.snackbar(
-          'Éxito',
-          'Equipo actualizado correctamente',
-          backgroundColor: AppColors.kGreen.withOpacity(0.8),
-          colorText: AppColors.kWhite,
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        Get.snackbar('Éxito', 'Equipo actualizado correctamente',
+            backgroundColor: AppColors.kGreen.withOpacity(0.8),
+            colorText: AppColors.kWhite,
+            snackPosition: SnackPosition.BOTTOM);
       } else {
-        final inviteCode = TeamsMockData.generateInviteCode(_nameController.text.trim());
-        
+        final inviteCode = TeamsFirestoreRepository.generateInviteCode(
+            _nameController.text.trim());
         final newTeam = Team(
-          id: 'team${DateTime.now().millisecondsSinceEpoch}',
+          id: '',
           name: _nameController.text.trim(),
           sport: _selectedSport,
-          description: _descriptionController.text.trim().isEmpty 
-              ? null 
+          description: _descriptionController.text.trim().isEmpty
+              ? null
               : _descriptionController.text.trim(),
-          creatorId: 'user1',
+          creatorId: user.uid,
           createdAt: DateTime.now(),
           playerIds: [],
           inviteCode: inviteCode,
         );
-        
-        TeamsMockData.addTeam(newTeam);
-        
+        await _repository.saveTeam(newTeam);
         Get.back();
-        Get.snackbar(
-          'Éxito',
-          'Equipo creado correctamente',
-          backgroundColor: AppColors.kGreen.withOpacity(0.8),
-          colorText: AppColors.kWhite,
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        Get.snackbar('Éxito', 'Equipo creado correctamente',
+            backgroundColor: AppColors.kGreen.withOpacity(0.8),
+            colorText: AppColors.kWhite,
+            snackPosition: SnackPosition.BOTTOM);
       }
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'No se pudo guardar el equipo',
-        backgroundColor: AppColors.kRed.withOpacity(0.8),
-        colorText: AppColors.kWhite,
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      Get.snackbar('Error', 'No se pudo guardar el equipo',
+          backgroundColor: AppColors.kRed.withOpacity(0.8),
+          colorText: AppColors.kWhite,
+          snackPosition: SnackPosition.BOTTOM);
     }
   }
 

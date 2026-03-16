@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/constants/colors.dart';
 import '../../data/models/match_model.dart';
-import '../../data/datasources/matches_mock_data.dart';
+import '../../data/repositories/matches_firestore_repository.dart';
 import '../../../teams/data/models/team_model.dart';
-import '../../../teams/data/datasources/teams_mock_data.dart';
+import '../../../teams/data/repositories/teams_firestore_repository.dart';
 import '../../../courts/data/models/court_model.dart';
 import '../../../courts/data/datasources/courts_mock_data.dart';
 
@@ -30,17 +31,31 @@ class _CreateMatchFlowScreenState extends State<CreateMatchFlowScreen> {
   List<Team> _teams = [];
   List<Court> _courts = [];
 
+  final _matchesRepo = MatchesFirestoreRepository();
+  final _teamsRepo = TeamsFirestoreRepository();
+
   @override
   void initState() {
     super.initState();
     _loadData();
   }
 
-  void _loadData() {
-    setState(() {
-      _teams = TeamsMockData.getAllTeams();
-      _courts = CourtsMockData.getAllCourts();
-    });
+  Future<void> _loadData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final teams = await _teamsRepo.getTeamsForUser(user.uid);
+      if (mounted) {
+        setState(() {
+          _teams = teams;
+          _courts = CourtsMockData.getAllCourts();
+        });
+      }
+    } else {
+      setState(() {
+        _teams = [];
+        _courts = CourtsMockData.getAllCourts();
+      });
+    }
   }
 
   @override
@@ -49,8 +64,16 @@ class _CreateMatchFlowScreenState extends State<CreateMatchFlowScreen> {
     super.dispose();
   }
 
-  void _createMatch() {
+  Future<void> _createMatch() async {
     try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        Get.snackbar('Error', 'Debes estar autenticado',
+            backgroundColor: AppColors.kRed.withOpacity(0.8),
+            colorText: AppColors.kWhite,
+            snackPosition: SnackPosition.BOTTOM);
+        return;
+      }
       final matchDateTime = DateTime(
         _selectedDate.year,
         _selectedDate.month,
@@ -58,9 +81,8 @@ class _CreateMatchFlowScreenState extends State<CreateMatchFlowScreen> {
         _selectedTime.hour,
         _selectedTime.minute,
       );
-
       final newMatch = Match(
-        id: 'match${DateTime.now().millisecondsSinceEpoch}',
+        id: '',
         name: _matchNameController.text.trim(),
         dateTime: matchDateTime,
         venue: _selectedCourt?.name,
@@ -68,12 +90,10 @@ class _CreateMatchFlowScreenState extends State<CreateMatchFlowScreen> {
         status: MatchStatus.upcoming,
         homeTeamId: _selectedHomeTeam?.id,
         awayTeamId: _selectedAwayTeam?.id,
-        createdBy: 'user1',
+        createdBy: user.uid,
         createdAt: DateTime.now(),
       );
-
-      MatchesMockData.addMatch(newMatch);
-
+      await _matchesRepo.saveMatch(newMatch);
       Get.back();
       Get.snackbar(
         'Éxito',
