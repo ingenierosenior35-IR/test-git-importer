@@ -54,7 +54,7 @@ class PrefUtils {
 
   static getIsSignIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(signIn) ?? true;
+    return prefs.getBool(signIn) ?? false;
   }
 }
     

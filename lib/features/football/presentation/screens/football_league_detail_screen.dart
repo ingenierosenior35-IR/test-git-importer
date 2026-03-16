@@ -27,20 +27,17 @@ class _FootballLeagueDetailScreenState
   // Results (past)
   List<EspnEvent> _results = [];
   bool _loadingResults = true;
-  bool _loadingMoreResults = false;
-  int _resultWeeksLoaded = 0;
-  static const _kInitialWeeks = 8;
-  static const _kMoreWeeks = 8;
-  static const _kMaxWeeks = 104; // ~2 years
 
   // Upcoming (future)
   List<EspnEvent> _upcoming = [];
   bool _loadingUpcoming = true;
-  bool _loadingMoreUpcoming = false;
-  int _upcomingWeeksLoaded = 0;
-  static const _kInitialUpcomingWeeks = 6;
-  static const _kMoreUpcomingWeeks = 4;
-  static const _kMaxUpcomingWeeks = 16;
+
+  /// Month (1-based) from which a soccer season is considered to have started.
+  /// NOTE: This assumes Northern Hemisphere leagues (Aug-Jun). For Southern
+  /// Hemisphere or differently structured leagues the results may be incomplete.
+  static const int _kSeasonStartMonth = 8;
+  static const int _kMaxWeeksBack = 50;
+  static const int _kMaxWeeksAhead = 40;
 
   // Teams
   List<EspnTeam> _teams = [];
@@ -71,48 +68,27 @@ class _FootballLeagueDetailScreenState
   Future<void> _loadResults() async {
     setState(() {
       _loadingResults = true;
-      _resultWeeksLoaded = 0;
       _results = [];
     });
-    final events = await _fetchPastWeeks(_kInitialWeeks, offsetWeeks: 0);
+    final now = DateTime.now();
+    final seasonStartYear = now.month >= _kSeasonStartMonth ? now.year : now.year - 1;
+    final seasonStart = DateTime(seasonStartYear, _kSeasonStartMonth, 1);
+    final weeksBack = (now.difference(seasonStart).inDays / 7).ceil().clamp(1, _kMaxWeeksBack);
+    final events = await _service.getScoreboardRangeParallel(
+      widget.league.slug,
+      startDate: seasonStart,
+      weekCount: weeksBack,
+      stepDays: 7,
+    );
     if (mounted) {
       setState(() {
-        _results = events;
-        _resultWeeksLoaded = _kInitialWeeks;
+        _results = events
+            .where((e) => e.isFinished || e.isLive)
+            .toList()
+          ..sort((a, b) => b.date.compareTo(a.date));
         _loadingResults = false;
       });
     }
-  }
-
-  Future<void> _loadMoreResults() async {
-    if (_loadingMoreResults || _resultWeeksLoaded >= _kMaxWeeks) return;
-    setState(() => _loadingMoreResults = true);
-    final more = await _fetchPastWeeks(_kMoreWeeks,
-        offsetWeeks: _resultWeeksLoaded);
-    if (mounted) {
-      final seen = _results.map((e) => e.id).toSet();
-      setState(() {
-        _results.addAll(more.where((e) => !seen.contains(e.id)));
-        _resultWeeksLoaded += _kMoreWeeks;
-        _loadingMoreResults = false;
-      });
-    }
-  }
-
-  Future<List<EspnEvent>> _fetchPastWeeks(int count,
-      {required int offsetWeeks}) async {
-    final now = DateTime.now();
-    final anchor = now.subtract(Duration(days: offsetWeeks * 7));
-    final raw = await _service.getScoreboardRange(
-      widget.league.slug,
-      startDate: anchor,
-      weekCount: count,
-      stepDays: -7,
-    );
-    return raw
-        .where((e) => e.isFinished || e.isLive)
-        .toList()
-      ..sort((a, b) => b.date.compareTo(a.date));
   }
 
   // ─── Upcoming ────────────────────────────────────────────────────────────
@@ -120,50 +96,27 @@ class _FootballLeagueDetailScreenState
   Future<void> _loadUpcoming() async {
     setState(() {
       _loadingUpcoming = true;
-      _upcomingWeeksLoaded = 0;
       _upcoming = [];
     });
-    final events =
-        await _fetchUpcomingWeeks(_kInitialUpcomingWeeks, offsetWeeks: 0);
+    final now = DateTime.now();
+    final seasonStartYear = now.month >= _kSeasonStartMonth ? now.year : now.year - 1;
+    final seasonEnd = DateTime(seasonStartYear + 1, 6, 1);
+    final weeksAhead = (seasonEnd.difference(now).inDays / 7).ceil().clamp(1, _kMaxWeeksAhead);
+    final events = await _service.getScoreboardRangeParallel(
+      widget.league.slug,
+      startDate: now,
+      weekCount: weeksAhead,
+      stepDays: 7,
+    );
     if (mounted) {
       setState(() {
-        _upcoming = events;
-        _upcomingWeeksLoaded = _kInitialUpcomingWeeks;
+        _upcoming = events
+            .where((e) => e.isScheduled)
+            .toList()
+          ..sort((a, b) => a.date.compareTo(b.date));
         _loadingUpcoming = false;
       });
     }
-  }
-
-  Future<void> _loadMoreUpcoming() async {
-    if (_loadingMoreUpcoming || _upcomingWeeksLoaded >= _kMaxUpcomingWeeks)
-      return;
-    setState(() => _loadingMoreUpcoming = true);
-    final more = await _fetchUpcomingWeeks(_kMoreUpcomingWeeks,
-        offsetWeeks: _upcomingWeeksLoaded);
-    if (mounted) {
-      final seen = _upcoming.map((e) => e.id).toSet();
-      setState(() {
-        _upcoming.addAll(more.where((e) => !seen.contains(e.id)));
-        _upcomingWeeksLoaded += _kMoreUpcomingWeeks;
-        _loadingMoreUpcoming = false;
-      });
-    }
-  }
-
-  Future<List<EspnEvent>> _fetchUpcomingWeeks(int count,
-      {required int offsetWeeks}) async {
-    final now = DateTime.now();
-    final anchor = now.add(Duration(days: offsetWeeks * 7));
-    final raw = await _service.getScoreboardRange(
-      widget.league.slug,
-      startDate: anchor,
-      weekCount: count,
-      stepDays: 7,
-    );
-    return raw
-        .where((e) => e.isScheduled || e.isLive)
-        .toList()
-      ..sort((a, b) => a.date.compareTo(b.date));
   }
 
   // ─── Teams ───────────────────────────────────────────────────────────────
@@ -251,20 +204,11 @@ class _FootballLeagueDetailScreenState
       onRefresh: _loadResults,
       child: ListView.builder(
         padding: const EdgeInsets.all(12),
-        itemCount: _results.length + 1,
-        itemBuilder: (context, index) {
-          if (index == _results.length) {
-            return _buildLoadMoreBtn(
-              _loadingMoreResults,
-              _resultWeeksLoaded >= _kMaxWeeks,
-              _loadMoreResults,
-            );
-          }
-          return _MatchCard(
-            event: _results[index],
-            onTap: () => _openMatchDetail(_results[index]),
-          );
-        },
+        itemCount: _results.length,
+        itemBuilder: (context, index) => _MatchCard(
+          event: _results[index],
+          onTap: () => _openMatchDetail(_results[index]),
+        ),
       ),
     );
   }
@@ -285,20 +229,11 @@ class _FootballLeagueDetailScreenState
       onRefresh: _loadUpcoming,
       child: ListView.builder(
         padding: const EdgeInsets.all(12),
-        itemCount: _upcoming.length + 1,
-        itemBuilder: (context, index) {
-          if (index == _upcoming.length) {
-            return _buildLoadMoreBtn(
-              _loadingMoreUpcoming,
-              _upcomingWeeksLoaded >= _kMaxUpcomingWeeks,
-              _loadMoreUpcoming,
-            );
-          }
-          return _FixtureCard(
-            event: _upcoming[index],
-            onTap: () => _openMatchDetail(_upcoming[index]),
-          );
-        },
+        itemCount: _upcoming.length,
+        itemBuilder: (context, index) => _FixtureCard(
+          event: _upcoming[index],
+          onTap: () => _openMatchDetail(_upcoming[index]),
+        ),
       ),
     );
   }
@@ -518,24 +453,6 @@ class _FootballLeagueDetailScreenState
         text,
         textAlign: TextAlign.center,
         style: const TextStyle(color: AppColors.kGreyLight, fontSize: 12),
-      ),
-    );
-  }
-
-  Widget _buildLoadMoreBtn(bool loading, bool maxReached, VoidCallback onMore) {
-    if (maxReached) return const SizedBox.shrink();
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Center(
-        child: loading
-            ? const CircularProgressIndicator(color: AppColors.kYellowAccent)
-            : OutlinedButton(
-                onPressed: onMore,
-                style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: AppColors.kYellowAccent)),
-                child: const Text('Cargar más',
-                    style: TextStyle(color: AppColors.kYellowAccent)),
-              ),
       ),
     );
   }

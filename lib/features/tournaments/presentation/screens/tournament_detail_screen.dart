@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/constants/colors.dart';
 import '../../data/models/tournament_model.dart';
-import '../../data/datasources/tournaments_mock_data.dart';
+import '../../data/repositories/tournaments_firestore_repository.dart';
 import '../../../matches/data/models/match_model.dart';
-import '../../../matches/data/datasources/matches_mock_data.dart';
-import '../../../teams/data/datasources/teams_mock_data.dart';
 import '../../../teams/data/models/team_model.dart';
 
 class TournamentDetailScreen extends StatefulWidget {
@@ -39,34 +38,18 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen>
     super.dispose();
   }
 
+  final _repository = TournamentsFirestoreRepository();
+
   void _loadData() {
     setState(() {
-      tournamentMatches = _getTournamentMatches();
-      standings = TournamentsMockData.getStandingsByTournamentId(tournament.id);
+      tournamentMatches = [];
+      standings = [];
     });
-  }
-
-  List<Match> _getTournamentMatches() {
-    final allMatches = MatchesMockData.getAllMatches();
-    final tournamentTeams = TournamentsMockData.getTeamsByTournamentId(tournament.id);
-    final teamIds = tournamentTeams.map((tt) => tt.teamId).toSet();
-    
-    return allMatches.where((match) {
-      if (match.homeTeamId != null && match.awayTeamId != null) {
-        return teamIds.contains(match.homeTeamId) || teamIds.contains(match.awayTeamId);
-      }
-      return false;
-    }).toList()..sort((a, b) => a.dateTime.compareTo(b.dateTime));
   }
 
   void _editTournament() {
     Get.toNamed('/tournament_form_screen', arguments: tournament)?.then((_) {
-      final updated = TournamentsMockData.getTournamentById(tournament.id);
-      if (updated != null) {
-        setState(() {
-          tournament = updated;
-        });
-      }
+      Get.back();
     });
   }
 
@@ -92,9 +75,9 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen>
             ),
           ),
           TextButton(
-            onPressed: () {
-              TournamentsMockData.deleteTournament(tournament.id);
+            onPressed: () async {
               Get.back();
+              await _repository.deleteTournament(tournament.id);
               Get.back();
               Get.snackbar(
                 'Éxito',
@@ -545,12 +528,9 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen>
   }
 
   Widget _buildMatchCard(Match match) {
-    final homeTeam = match.homeTeamId != null
-        ? TeamsMockData.getTeamById(match.homeTeamId!)
-        : null;
-    final awayTeam = match.awayTeamId != null
-        ? TeamsMockData.getTeamById(match.awayTeamId!)
-        : null;
+    // Team details are loaded from Firestore; for now show names from IDs.
+    const Team? homeTeam = null;
+    const Team? awayTeam = null;
 
     return GestureDetector(
       onTap: () {

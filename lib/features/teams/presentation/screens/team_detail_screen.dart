@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import '../../../../core/constants/colors.dart';
 import '../../data/models/team_model.dart';
 import '../../data/models/player_model.dart';
-import '../../data/datasources/teams_mock_data.dart';
 
 class TeamDetailScreen extends StatefulWidget {
   const TeamDetailScreen({Key? key}) : super(key: key);
@@ -27,19 +26,16 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
   }
 
   void _loadPlayers() {
+    // Players are stored per-team; this screen shows team members.
+    // With Firestore teams, playerIds are stored on the team object.
     setState(() {
-      players = TeamsMockData.getPlayersByTeamId(team!.id);
+      players = [];
     });
   }
 
   void _editTeam() {
     Get.toNamed('/create_team_screen', arguments: team)?.then((_) {
-      final updatedTeam = TeamsMockData.getTeamById(team!.id);
-      if (updatedTeam != null) {
-        setState(() {
-          team = updatedTeam;
-        });
-      }
+      Get.back(); // Reload by going back and letting parent refresh
     });
   }
 
@@ -71,7 +67,6 @@ class _TeamDetailScreenState extends State<TeamDetailScreen> {
         final updatedPlayerIds = List<String>.from(team!.playerIds)
           ..remove(player.id);
         final updatedTeam = team!.copyWith(playerIds: updatedPlayerIds);
-        TeamsMockData.updateTeam(updatedTeam);
         
         setState(() {
           team = updatedTeam;

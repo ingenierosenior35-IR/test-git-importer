@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/constants/colors.dart';
 import '../../data/models/player_model.dart';
-import '../../data/datasources/teams_mock_data.dart';
 
 class PlayerDetailScreen extends StatelessWidget {
   const PlayerDetailScreen({Key? key}) : super(key: key);
@@ -10,7 +9,8 @@ class PlayerDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Player player = Get.arguments as Player;
-    final teams = player.teamIds.map((id) => TeamsMockData.getTeamById(id)).where((team) => team != null).toList();
+    // Teams are now in Firestore; player.teamIds stores IDs but we can't sync-lookup
+    final List teams = [];  // Will be empty until Firestore async fetch is added
 
     return Scaffold(
       backgroundColor: AppColors.kDarkBackground,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../core/constants/colors.dart';
 import '../../features/home/presentation/screens/home_page.dart';
 import '../../features/matches/presentation/screens/matches_list_screen.dart';
@@ -30,38 +31,56 @@ class _MainContainerScreenState extends State<MainContainerScreen> {
     });
   }
 
+  Future<void> _onWillPop() async {
+    if (_selectedIndex != 0) {
+      // If not on Home tab, navigate to Home first
+      setState(() => _selectedIndex = 0);
+      return;
+    }
+    // On Home tab → exit the app
+    SystemNavigator.pop();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.kDarkBackground,
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _screens,
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: AppColors.kDarkCard,
-          boxShadow: [
-            BoxShadow(
-              // ignore: deprecated_member_use
-              color: Colors.black.withOpacity(0.15),
-              blurRadius: 4,
-              offset: const Offset(0, -1),
-            ),
-          ],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (!didPop) {
+          await _onWillPop();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.kDarkBackground,
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: _screens,
         ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildNavItem(Icons.home_rounded, 'Inicio', 0),
-                _buildNavItem(Icons.sports_soccer_rounded, 'Partidos', 1),
-                _buildNavItem(Icons.videocam_rounded, 'Video', 2),
-                _buildNavItem(Icons.analytics_rounded, 'Análisis', 3),
-                _buildNavItem(Icons.person_rounded, 'Perfil', 4),
-              ],
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: AppColors.kDarkCard,
+            boxShadow: [
+              BoxShadow(
+                // ignore: deprecated_member_use
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: 4,
+                offset: const Offset(0, -1),
+              ),
+            ],
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildNavItem(Icons.home_rounded, 'Inicio', 0),
+                  _buildNavItem(Icons.sports_soccer_rounded, 'Partidos', 1),
+                  _buildNavItem(Icons.videocam_rounded, 'Video', 2),
+                  _buildNavItem(Icons.analytics_rounded, 'Análisis', 3),
+                  _buildNavItem(Icons.person_rounded, 'Perfil', 4),
+                ],
+              ),
             ),
           ),
         ),

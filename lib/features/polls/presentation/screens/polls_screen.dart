@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:Rival/core/app_export.dart';
 import 'package:Rival/core/constants/colors.dart';
 import '../../data/models/poll_model.dart';
-import '../../data/datasources/polls_mock_data.dart';
 import '../../data/repositories/polls_firebase_repository.dart';
 import 'poll_detail_screen.dart';
 import 'create_poll_screen.dart';
@@ -38,7 +37,6 @@ class _PollsScreenState extends State<PollsScreen> with SingleTickerProviderStat
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        // Always use real Firestore data when authenticated, even if empty.
         final polls = await _repository.getPollsForUser(user.uid);
         if (mounted) {
           setState(() {
@@ -51,10 +49,10 @@ class _PollsScreenState extends State<PollsScreen> with SingleTickerProviderStat
     } catch (e) {
       debugPrint('PollsScreen._loadPolls error: $e');
     }
-    // Only fall back to mock data when the user is not logged in (dev/preview).
+    // Not authenticated or error: show empty list.
     if (mounted) {
       setState(() {
-        _allPolls = PollsMockData.getMockPolls();
+        _allPolls = [];
         _loading = false;
       });
     }
