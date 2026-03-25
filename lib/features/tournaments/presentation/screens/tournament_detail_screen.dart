@@ -115,6 +115,41 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen>
     }
   }
 
+  /// Starts a non-knockout tournament (league / groups+KO) without generating
+  /// a bracket automatically. Simply moves status → started.
+  Future<void> _startTournament() async {
+    if (enrolledTeams.length < 2) {
+      Get.snackbar('Error', 'Se necesitan al menos 2 equipos inscritos.',
+          backgroundColor: AppColors.kRed.withOpacity(0.8),
+          colorText: AppColors.kWhite);
+      return;
+    }
+    try {
+      setState(() => _isLoading = true);
+      await _repository.updateTournamentStatus(
+          tournament.id, TournamentStatus.started,
+          currentRound: 1);
+      await _loadData();
+      Get.snackbar('Éxito', 'Torneo iniciado.',
+          backgroundColor: AppColors.kGreen.withOpacity(0.8),
+          colorText: AppColors.kWhite);
+    } catch (e) {
+      if (mounted) setState(() => _isLoading = false);
+      Get.snackbar('Error', e.toString(),
+          backgroundColor: AppColors.kRed.withOpacity(0.8),
+          colorText: AppColors.kWhite);
+    }
+  }
+
+  /// Returns true when the current user (admin) can trigger the start/bracket
+  /// action. True only when the user is the tournament creator AND the
+  /// tournament status is draft, open, or upcoming (i.e. not yet started).
+  bool get _isStartable =>
+      _isAdmin &&
+      (tournament.status == TournamentStatus.draft ||
+          tournament.status == TournamentStatus.open ||
+          tournament.status == TournamentStatus.upcoming);
+
   void _editTournament() {
     Get.toNamed('/tournament_form_screen', arguments: tournament)
         ?.then((_) => _loadData());
@@ -524,17 +559,34 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen>
               ),
               const SizedBox(height: 12),
             ],
-            if ((tournament.status == TournamentStatus.open ||
-                    tournament.status == TournamentStatus.upcoming) &&
-                enrolledTeams.length >= 2 &&
-                tournament.format == TournamentFormat.knockout) ...[
-              _adminButton(
-                label: 'Generar bracket e iniciar torneo',
-                icon: Icons.account_tree_outlined,
-                color: AppColors.kGreen,
-                onTap: _generateBracket,
-              ),
-              const SizedBox(height: 12),
+            if (_isStartable) ...[
+              if (enrolledTeams.length < 2) ...[
+                _adminButton(
+                  label: tournament.format == TournamentFormat.knockout
+                      ? 'Generar bracket e iniciar (mínimo 2 equipos)'
+                      : 'Iniciar torneo (mínimo 2 equipos)',
+                  icon: tournament.format == TournamentFormat.knockout
+                      ? Icons.account_tree_outlined
+                      : Icons.play_circle_outline,
+                  color: AppColors.kGreen,
+                  onTap: null,
+                ),
+                const SizedBox(height: 12),
+              ] else ...[
+                _adminButton(
+                  label: tournament.format == TournamentFormat.knockout
+                      ? 'Generar bracket e iniciar torneo'
+                      : 'Iniciar torneo',
+                  icon: tournament.format == TournamentFormat.knockout
+                      ? Icons.account_tree_outlined
+                      : Icons.play_circle_outline,
+                  color: AppColors.kGreen,
+                  onTap: tournament.format == TournamentFormat.knockout
+                      ? _generateBracket
+                      : _startTournament,
+                ),
+                const SizedBox(height: 12),
+              ],
             ],
           ],
           if (!_isAdmin && tournament.canJoin && !_userTeamEnrolled) ...[
@@ -701,22 +753,28 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen>
               const Text('No hay partidos generados',
                   style: TextStyle(color: AppColors.kGrey, fontSize: 16)),
               if (_isAdmin &&
-                  tournament.format == TournamentFormat.knockout &&
                   enrolledTeams.length >= 2 &&
-                  (tournament.status == TournamentStatus.open ||
-                      tournament.status == TournamentStatus.upcoming)) ...[
+                  _isStartable) ...[
                 const SizedBox(height: 20),
                 ElevatedButton.icon(
-                  onPressed: _generateBracket,
+                  onPressed: tournament.format == TournamentFormat.knockout
+                      ? _generateBracket
+                      : _startTournament,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.kYellowAccent,
                     foregroundColor: AppColors.kBlack,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
                   ),
-                  icon: const Icon(Icons.account_tree_outlined),
-                  label: const Text('Generar bracket',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  icon: Icon(tournament.format == TournamentFormat.knockout
+                      ? Icons.account_tree_outlined
+                      : Icons.play_circle_outline),
+                  label: Text(
+                    tournament.format == TournamentFormat.knockout
+                        ? 'Generar bracket'
+                        : 'Iniciar torneo',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ],
@@ -1071,7 +1129,7 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen>
     required String label,
     required IconData icon,
     required Color color,
-    required VoidCallback onTap,
+    VoidCallback? onTap,
   }) {
     return SizedBox(
       width: double.infinity,
@@ -1081,6 +1139,8 @@ class _TournamentDetailScreenState extends State<TournamentDetailScreen>
         style: ElevatedButton.styleFrom(
           backgroundColor: color,
           foregroundColor: AppColors.kBlack,
+          disabledBackgroundColor: AppColors.kGrey.withOpacity(0.3),
+          disabledForegroundColor: AppColors.kGrey,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           elevation: 0,
         ),
