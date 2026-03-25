@@ -4,11 +4,20 @@ enum TournamentFormat {
   groupsAndKnockout, // Groups + knockout
 }
 
+/// draft = not yet open; open = accepting teams; started = bracket generated / in progress;
+/// finished = completed; cancelled = cancelled.
+/// Legacy values (upcoming → open, ongoing → started, completed → finished) are
+/// normalised on read in the repository.
 enum TournamentStatus {
+  draft,
+  open,
+  started,
+  finished,
+  cancelled,
+  // Keep legacy aliases so existing Firestore docs still parse correctly.
   upcoming,
   ongoing,
   completed,
-  cancelled,
 }
 
 class Tournament {
@@ -26,12 +35,15 @@ class Tournament {
   final String? location;
   final String createdBy;
   final DateTime createdAt;
-  
+
+  /// Current elimination round (1-based). 0 = bracket not yet generated.
+  final int currentRound;
+
   // Scoring rules
   final int pointsForWin;
   final int pointsForDraw;
   final int pointsForLoss;
-  
+
   // Registration
   final String? joinCode;
   final bool isPublic;
@@ -51,6 +63,7 @@ class Tournament {
     this.location,
     required this.createdBy,
     required this.createdAt,
+    this.currentRound = 0,
     this.pointsForWin = 3,
     this.pointsForDraw = 1,
     this.pointsForLoss = 0,
@@ -73,6 +86,7 @@ class Tournament {
     String? location,
     String? createdBy,
     DateTime? createdAt,
+    int? currentRound,
     int? pointsForWin,
     int? pointsForDraw,
     int? pointsForLoss,
@@ -94,6 +108,7 @@ class Tournament {
       location: location ?? this.location,
       createdBy: createdBy ?? this.createdBy,
       createdAt: createdAt ?? this.createdAt,
+      currentRound: currentRound ?? this.currentRound,
       pointsForWin: pointsForWin ?? this.pointsForWin,
       pointsForDraw: pointsForDraw ?? this.pointsForDraw,
       pointsForLoss: pointsForLoss ?? this.pointsForLoss,
@@ -102,18 +117,41 @@ class Tournament {
     );
   }
 
-  bool get isActive => status == TournamentStatus.ongoing;
-  bool get isCompleted => status == TournamentStatus.completed;
-  bool get canJoin => isPublic && currentTeams < maxTeams && 
-                      (status == TournamentStatus.upcoming || status == TournamentStatus.ongoing);
+  bool get isActive =>
+      status == TournamentStatus.started || status == TournamentStatus.ongoing;
+  bool get isCompleted =>
+      status == TournamentStatus.finished || status == TournamentStatus.completed;
+  bool get canJoin =>
+      currentTeams < maxTeams &&
+      (status == TournamentStatus.open ||
+          status == TournamentStatus.draft ||
+          status == TournamentStatus.upcoming);
 }
 
+/// Represents a team enrolled in a tournament (subcollection: tournaments/{id}/teams/{teamId}).
+class TournamentEnrolledTeam {
+  final String teamId;
+  final String teamName;
+  final String ownerUserId;
+  final DateTime joinedAt;
+  final String? logoUrl;
+
+  const TournamentEnrolledTeam({
+    required this.teamId,
+    required this.teamName,
+    required this.ownerUserId,
+    required this.joinedAt,
+    this.logoUrl,
+  });
+}
+
+/// Legacy model kept for backward compatibility with mock data.
 class TournamentTeam {
   final String tournamentId;
   final String teamId;
   final DateTime joinedAt;
-  final int? groupNumber; // For group stage tournaments
-  final int? seed; // For seeded tournaments
+  final int? groupNumber;
+  final int? seed;
 
   const TournamentTeam({
     required this.tournamentId,
@@ -122,6 +160,82 @@ class TournamentTeam {
     this.groupNumber,
     this.seed,
   });
+}
+
+/// A match within a tournament bracket (subcollection: tournaments/{id}/matches/{matchId}).
+class TournamentMatch {
+  final String id;
+  final int round;
+  final int matchIndex; // 0-based position within the round
+  final String? homeTeamId;
+  final String? awayTeamId;
+  final String? homeTeamName;
+  final String? awayTeamName;
+  final int? homeScore;
+  final int? awayScore;
+  final DateTime? scheduledAt;
+
+  /// 'scheduled' | 'live' | 'finished' | 'bye'
+  final String status;
+  final String? winnerTeamId;
+
+  const TournamentMatch({
+    required this.id,
+    required this.round,
+    required this.matchIndex,
+    this.homeTeamId,
+    this.awayTeamId,
+    this.homeTeamName,
+    this.awayTeamName,
+    this.homeScore,
+    this.awayScore,
+    this.scheduledAt,
+    this.status = 'scheduled',
+    this.winnerTeamId,
+  });
+
+  /// A bye match has no away team; the home team advances automatically.
+  bool get isBye => awayTeamId == null;
+  bool get isFinished => status == 'finished' || status == 'bye';
+
+  String? get effectiveWinnerId {
+    if (isBye) return homeTeamId;
+    return winnerTeamId;
+  }
+
+  String get effectiveHomeTeamName => homeTeamName ?? homeTeamId ?? 'TBD';
+  String get effectiveAwayTeamName =>
+      isBye ? 'BYE' : (awayTeamName ?? awayTeamId ?? 'TBD');
+
+  TournamentMatch copyWith({
+    String? id,
+    int? round,
+    int? matchIndex,
+    String? homeTeamId,
+    String? awayTeamId,
+    String? homeTeamName,
+    String? awayTeamName,
+    int? homeScore,
+    int? awayScore,
+    DateTime? scheduledAt,
+    String? status,
+    String? winnerTeamId,
+  }) {
+    return TournamentMatch(
+      id: id ?? this.id,
+      round: round ?? this.round,
+      matchIndex: matchIndex ?? this.matchIndex,
+      homeTeamId: homeTeamId ?? this.homeTeamId,
+      awayTeamId: awayTeamId ?? this.awayTeamId,
+      homeTeamName: homeTeamName ?? this.homeTeamName,
+      awayTeamName: awayTeamName ?? this.awayTeamName,
+      homeScore: homeScore ?? this.homeScore,
+      awayScore: awayScore ?? this.awayScore,
+      scheduledAt: scheduledAt ?? this.scheduledAt,
+      status: status ?? this.status,
+      winnerTeamId: winnerTeamId ?? this.winnerTeamId,
+    );
+  }
 }
 
 class StandingsRow {

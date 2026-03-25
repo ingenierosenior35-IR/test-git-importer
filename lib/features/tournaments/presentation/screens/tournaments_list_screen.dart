@@ -47,13 +47,21 @@ class _TournamentsListScreenState extends State<TournamentsListScreen>
       if (mounted) {
         setState(() {
           activeTournaments = mine
-              .where((t) => t.status == TournamentStatus.ongoing)
+              .where((t) =>
+                  t.status == TournamentStatus.started ||
+                  t.status == TournamentStatus.ongoing)
               .toList();
           upcomingTournaments = mine
-              .where((t) => t.status == TournamentStatus.upcoming)
+              .where((t) =>
+                  t.status == TournamentStatus.open ||
+                  t.status == TournamentStatus.draft ||
+                  t.status == TournamentStatus.upcoming)
               .toList();
           completedTournaments = mine
-              .where((t) => t.status == TournamentStatus.completed)
+              .where((t) =>
+                  t.status == TournamentStatus.finished ||
+                  t.status == TournamentStatus.completed ||
+                  t.status == TournamentStatus.cancelled)
               .toList();
           _loading = false;
         });
@@ -356,10 +364,15 @@ class _TournamentsListScreenState extends State<TournamentsListScreen>
 
   String _getStatusText(TournamentStatus status) {
     switch (status) {
+      case TournamentStatus.draft:
+        return 'BORRADOR';
+      case TournamentStatus.open:
       case TournamentStatus.upcoming:
-        return 'PRÓXIMO';
+        return 'ABIERTO';
+      case TournamentStatus.started:
       case TournamentStatus.ongoing:
         return 'EN CURSO';
+      case TournamentStatus.finished:
       case TournamentStatus.completed:
         return 'FINALIZADO';
       case TournamentStatus.cancelled:
@@ -369,10 +382,15 @@ class _TournamentsListScreenState extends State<TournamentsListScreen>
 
   Color _getStatusColor(TournamentStatus status) {
     switch (status) {
+      case TournamentStatus.draft:
+        return AppColors.kGrey;
+      case TournamentStatus.open:
       case TournamentStatus.upcoming:
         return AppColors.kYellowAccent;
+      case TournamentStatus.started:
       case TournamentStatus.ongoing:
         return AppColors.kGreen;
+      case TournamentStatus.finished:
       case TournamentStatus.completed:
         return AppColors.kBlue;
       case TournamentStatus.cancelled:
