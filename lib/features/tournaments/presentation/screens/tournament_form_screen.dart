@@ -165,7 +165,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
             ? null 
             : _descriptionController.text.trim(),
         format: _selectedFormat,
-        status: _editingTournament?.status ?? TournamentStatus.upcoming,
+        status: _editingTournament?.status ?? TournamentStatus.open,
         startDate: _startDate,
         endDate: _endDate,
         sport: _sportController.text.trim(),
