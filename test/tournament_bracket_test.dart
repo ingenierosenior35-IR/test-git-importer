@@ -11,7 +11,7 @@ TournamentEnrolledTeam _team(String id, String name) => TournamentEnrolledTeam(
 
 void main() {
   group('TournamentsFirestoreRepository.buildBracketRound1', () {
-    test('2 teams – 1 match, no byes', () {
+    test('2 teams – 1 normal match, no byes', () {
       final teams = [_team('t1', 'A'), _team('t2', 'B')];
       final matches = TournamentsFirestoreRepository.buildBracketRound1(teams);
       expect(matches.length, 1);
@@ -21,7 +21,7 @@ void main() {
       expect(matches[0].status, 'scheduled');
     });
 
-    test('4 teams – 2 matches, no byes', () {
+    test('4 teams – 2 normal matches, no byes', () {
       final teams = [
         _team('t1', 'A'),
         _team('t2', 'B'),
@@ -33,16 +33,14 @@ void main() {
       expect(matches.every((m) => !m.isBye), isTrue);
     });
 
-    test('3 teams – 2 slots, 1 bye (slot 4 = 4 slots total for 3 teams → 1 bye)',
-        () {
-      // 3 teams → nextPow2 = 4 → slots = 4 → byeCount = 1
-      // padded = [t1, t2, t3, null]
-      // match0: t1 vs t2 (scheduled)
-      // match1: t3 vs null (bye)
+    test('3 teams – 1 normal match + 1 bye for last team', () {
+      // 3 teams: (t1 vs t2), t3 = bye
       final teams = [_team('t1', 'A'), _team('t2', 'B'), _team('t3', 'C')];
       final matches = TournamentsFirestoreRepository.buildBracketRound1(teams);
       expect(matches.length, 2);
       expect(matches[0].isBye, isFalse);
+      expect(matches[0].homeTeamId, 't1');
+      expect(matches[0].awayTeamId, 't2');
       expect(matches[1].isBye, isTrue);
       expect(matches[1].homeTeamId, 't3');
       expect(matches[1].awayTeamId, isNull);
@@ -51,16 +49,34 @@ void main() {
       expect(matches[1].effectiveWinnerId, 't3');
     });
 
-    test('5 teams – 4 matches, 3 byes', () {
-      // 5 teams → nextPow2 = 8 → 8 slots → byeCount = 3
+    test('5 teams – 2 normal matches + 1 bye (last team)', () {
+      // 5 teams: (t1,t2), (t3,t4), t5=bye
       final teams = List.generate(5, (i) => _team('t${i + 1}', 'Team ${i + 1}'));
+      final matches = TournamentsFirestoreRepository.buildBracketRound1(teams);
+      expect(matches.length, 3);
+      expect(matches[0].isBye, isFalse);
+      expect(matches[1].isBye, isFalse);
+      expect(matches[2].isBye, isTrue);
+      expect(matches[2].homeTeamId, 't5');
+    });
+
+    test('6 teams – 3 normal matches, no byes', () {
+      final teams = List.generate(6, (i) => _team('t${i + 1}', 'Team ${i + 1}'));
+      final matches = TournamentsFirestoreRepository.buildBracketRound1(teams);
+      expect(matches.length, 3);
+      expect(matches.every((m) => !m.isBye), isTrue);
+    });
+
+    test('7 teams – 3 normal matches + 1 bye for last team', () {
+      final teams = List.generate(7, (i) => _team('t${i + 1}', 'Team ${i + 1}'));
       final matches = TournamentsFirestoreRepository.buildBracketRound1(teams);
       expect(matches.length, 4);
       final byes = matches.where((m) => m.isBye).toList();
-      expect(byes.length, 3);
+      expect(byes.length, 1);
+      expect(byes[0].homeTeamId, 't7');
     });
 
-    test('8 teams – 4 matches, no byes', () {
+    test('8 teams – 4 normal matches, no byes', () {
       final teams = List.generate(8, (i) => _team('t${i + 1}', 'Team ${i + 1}'));
       final matches = TournamentsFirestoreRepository.buildBracketRound1(teams);
       expect(matches.length, 4);
@@ -136,6 +152,22 @@ void main() {
         winnerTeamId: 't1',
       );
       expect(m.effectiveAwayTeamName, 'BYE');
+    });
+
+    test('round advancement: 3 winners from 5-team round 1 → 2 matches in round 2',
+        () {
+      // Simulate winners from a 5-team round 1: 2 normal + 1 bye = 3 advancing
+      final roundOneWinners = [
+        _team('w1', 'Winner1'),
+        _team('w2', 'Winner2'),
+        _team('t5', 'Team5'),
+      ];
+      final r2 =
+          TournamentsFirestoreRepository.buildBracketRound(roundOneWinners, round: 2);
+      // 3 teams: (w1,w2), t5=bye
+      expect(r2.length, 2);
+      expect(r2[0].isBye, isFalse);
+      expect(r2[1].isBye, isTrue);
     });
   });
 

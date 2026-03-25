@@ -336,8 +336,8 @@ class TournamentsFirestoreRepository {
 
   /// Builds round-1 bracket matches for [enrolled] teams.
   ///
-  /// If the count is not a power of 2, the top-seeded teams receive a BYE
-  /// (i.e., they advance automatically without playing).
+  /// Teams are paired sequentially (by join order). If the number of teams is
+  /// odd, the last team receives a BYE and advances automatically.
   ///
   /// [enrolled] should already be sorted by joinedAt ascending for determinism.
   static List<TournamentMatch> buildBracketRound1(
@@ -346,48 +346,53 @@ class TournamentsFirestoreRepository {
   }
 
   /// Builds bracket matches for [teams] in the given [round].
+  ///
+  /// Teams are paired sequentially. If the count is odd, the last team gets a
+  /// BYE match (no opponent; advances automatically).
   static List<TournamentMatch> buildBracketRound(
       List<TournamentEnrolledTeam> teams,
       {required int round}) {
     final n = teams.length;
     if (n < 2) return [];
 
-    // Next power of 2 >= n
-    final slots = _nextPowerOf2(n);
-    final byeCount = slots - n;
-
-    // Create a seeded list padded with nulls (= byes) interleaved at the end.
-    // The first [byeCount] positions get a BYE partner.
-    final padded = List<TournamentEnrolledTeam?>.from(teams)
-      ..addAll(List<TournamentEnrolledTeam?>.filled(byeCount, null));
-
     final matches = <TournamentMatch>[];
-    for (int i = 0; i < padded.length; i += 2) {
-      final home = padded[i];
-      final away = padded[i + 1];
-      final isBye = away == null;
-      matches.add(TournamentMatch(
-        id: '',
-        round: round,
-        matchIndex: i ~/ 2,
-        homeTeamId: home?.teamId,
-        awayTeamId: away?.teamId,
-        homeTeamName: home?.teamName,
-        awayTeamName: away?.teamName,
-        status: isBye ? 'bye' : 'scheduled',
-        winnerTeamId: isBye ? home?.teamId : null,
-      ));
+    int idx = 0;
+    int matchIndex = 0;
+
+    while (idx < n) {
+      final home = teams[idx];
+      idx++;
+
+      if (idx < n) {
+        // Normal match
+        final away = teams[idx];
+        idx++;
+        matches.add(TournamentMatch(
+          id: '',
+          round: round,
+          matchIndex: matchIndex++,
+          homeTeamId: home.teamId,
+          awayTeamId: away.teamId,
+          homeTeamName: home.teamName,
+          awayTeamName: away.teamName,
+          status: 'scheduled',
+        ));
+      } else {
+        // Odd team → BYE
+        matches.add(TournamentMatch(
+          id: '',
+          round: round,
+          matchIndex: matchIndex++,
+          homeTeamId: home.teamId,
+          awayTeamId: null,
+          homeTeamName: home.teamName,
+          awayTeamName: null,
+          status: 'bye',
+          winnerTeamId: home.teamId,
+        ));
+      }
     }
     return matches;
-  }
-
-  static int _nextPowerOf2(int n) {
-    if (n <= 1) return 1;
-    var p = 1;
-    while (p < n) {
-      p <<= 1;
-    }
-    return p;
   }
 
   // ─────────────────────────────────────────────────────────────────────────
