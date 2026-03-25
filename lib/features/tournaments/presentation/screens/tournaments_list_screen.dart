@@ -20,12 +20,13 @@ class _TournamentsListScreenState extends State<TournamentsListScreen>
   List<Tournament> activeTournaments = [];
   List<Tournament> upcomingTournaments = [];
   List<Tournament> completedTournaments = [];
+  List<Tournament> publicTournaments = [];
   bool _loading = true;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     _loadTournaments();
   }
 
@@ -43,7 +44,12 @@ class _TournamentsListScreenState extends State<TournamentsListScreen>
       return;
     }
     try {
-      final mine = await _repository.getTournamentsForUser(user.uid);
+      final results = await Future.wait([
+        _repository.getTournamentsForUser(user.uid),
+        _repository.getPublicTournaments(),
+      ]);
+      final mine = results[0];
+      final all = results[1];
       if (mounted) {
         setState(() {
           activeTournaments = mine
@@ -62,6 +68,14 @@ class _TournamentsListScreenState extends State<TournamentsListScreen>
                   t.status == TournamentStatus.finished ||
                   t.status == TournamentStatus.completed ||
                   t.status == TournamentStatus.cancelled)
+              .toList();
+          // Show all public open/draft/upcoming tournaments; exclude ones the user created.
+          final myIds = mine.map((t) => t.id).toSet();
+          publicTournaments = all
+              .where((t) =>
+                  !myIds.contains(t.id) &&
+                  (t.status == TournamentStatus.open ||
+                      t.status == TournamentStatus.upcoming))
               .toList();
           _loading = false;
         });
@@ -117,6 +131,7 @@ class _TournamentsListScreenState extends State<TournamentsListScreen>
             Tab(text: 'ACTIVOS'),
             Tab(text: 'PRÓXIMOS'),
             Tab(text: 'FINALIZADOS'),
+            Tab(text: 'EXPLORAR'),
           ],
         ),
       ),
@@ -129,6 +144,7 @@ class _TournamentsListScreenState extends State<TournamentsListScreen>
           _buildTournamentsList(activeTournaments, isEmpty: activeTournaments.isEmpty),
           _buildTournamentsList(upcomingTournaments, isEmpty: upcomingTournaments.isEmpty),
           _buildTournamentsList(completedTournaments, isEmpty: completedTournaments.isEmpty),
+          _buildExploreTournamentsList(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -170,6 +186,16 @@ class _TournamentsListScreenState extends State<TournamentsListScreen>
                 ),
               ),
             ),
+            TextButton(
+              onPressed: () => _tabController.animateTo(3),
+              child: const Text(
+                'Explorar torneos públicos',
+                style: TextStyle(
+                  color: AppColors.kGrey,
+                  fontSize: 13,
+                ),
+              ),
+            ),
           ],
         ),
       );
@@ -180,6 +206,44 @@ class _TournamentsListScreenState extends State<TournamentsListScreen>
       itemCount: tournaments.length,
       itemBuilder: (context, index) {
         return _buildTournamentCard(tournaments[index]);
+      },
+    );
+  }
+
+  Widget _buildExploreTournamentsList() {
+    if (publicTournaments.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.travel_explore,
+              size: 80,
+              color: AppColors.kGrey.withOpacity(0.3),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'No hay torneos públicos disponibles',
+              style: TextStyle(color: AppColors.kGrey, fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            TextButton(
+              onPressed: _loadTournaments,
+              child: const Text(
+                'Recargar',
+                style: TextStyle(color: AppColors.kYellowAccent, fontSize: 14),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    return ListView.builder(
+      padding: const EdgeInsets.all(20),
+      itemCount: publicTournaments.length,
+      itemBuilder: (context, index) {
+        return _buildTournamentCard(publicTournaments[index]);
       },
     );
   }
