@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+
 import '../models/poll_model.dart';
 
 /// Repository for persisting and retrieving [Poll] documents in Firestore.
@@ -114,24 +117,90 @@ class PollsFirebaseRepository {
   Poll? _normalizeAndParse(String docId, Map<String, dynamic> data) {
     try {
       data['id'] = docId;
+
       // Convert Firestore Timestamp to ISO string
       final createdAt = data['createdAt'];
       if (createdAt is Timestamp) {
         data['createdAt'] = createdAt.toDate().toIso8601String();
+      } else if (createdAt is DateTime) {
+        data['createdAt'] = createdAt.toIso8601String();
+      } else if (createdAt is String) {
+        data['createdAt'] = createdAt;
       } else if (createdAt == null) {
         data['createdAt'] = DateTime.now().toIso8601String();
       }
-      if (data['participantIds'] == null) {
+
+      // participantIds -> List<String>
+      final participantIdsRaw = data['participantIds'];
+      if (participantIdsRaw is List) {
+        data['participantIds'] =
+            participantIdsRaw.map((e) => e.toString()).toList();
+      } else {
         data['participantIds'] = <String>[];
       }
-      if (data['fixtures'] == null) {
-        data['fixtures'] = <dynamic>[];
-      }
+
+      // fixtures -> List<Map<String,dynamic>> best-effort
+      data['fixtures'] = _normalizeFixtures(data['fixtures']);
+
       return Poll.fromJson(data);
     } catch (e) {
       debugPrint('PollsFirebaseRepository._normalizeAndParse error: $e');
       return null;
     }
+  }
+
+  static List<Map<String, dynamic>> _normalizeFixtures(dynamic raw) {
+    if (raw == null) return <Map<String, dynamic>>[];
+
+    if (raw is List) {
+      final out = <Map<String, dynamic>>[];
+
+      for (final item in raw) {
+        if (item is Map<String, dynamic>) {
+          out.add(Map<String, dynamic>.from(item));
+          continue;
+        }
+
+        if (item is Map) {
+          out.add(Map<String, dynamic>.from(item.cast<String, dynamic>()));
+          continue;
+        }
+
+        if (item is String) {
+          final s = item.trim();
+
+          // If looks like JSON, try decode
+          if (s.startsWith('{') && s.endsWith('}')) {
+            try {
+              final decoded = jsonDecode(s);
+              if (decoded is Map<String, dynamic>) {
+                out.add(decoded);
+                continue;
+              }
+              if (decoded is Map) {
+                out.add(
+                    Map<String, dynamic>.from(decoded.cast<String, dynamic>()));
+                continue;
+              }
+            } catch (_) {
+              // fall through
+            }
+          }
+
+          // Otherwise treat as event id reference
+          if (s.isNotEmpty) {
+            out.add(<String, dynamic>{'id': s});
+          }
+          continue;
+        }
+
+        // ignore unknown
+      }
+
+      return out;
+    }
+
+    return <Map<String, dynamic>>[];
   }
 
   /// Saves a prediction for a fixture inside a poll.
